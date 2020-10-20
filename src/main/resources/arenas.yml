@@ -1,0 +1,22 @@
+instances:
+  default:
+    #2 or 4 bases
+    bases:
+    lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
+    Endlocation: world,364.0,63.0,-72.0,0.0,0.0
+    baselocation:
+    '1':
+      baselocation1:
+      baselocation2:
+      spawnpoint:
+      respawnpoint:
+      portallocation1:
+      portallocation2:
+    minimumplayers: 2
+    maximumplayers: 10
+    mapname: mapname
+    world: worldname
+    signs: []
+    isdone: false
+    playerspawnpoints:
+      - world,364.0,63.0,-72.0,0.0,0.0
