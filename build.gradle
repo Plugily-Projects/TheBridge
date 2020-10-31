@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'plugily.projects.amongcraft'
+version '0.0.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://papermc.io/repo/repository/maven-public/"
+    }
+    maven {
+        url "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+    maven {
+        url "https://maven.plugily.xyz/"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT'
+    compile 'pl.plajer:commons-box-classic:1.1.6'
+    compile 'pl.plajer:commons-box-database:1.1.6'
+    compile 'pl.plajer:commons-box-minecraft:1.1.6'
+    compile 'me.tigerhix.lib:scoreboard:1.0.2'
+    compile 'com.github.stefvanschie.inventoryframework:IF:0.5.19'
+    compileOnly 'me.clip:placeholderapi:2.10.1'
+    compile 'org.bstats.bStats-Metrics:bstats-bukkit:1.5'
+    compile 'org.jetbrains:annotations:13.0'
+    compile 'commons-io:commons-io:2.6'
+}

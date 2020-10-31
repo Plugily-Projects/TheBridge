@@ -1,43 +1,14 @@
-#     thebridge configuration file
+#     Among Craft configuration file
 #
 #    You can edit here the basic things of MM
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
 
-# Select locale of thebridge, default it's English.
-# Available locales:
-#    default - English language. Uses 'language.yml'.
-#    de - Deutsche sprache          pl - Język polski
-#    fr - Langue française          cn - 简体中文
-#    zh_tw - 中文(繁體)              kr - 한국어
-#    id - Bhasa Indonesia           hu - Magyar nyelv
-#    cs - Český jazyk               ro - Limba română
-#    vn - Tiếng Việt                it - Lingua italiana
-#    ru - Русский язык              es - Idioma español
-#    nl - Nederlandse taal          pt_br - Português (Brasil)
-#    tr - Türk dili                 sk - Slovenský jazyk
-#    ja - Japanese                  af - Afrikaans
-#    dk - Danish                    th - Thai
-#    uk - Ukrainian
-locale: default
-
-# Enable bossbar support?
-Bossbar-Enabled: true
-
-# How many seconds game should take to start.
-Starting-Waiting-Time: 60
-
-# Lobby waiting time set when lobby max players number is reached, used to start game quicker.
-Start-Time-On-Full-Lobby: 15
-
-# How many seconds classic game should play.
-Classic-Gameplay-Time: 270
-
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
-# thebridge doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/minecraft/thebridge/addons.php#bungee-signs-not-official
+# Among Craft doesn't offer that addon.
+# Check here for more info: https://wiki.plugily.xyz/minecraft/amongcraft/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -50,95 +21,17 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
 InventoryManager: true
 
-# Should in-game chat format be enabled?
-# You can edit the formatting in language.yml
-ChatFormat-Enabled: true
-
-# Should we disable all chat related stuff?
-# It will disable the separated chat, for example
-Disable-Separate-Chat: false
-
-# Should we override corpses spawn from CorpsesReborn plugin?
-# When player will die outside game corpse won't be spawned!
-# Disable this if you don't want this!
-# WARNING: If disabled, two corpses will be spawned when player in-game dies
-Override-Corpses-Spawn: true
-
-# Which item should be your Murderer sword?
-Murderer-Sword-Material: IRON_SWORD
-
-# How many blocks per tick sword thrown by murderer should fly
-# Please avoid high values as it might look like the sword is
-# blinking each tick
-Murderer-Sword-Speed: 0.65
-
-# How many blocks should the sword fly
-Murderer-Sword-Fly-Range: 20
-
-# In what radius should we hit the players
-Murderer-Sword-Fly-Hit-Range: 0.5
-
-#How long should be the sword attack after throw cooldown in seconds?
-#Its normal lower than Murderer-Sword-Fly-Cooldown!
-Murderer-Sword-Attack-Cooldown: 1
-
-#How long should be the sword fly cooldown in seconds?
-Murderer-Sword-Fly-Cooldown: 5
-
-#Should we change spawner mode to spawn on all spawners instant of random one
-Change-Gold-Spawner-Mode-To-All: false
-
-#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)
-Disable-Gold-Limiter: false
-
-#How much arrows should a player with bow gets when he pick up a gold ingot?
-Detective-Gold-Pick-Up-Arrows: 1
-
-#How much gold should a player need to get a bow
-Gold-For-Bow: 10
-
-#How much arrows should the player get? (Cause: Bow because enough gold collected)
-Gold-Bow-Arrows: 3
-
-#How much arrows should the detective gets on game start or when a player get a bow?
-Detective-Default-Arrows: 3
-
-#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)
-Detective-Fake-Arrows: 3
-
-#How much arrows should the player get when the prayer gives a bow to him?
-Detective-Prayer-Arrows: 2
-
-#How long should be the bow shoot cooldown in seconds?
-Detective-Bow-Cooldown: 5
-
-#Should Detectives be killed if they kill a innocent?
-Enable-Kill-Detective-If-Innocent-Killed: true
-
-#Should there be a innocent locator
-Enable-Innocent-Locator: true
-
-#Should the murderer get speed effect?
-Speed-Effect-Murderer:
-  Enabled: true
-  #Enter a multiplier (min 2, max 10)
-  Speed: 3
-
-# Play sound when a user gets score.
-# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-AddScore-Sound: ""
-
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/thebridge/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/amongcraft/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
-  Full-Games-Permission: "thebridge.fullgames"
-  # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.MM02'
-  # use 'thebridge.join.*' to enable access to all arenas
-  Join-Permission: "thebridge.join.<arena>"
+  Full-Games-Permission: "amongcraft.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'amongcraft.join.AC02'
+  # use 'amongcraft.join.*' to enable access to all arenas
+  Join-Permission: "amongcraft.join.<arena>"
 
 # Should we enable short commands such as /start and /leave
 Enable-Short-Commands: false
 
-# Should /mm leave command be blocked?
+# Should /ac leave command be blocked?
 Disable-Leave-Command: false
 
 # Should players get no fall damage?
@@ -152,14 +45,11 @@ Whitelisted-Commands:
 # Enable in game rewards? See rewards.yml for more...
 Rewards-Enabled: false
 
-# Should we block every not thebridge associated commands in game?
+# Should we block every not Among Craft associated commands in game?
 Block-Commands-In-Game: true
 
 # Should we fire some cool fireworks at location of every player after the game ends?
 Firework-When-Game-Ends: true
-
-# Should players' name tags in game be hidden?
-Nametags-Hidden: true
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
@@ -178,10 +68,7 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
-#Disable Party features of external party plugins (such as PAF, Parties ...)
-Disable-Parties: true
-
 # Don't modify.
-Version: 19
+Version: 0
 
 # No way! You've reached the end! But... where's the dragon!?
