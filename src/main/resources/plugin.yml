@@ -1,14 +1,14 @@
-name: AmongCraft
-main: plugily.projects.amongcraft.Main
+name: thebridge
+main: plugily.projects.thebridge.Main
 authors: [2Wild4You, Tigerpanzer, Plajer]
 version: 0.0.1
 api-version: 1.13
 softdepend: [PlaceholderAPI]
 
 commands:
-  AmongCraft:
-    description: Among Craft commands
+  thebridge:
+    description: thebridge commands
     aliases: [ac, among]
-  AmongCraftAdmin:
-    description: Among Craft admin commands
+  thebridgeAdmin:
+    description: thebridge admin commands
     aliases: [aca, amongadmin]

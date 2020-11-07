@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'plugily.projects.amongcraft'
+group 'plugily.projects.thebridge'
 version '0.0.1'
 
 sourceCompatibility = 1.8

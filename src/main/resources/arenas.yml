@@ -1,22 +1,20 @@
 instances:
   default:
-    #2 or 4 bases
-    bases:
     lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
-    Endlocation: world,364.0,63.0,-72.0,0.0,0.0
-    baselocation:
+    endlocation: world,364.0,63.0,-72.0,0.0,0.0
+    arenaLocation1: world,364.0,63.0,-72.0,0.0,0.0
+    arenaLocation2: world,364.0,63.0,-72.0,0.0,0.0
     '1':
-      baselocation1:
-      baselocation2:
-      spawnpoint:
-      respawnpoint:
-      portallocation1:
-      portallocation2:
+      baselocation1: world,364.0,63.0,-72.0,0.0,0.0
+      baselocation2: world,364.0,63.0,-72.0,0.0,0.0
+      spawnpoint: world,364.0,63.0,-72.0,0.0,0.0
+      respawnpoint: world,364.0,63.0,-72.0,0.0,0.0
+      portallocation1: world,364.0,63.0,-72.0,0.0,0.0
+      portallocation2: world,364.0,63.0,-72.0,0.0,0.0
+      color: GREEN
     minimumplayers: 2
-    maximumplayers: 10
+    maxiumSize: 2
     mapname: mapname
     world: worldname
     signs: []
     isdone: false
-    playerspawnpoints:
-      - world,364.0,63.0,-72.0,0.0,0.0

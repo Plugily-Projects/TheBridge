@@ -1,4 +1,4 @@
-#     Among Craft configuration file
+#     thebridge configuration file
 #
 #    You can edit here the basic things of MM
 #      Please read everything CAREFULLY!
@@ -7,8 +7,8 @@
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
-# Among Craft doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/minecraft/amongcraft/addons.php#bungee-signs-not-official
+# thebridge doesn't offer that addon.
+# Check here for more info: https://wiki.plugily.xyz/minecraft/thebridge/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -21,12 +21,12 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
 InventoryManager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/amongcraft/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/thebridge/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
-  Full-Games-Permission: "amongcraft.fullgames"
-  # <arena> represents arena name (NOT MAP NAME!), for example: 'amongcraft.join.AC02'
-  # use 'amongcraft.join.*' to enable access to all arenas
-  Join-Permission: "amongcraft.join.<arena>"
+  Full-Games-Permission: "thebridge.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.AC02'
+  # use 'thebridge.join.*' to enable access to all arenas
+  Join-Permission: "thebridge.join.<arena>"
 
 # Should we enable short commands such as /start and /leave
 Enable-Short-Commands: false
@@ -45,7 +45,7 @@ Whitelisted-Commands:
 # Enable in game rewards? See rewards.yml for more...
 Rewards-Enabled: false
 
-# Should we block every not Among Craft associated commands in game?
+# Should we block every not thebridge associated commands in game?
 Block-Commands-In-Game: true
 
 # Should we fire some cool fireworks at location of every player after the game ends?
