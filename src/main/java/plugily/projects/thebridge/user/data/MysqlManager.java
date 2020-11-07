@@ -1,6 +1,7 @@
 package plugily.projects.thebridge.user.data;
 
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.MessageUtils;
 import plugily.projects.thebridge.utils.Debugger;
@@ -18,7 +19,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

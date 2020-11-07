@@ -5,9 +5,9 @@ import org.bukkit.Location;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 
 /**
- * @author Tigerpanzer_02
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 10.12.2018
+ * Created at 07.11.2020
  */
 public class Base {
 

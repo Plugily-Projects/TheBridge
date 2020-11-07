@@ -6,7 +6,7 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

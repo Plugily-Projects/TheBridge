@@ -1,16 +1,24 @@
 package plugily.projects.thebridge.handlers.language;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.utils.Debugger;
+import plugily.projects.thebridge.utils.services.ServiceRegistry;
 import plugily.projects.thebridge.utils.services.locale.LocaleRegistry;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.thebridge.utils.services.locale.LocaleService;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Locale;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

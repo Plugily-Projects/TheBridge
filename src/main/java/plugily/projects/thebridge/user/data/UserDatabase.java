@@ -1,9 +1,10 @@
 package plugily.projects.thebridge.user.data;
 
+import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.user.User;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
