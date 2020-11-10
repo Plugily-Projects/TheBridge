@@ -16,42 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package plugily.projects.thebridge.arena.options;
+package plugily.projects.thebridge.handlers.party;
+
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
- * @author Tigerpanzer_02
+ * @author Plajer
  * <p>
- * Created at 07.11.2020
+ * Created at 09.02.2020
  */
-public enum ArenaOption {
-  /**
-   * Current arena timer, ex. 30 seconds before game starts.
-   */
-  TIMER(0),
-  /**
-   * How many bases are on that arena?
-   */
-  BASES(2),
-  /**
-   * How many players per base?
-   */
-  SIZE(4),
-  /**
-   * Minimum players in arena needed to start.
-   */
-  MINIMUM_PLAYERS(2),
-  /**
-   * Maximum players arena can hold, users with full games permission can bypass this!
-   */
-  MAXIMUM_PLAYERS(8);
+public class GameParty {
 
-  private final int defaultValue;
+  private final List<Player> players;
+  private final Player leader;
 
-  ArenaOption(int defaultValue) {
-    this.defaultValue = defaultValue;
+  public GameParty(List<Player> players, Player leader) {
+    this.players = players;
+    this.leader = leader;
   }
 
-  public int getDefaultValue() {
-    return defaultValue;
+  public List<Player> getPlayers() {
+    return players;
+  }
+
+  public Player getLeader() {
+    return leader;
   }
 }

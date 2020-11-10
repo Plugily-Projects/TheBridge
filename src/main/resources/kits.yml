@@ -1,0 +1,4 @@
+kits:
+  '1':
+    name: "Default"
+#todo use inventory manager somehow

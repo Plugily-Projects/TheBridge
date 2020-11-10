@@ -42,8 +42,8 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     /*if (throwable.getStackTrace().length == 0
-        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")
-        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
+        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.TheBridge")
+        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.TheBridge")) {
       return;
     }*/
     if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null &&

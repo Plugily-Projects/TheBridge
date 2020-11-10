@@ -1,5 +1,5 @@
 /*
- * MurderMystery - Find the murderer, kill him and survive!
+ * TheBridge - Find the murderer, kill him and survive!
  * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify

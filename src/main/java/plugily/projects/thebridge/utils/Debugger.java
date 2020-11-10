@@ -58,7 +58,7 @@ public class Debugger {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
-    logger.log(level, "[ACDBG] " + msg);
+    logger.log(level, "[TBDBG] " + msg);
   }
 
   public static void debug(String msg, Object... params) {
@@ -77,7 +77,7 @@ public class Debugger {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
-    logger.log(level, "[ACDBG] " + msg, params);
+    logger.log(level, "[TBDBG] " + msg, params);
   }
 
   /**
@@ -89,7 +89,7 @@ public class Debugger {
     if (!deep || !listenedPerformance.contains(monitorName)) {
       return;
     }
-    logger.log(Level.INFO, "[ACDBG] " + msg, params);
+    logger.log(Level.INFO, "[TBDBG] " + msg, params);
   }
 
 }
