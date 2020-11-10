@@ -2,8 +2,8 @@ instances:
   default:
     lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
     endlocation: world,364.0,63.0,-72.0,0.0,0.0
-    arenaLocation1: world,364.0,63.0,-72.0,0.0,0.0
-    arenaLocation2: world,364.0,63.0,-72.0,0.0,0.0
+    arenalocation1: world,364.0,63.0,-72.0,0.0,0.0
+    arenalocation2: world,364.0,63.0,-72.0,0.0,0.0
     '1':
       baselocation1: world,364.0,63.0,-72.0,0.0,0.0
       baselocation2: world,364.0,63.0,-72.0,0.0,0.0
@@ -15,6 +15,10 @@ instances:
     minimumplayers: 2
     maxiumSize: 2
     mapname: mapname
+    # HEARTS -> LAST TEAM STANDING
+    # POINTS -> FIRST TEAM WHO REACH THE POINTS WIN
+    mode: POINTS
+    modevalue: 5
     world: worldname
     signs: []
     isdone: false
