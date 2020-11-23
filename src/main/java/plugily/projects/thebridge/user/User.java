@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
 import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.thebridge.api.events.player.TBPlayerStatisticChangeEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 
@@ -28,6 +29,7 @@ public class User {
   private final Map<String, Double> cooldowns = new HashMap<>();
   private final Player player;
   private boolean spectator = false;
+  private boolean permanentSpectator = false;
 
   public User(Player player) {
     this.player = player;
@@ -53,6 +55,14 @@ public class User {
     this.spectator = spectator;
   }
 
+  public boolean isPermanentSpectator() {
+    return permanentSpectator;
+  }
+
+  public void setPermanentSpectator(boolean permanentSpectator) {
+    this.permanentSpectator = permanentSpectator;
+  }
+
   public int getStat(StatsStorage.StatisticType stat) {
     if (!stats.containsKey(stat)) {
       stats.put(stat, 0);
@@ -72,7 +82,7 @@ public class User {
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      AmongPlayerStatisticChangeEvent playerStatisticChangeEvent = new AmongPlayerStatisticChangeEvent(getArena(), player, stat, i);
+      TBPlayerStatisticChangeEvent playerStatisticChangeEvent = new TBPlayerStatisticChangeEvent(getArena(), player, stat, i);
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }
@@ -82,7 +92,7 @@ public class User {
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      AmongPlayerStatisticChangeEvent playerStatisticChangeEvent = new AmongPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
+      TBPlayerStatisticChangeEvent playerStatisticChangeEvent = new TBPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }
