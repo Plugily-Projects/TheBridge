@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ MurderMystery - Find the murderer, kill him and survive!
+  ~ thebridge - Find the murderer, kill him and survive!
   ~ Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -199,11 +199,11 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <windowtitle>Murder Mystery API docs for v${project.version}</windowtitle>
+                    <windowtitle>The Bridge API docs for v${project.version}</windowtitle>
                     <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking Murder Mystery with your plugin.
+                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking The Bridge with your plugin.
                     </description>
-                    <destDir>minecraft/murdermystery</destDir>
+                    <destDir>minecraft/thebridge</destDir>
                     <isOffline>false</isOffline>
                 </configuration>
             </plugin>
@@ -226,23 +226,23 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework</shadedPattern>
+                                    <shadedPattern>plugily.projects.thebridge.utils.inventoryframework</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.database.hikari</shadedPattern>
+                                    <shadedPattern>plugily.projects.thebridge.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>me.tigerhix.lib.scoreboard</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.scoreboard</shadedPattern>
+                                    <shadedPattern>plugily.projects.thebridge.utils.scoreboard</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.plajerlair.commonsbox</shadedPattern>
+                                    <shadedPattern>plugily.projects.thebridge.plajerlair.commonsbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils</shadedPattern>
+                                    <shadedPattern>plugily.projects.thebridge.utils</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -278,7 +278,7 @@
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>MurderMystery</name>
+            <name>thebridge</name>
             <url>ftp://plugily.xyz</url>
         </site>
     </distributionManagement>
