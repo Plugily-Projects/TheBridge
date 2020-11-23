@@ -1,9 +1,94 @@
 package plugily.projects.thebridge.commands.arguments.game;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
+import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
+import plugily.projects.thebridge.commands.arguments.data.LabelData;
+import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.setup.SetupInventory;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Tigerpanzer_02 & 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
+//todo add/change values
 public class CreateArgument {
+
+  private final ArgumentsRegistry registry;
+
+  public CreateArgument(ArgumentsRegistry registry, ChatManager chatManager) {
+    this.registry = registry;
+    registry.mapArgument("thebridge", new LabeledCommandArgument("create", "thebridge.admin.create", CommandArgument.ExecutorType.PLAYER,
+      new LabelData("/tb create &6<arena>", "/tb create <arena>", "&7Create new arena\n&6Permission: &7thebridge.admin.create")) {
+      @Override
+      public void execute(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+          sender.sendMessage(chatManager.colorMessage("Commands.Type-Arena-Name"));
+          return;
+        }
+        Player player = (Player) sender;
+        for (Arena arena : ArenaRegistry.getArenas()) {
+          if (arena.getId().equalsIgnoreCase(args[1])) {
+            player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
+            player.sendMessage(ChatColor.DARK_RED + "Usage: /tb create <ID>");
+            return;
+          }
+        }
+        if (ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
+          player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
+        } else {
+          createInstanceInConfig(args[1], player.getWorld().getName());
+          player.sendMessage(ChatColor.BOLD + "------------------------------------------");
+          player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
+          player.sendMessage("");
+          player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/tb " + args[1] + " edit" + ChatColor.GREEN + "!");
+          player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
+          //player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
+          player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
+        }
+      }
+    });
+  }
+
+  private void createInstanceInConfig(String id, String worldName) {
+    String path = "instances." + id + ".";
+    FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    config.set(path + "goldspawnpoints", new ArrayList<>());
+    config.set(path + "minimumplayers", 2);
+    config.set(path + "maximumplayers", 10);
+    config.set(path + "mapname", id);
+    config.set(path + "signs", new ArrayList<>());
+    config.set(path + "isdone", false);
+    config.set(path + "world", worldName);
+    ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
+
+    Arena arena = new Arena(id);
+
+    arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
+    arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
+    arena.setMapName(config.getString(path + "mapname"));
+    arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));
+    arena.setReady(false);
+
+    ArenaRegistry.registerArena(arena);
+  }
+
 }
