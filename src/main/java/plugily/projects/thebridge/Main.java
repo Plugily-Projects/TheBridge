@@ -13,8 +13,12 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaEvents;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
+import plugily.projects.thebridge.events.*;
+import plugily.projects.thebridge.events.spectator.SpectatorEvents;
+import plugily.projects.thebridge.events.spectator.SpectatorItemEvents;
 import plugily.projects.thebridge.handlers.BungeeManager;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
@@ -93,7 +97,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_12_R1)) {
       MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server version is not supported by Murder Mystery!");
+      Debugger.sendConsoleMsg("&cYour server version is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
@@ -103,7 +107,7 @@ public class Main extends JavaPlugin {
       Class.forName("org.spigotmc.SpigotConfig");
     } catch (Exception e) {
       MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server software is not supported by Murder Mystery!");
+      Debugger.sendConsoleMsg("&cYour server software is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);

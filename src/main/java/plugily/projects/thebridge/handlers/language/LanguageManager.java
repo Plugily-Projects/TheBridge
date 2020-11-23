@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.services.ServiceRegistry;
+import plugily.projects.thebridge.utils.services.locale.Locale;
 import plugily.projects.thebridge.utils.services.locale.LocaleRegistry;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -14,8 +15,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
+
 
 /**
  * @author Tigerpanzer_02 & 2Wild4You
@@ -50,14 +55,15 @@ public class LanguageManager {
 
   private static void registerLocales() {
     Arrays.asList(
-      new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
+      new Locale("English", "English", "en_GB", "Tigerpanzer_02", Arrays.asList("default", "english", "en")),
+      new Locale("German", "Deutsch", "de_DE", "2Wild4You, Tigerpanzer_02 and POEditor contributors", Arrays.asList("deutsch", "german", "de")))
       .forEach(LocaleRegistry::registerLocale);
   }
 
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     if (service == null) {
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
+      Debugger.sendConsoleMsg("&c[The Bridge] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
@@ -65,16 +71,16 @@ public class LanguageManager {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
       if (status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
-        Debugger.sendConsoleMsg("&c[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        Debugger.sendConsoleMsg("&c[The Bridge] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if (status == LocaleService.DownloadStatus.SUCCESS) {
-        Debugger.sendConsoleMsg("&c[Murder Mystery] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+        Debugger.sendConsoleMsg("&c[The Bridge] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
       } else if (status == LocaleService.DownloadStatus.LATEST) {
-        Debugger.sendConsoleMsg("&c[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+        Debugger.sendConsoleMsg("&c[The Bridge] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
       pluginLocale = LocaleRegistry.getByName("English");
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
+      Debugger.sendConsoleMsg("&c[The Bridge] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
     try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
@@ -100,10 +106,10 @@ public class LanguageManager {
       }
     }
     if (pluginLocale == null) {
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Plugin locale is invalid! Using default one...");
+      Debugger.sendConsoleMsg("&c[The Bridge] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
     }
-    Debugger.sendConsoleMsg("&a[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
+    Debugger.sendConsoleMsg("&a[The Bridge] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
       + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }

@@ -26,8 +26,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.TheBridge.Main;
-import plugily.projects.TheBridge.handlers.ChatManager;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.handlers.ChatManager;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
  * Created at 03.08.2018
  */
