@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 import java.util.stream.Collectors;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
  * Created at 09.02.2020
  */

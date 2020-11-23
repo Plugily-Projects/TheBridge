@@ -24,7 +24,7 @@ import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
  * Created at 09.02.2020
  */

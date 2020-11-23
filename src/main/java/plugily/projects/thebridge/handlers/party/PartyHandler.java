@@ -21,7 +21,7 @@ package plugily.projects.thebridge.handlers.party;
 import org.bukkit.entity.Player;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
  * Created at 09.02.2020
  */
