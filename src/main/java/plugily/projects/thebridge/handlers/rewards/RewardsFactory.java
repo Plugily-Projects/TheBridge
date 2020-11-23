@@ -1,6 +1,8 @@
 package plugily.projects.thebridge.handlers.rewards;
 
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.utils.Debugger;
 
 import org.apache.commons.lang.StringUtils;
