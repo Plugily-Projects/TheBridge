@@ -76,7 +76,37 @@ public class Arena extends BukkitRunnable {
     long start = System.currentTimeMillis();
 
     switch (getArenaState()) {
-
+      case WAITING_FOR_PLAYERS:
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          plugin.getServer().setWhitelist(false);
+        }
+        if (getPlayers().size() < getMinimumPlayers()) {
+          if (getTimer() <= 0) {
+            setTimer(45);
+            chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
+            break;
+          }
+        } else {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+            gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
+          }
+          chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
+          setArenaState(ArenaState.STARTING);
+          setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
+          this.showPlayers();
+        }
+        setTimer(getTimer() - 1);
+        break;
+      case STARTING:
+        break;
+      case IN_GAME:
+        break;
+      case ENDING:
+        break;
+      case RESTARTING:
+        break;
+      default:
+        break;
     }
   }
 
