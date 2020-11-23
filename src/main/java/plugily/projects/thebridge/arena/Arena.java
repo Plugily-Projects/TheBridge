@@ -3,14 +3,15 @@ package plugily.projects.thebridge.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.api.events.game.TBGameStateChangeEvent;
+import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.arena.options.ArenaOption;
-import plugily.projects.thebridge.arena.vent.Vent;
+import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
 
@@ -19,6 +20,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import plugily.projects.thebridge.utils.NMS;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -36,8 +38,10 @@ public class Arena extends BukkitRunnable {
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
+  private final ChatManager chatManager = plugin.getChatManager();
   private final ScoreboardManager scoreboardManager;
   private final Set<Player> players = new HashSet<>();
+  private final List<Player> spectators = new ArrayList<>(), deaths = new ArrayList<>();
   //all arena values that are integers, contains constant and floating values
   private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   //instead of 3 location fields we use map with GameLocation enum
@@ -186,7 +190,7 @@ public class Arena extends BukkitRunnable {
   public void setArenaState(@NotNull ArenaState arenaState) {
     this.arenaState = arenaState;
 
-    MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
+    TBGameStateChangeEvent gameStateChangeEvent = new TBGameStateChangeEvent(this, getArenaState());
     Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
 
     plugin.getSignManager().updateSigns();
@@ -216,6 +220,34 @@ public class Arena extends BukkitRunnable {
     player.teleport(location);
   }
 
+  public ScoreboardManager getScoreboardManager() {
+    return scoreboardManager;
+  }
+
+  public void addDeathPlayer(Player player) {
+    deaths.add(player);
+  }
+
+  public void removeDeathPlayer(Player player) {
+    deaths.remove(player);
+  }
+
+  public boolean isDeathPlayer(Player player) {
+    return deaths.contains(player);
+  }
+
+  public void addSpectatorPlayer(Player player) {
+    spectators.add(player);
+  }
+
+  public void removeSpectatorPlayer(Player player) {
+    spectators.remove(player);
+  }
+
+  public boolean isSpectatorPlayer(Player player) {
+    return spectators.contains(player);
+  }
+
   /**
    * Executes boss bar action for arena
    *
@@ -238,6 +270,11 @@ public class Arena extends BukkitRunnable {
     }
   }
 
+  public void cleanUpArena() {
+    //todo
+  }
+
+
   /**
    * Get lobby location of arena.
    *
@@ -258,14 +295,17 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToStartLocation(Player player) {
-    player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
+    //todo
   }
 
   private void teleportAllToStartLocation() {
-    for (Player player : getPlayers()) {
-      player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
-    }
+    //todo
   }
+
+  public void setForceStart(boolean forceStart) {
+    this.forceStart = forceStart;
+  }
+
 
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
