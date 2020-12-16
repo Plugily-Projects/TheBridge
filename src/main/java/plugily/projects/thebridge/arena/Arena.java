@@ -15,6 +15,7 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.game.TBGameStartEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStateChangeEvent;
+import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
@@ -53,6 +54,7 @@ public class Arena extends BukkitRunnable {
   //instead of 3 location fields we use map with GameLocation enum
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   private boolean ready = true, forceStart = false;
+  private List<Base> bases = new ArrayList<>();
 
 
   public Arena(String id) {
@@ -363,6 +365,21 @@ public class Arena extends BukkitRunnable {
     setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
   }
 
+  public List<Base> getBases() {
+    return bases;
+  }
+
+  public void setBases(List<Base> bases) {
+    this.bases = bases;
+  }
+
+  public void addBase(Base base){
+    this.bases.add(base);
+  }
+
+  public void removeBase(Base base){
+    this.bases.remove(base);
+  }
   /**
    * Return game state of arena.
    *

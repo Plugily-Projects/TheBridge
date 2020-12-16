@@ -13,7 +13,7 @@ instances:
       portallocation2: world,364.0,63.0,-72.0,0.0,0.0
       color: GREEN
     minimumplayers: 2
-    maxiumSize: 2
+    maximumSize: 2
     mapname: mapname
     # HEARTS -> LAST TEAM STANDING
     # POINTS -> FIRST TEAM WHO REACH THE POINTS WIN

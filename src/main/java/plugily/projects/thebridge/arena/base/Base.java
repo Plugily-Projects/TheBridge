@@ -2,7 +2,10 @@ package plugily.projects.thebridge.arena.base;
 
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+
+import java.util.List;
 
 /**
  * @author Tigerpanzer_02 & 2Wild4You
@@ -18,11 +21,14 @@ public class Base {
   private Location playerRespawnPoint;
   private Location portalLocation1;
   private Location portalLocation2;
+  private Integer maximumSize;
+
+  private List<Player> players;
 
   private Cuboid baseCuboid;
   private Cuboid portalCuboid;
 
-  public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2) {
+  public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
     this.baseLocation1 = baseLocation1;
     this.baseLocation2 = baseLocation2;
@@ -32,6 +38,7 @@ public class Base {
     this.portalLocation2 = portalLocation2;
     this.baseCuboid = new Cuboid(baseLocation1, baseLocation2);
     this.portalCuboid = new Cuboid(portalLocation1, portalLocation2);
+    this.maximumSize = maximumSize;
   }
 
   public String getColor() {
@@ -68,5 +75,29 @@ public class Base {
 
   public Cuboid getPortalCuboid() {
     return portalCuboid;
+  }
+
+  public void addPlayer(Player player) {
+    this.players.add(player);
+  }
+
+  public void removePlayer(Player player) {
+    this.players.remove(player);
+  }
+
+  public void setPlayers(List<Player> players) {
+    this.players = players;
+  }
+
+  public void resetPlayers() {
+    this.players.clear();
+  }
+
+  public List<Player> getPlayers() {
+    return players;
+  }
+
+  public Integer getMaximumSize() {
+    return maximumSize;
   }
 }
