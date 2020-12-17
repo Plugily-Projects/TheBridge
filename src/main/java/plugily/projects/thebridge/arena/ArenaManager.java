@@ -205,6 +205,8 @@ public class ArenaManager {
     }
     if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      player.getInventory().setItem(SpecialItemManager.getSpecialItem("Kit").getSlot(), SpecialItemManager.getSpecialItem("Kit").getItemStack());
+      player.getInventory().setItem(SpecialItemManager.getSpecialItem("BaseSelector").getSlot(), SpecialItemManager.getSpecialItem("BaseSelector").getItemStack());
     }
     player.updateInventory();
     for (Player arenaPlayer : arena.getPlayers()) {

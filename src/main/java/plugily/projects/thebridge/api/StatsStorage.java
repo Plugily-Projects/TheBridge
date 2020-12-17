@@ -114,7 +114,8 @@ public class StatsStorage {
   public enum StatisticType {
     //todo
     DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), KILLS("kills", true),
-    LOSES("loses", true), WINS("wins", true), LOCAL_DEATHS("local_deaths",false), LOCAL_KILLS("local_kills", false);
+    LOSES("loses", true), WINS("wins", true), LOCAL_DEATHS("local_deaths",false),
+    LOCAL_KILLS("local_kills", false), LEVEL("level", true);
 
     private final String name;
     private final boolean persistent;

@@ -1,6 +1,6 @@
 /*
- * TheBridge - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Village Defense - Protect villagers from hordes of zombies
+ * Copyright (C) 2020  Plugily Projects - maintained by 2Wild4You, Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,39 +18,107 @@
 
 package plugily.projects.thebridge.handlers.items;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.utils.Debugger;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer_02
- * <p>
- * Created at 03.08.2018
+ * Created by Tom on 5/02/2016.
  */
 public class SpecialItemManager {
 
-  private static final HashMap<String, List<SpecialItem>> specialItems = new HashMap<>();
+  private final List<SpecialItem> specialItems = new ArrayList<>();
+  private final FileConfiguration config;
+  private final Main plugin;
 
-  public static void addItem(String name, List<SpecialItem> entityItem) {
-    specialItems.put(name, entityItem);
+  public SpecialItemManager(Main plugin) {
+    this.plugin = plugin;
+    this.config = ConfigUtils.getConfig(plugin, "special_items");
   }
 
-  public static SpecialItem getSpecialItem(String name) {
-    List<SpecialItem> specialitem = specialItems.getOrDefault(name, new java.util.ArrayList<>());
-    Random num = new Random();
-    return specialitem.get(num.nextInt(specialitem.size()));
+  public void addItem(SpecialItem item) {
+    specialItems.add(item);
   }
 
-  public static String getRelatedSpecialItem(ItemStack itemStack) {
-    for (String key : specialItems.keySet()) {
-      List<SpecialItem> entityItem = specialItems.get(key);
-      if (!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName()
-          .equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
-        return key;
+  @NotNull
+  public SpecialItem getSpecialItem(String name) {
+    for (SpecialItem item : specialItems) {
+      if (item.getName().equals(name)) {
+        return item;
       }
     }
-    return null;
+    return SpecialItem.INVALID_ITEM;
   }
+
+  @NotNull
+  public SpecialItem getRelatedSpecialItem(ItemStack itemStack) {
+    for (SpecialItem item : specialItems) {
+      if (item.getItemStack().isSimilar(itemStack)) {
+        return item;
+      }
+    }
+    return SpecialItem.INVALID_ITEM;
+  }
+
+  public void registerItems() {
+    for (String key : config.getKeys(false)) {
+      if ("Version".equals(key)) {
+        continue;
+      }
+      XMaterial mat;
+      String name;
+      List<String> lore;
+      int slot;
+      try {
+        mat = XMaterial.matchXMaterial(config.getString(key + ".material-name", "bedrock").toUpperCase()).orElse(XMaterial.BEDROCK);
+        name = plugin.getChatManager().colorRawMessage(config.getString(key + ".displayname"));
+        lore = config.getStringList(key + ".lore").stream()
+            .map(itemLore -> itemLore = plugin.getChatManager().colorRawMessage(itemLore))
+            .collect(Collectors.toList());
+        slot = config.getInt(key + ".slot");
+      } catch (Exception ex) {
+        plugin.getLogger().log(Level.WARNING, "Configuration of " + key + "is missing a value. (material-name, displayname, lore or slot)");
+        continue;
+      }
+      SpecialItem.DisplayStage stage;
+      try {
+        stage = SpecialItem.DisplayStage.valueOf(config.getString(key + ".stage").toUpperCase());
+      } catch (Exception ex) {
+        Debugger.debug(Level.WARNING, "Invalid display stage of special item " + key + " in special_items.yml! Please use lobby or spectator!");
+        stage = SpecialItem.DisplayStage.LOBBY;
+      }
+      SpecialItem item = new SpecialItem(key, new ItemBuilder(mat.parseItem()).name(name).lore(lore).build(), slot, stage);
+      addItem(item);
+    }
+  }
+
+  public List<SpecialItem> getSpecialItems() {
+    return specialItems;
+  }
+
+  public enum SpecialItems {
+    KIT_SELECTOR("Kit-Menu"), LOBBY_LEAVE_ITEM("Leave-Lobby"), PLAYERS_LIST("Player-List"),
+    SPECTATOR_OPTIONS("Spectator-Options"), SPECTATOR_LEAVE_ITEM("Leave-Spectator"), BASE_SELECTOR("Base-Selector");
+
+    private final String name;
+
+    SpecialItems(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
+
 }

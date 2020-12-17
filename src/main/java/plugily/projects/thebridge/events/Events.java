@@ -1,5 +1,10 @@
 package plugily.projects.thebridge.events;
 
+import com.github.stefvanschie.inventoryframework.Gui;
+import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +18,8 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
@@ -97,7 +104,7 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onLeave(PlayerInteractEvent event) {
+  public void onSpecialItem(PlayerInteractEvent event) {
     if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
@@ -117,6 +124,10 @@ public class Events implements Listener {
       } else {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
+    }
+    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("BaseSelector")) {
+      event.setCancelled(true);
+      //todo Base Selector
     }
   }
 

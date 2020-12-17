@@ -25,11 +25,14 @@ import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.PlaceholderManager;
 import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
+import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.handlers.party.PartyHandler;
 import plugily.projects.thebridge.handlers.party.PartySupportInitializer;
 import plugily.projects.thebridge.handlers.rewards.RewardsFactory;
 import plugily.projects.thebridge.handlers.sign.SignManager;
+import plugily.projects.thebridge.kits.KitMenuHandler;
+import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.user.UserManager;
 import plugily.projects.thebridge.user.data.MysqlManager;
@@ -57,9 +60,11 @@ public class Main extends JavaPlugin {
   private SignManager signManager;
   private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
+  private KitMenuHandler kitMenuHandler;
   private ArgumentsRegistry argumentsRegistry;
   private UserManager userManager;
   private ChatManager chatManager;
+  private SpecialItemManager specialItemManager;
 
   @Override
   public void onEnable() {
@@ -168,7 +173,6 @@ public class Main extends JavaPlugin {
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
-    SpecialItem.loadAll();
     PermissionsManager.init();
     new ArenaEvents(this);
     new SpectatorEvents(this);
@@ -185,7 +189,11 @@ public class Main extends JavaPlugin {
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
+    specialItemManager = new SpecialItemManager(this);
+    specialItemManager.registerItems();
+    kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
+    KitRegistry.init(this);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -241,7 +249,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "kits")) {
+    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if (!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -277,6 +285,9 @@ public class Main extends JavaPlugin {
     return signManager;
   }
 
+  public SpecialItemManager getSpecialItemManager() {
+    return specialItemManager;
+  }
 
   public ArgumentsRegistry getArgumentsRegistry() {
     return argumentsRegistry;
@@ -284,6 +295,10 @@ public class Main extends JavaPlugin {
 
   public UserManager getUserManager() {
     return userManager;
+  }
+
+  public KitMenuHandler getKitMenuHandler() {
+    return kitMenuHandler;
   }
 
   private void saveAllUserStatistics() {

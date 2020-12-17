@@ -2,6 +2,8 @@ instances:
   default:
     lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
     endlocation: world,364.0,63.0,-72.0,0.0,0.0
+    spectatorlocation: world,364.0,63.0,-72.0,0.0,0.0
+    midlocation: world,364.0,63.0,-72.0,0.0,0.0
     arenalocation1: world,364.0,63.0,-72.0,0.0,0.0
     arenalocation2: world,364.0,63.0,-72.0,0.0,0.0
     '1':

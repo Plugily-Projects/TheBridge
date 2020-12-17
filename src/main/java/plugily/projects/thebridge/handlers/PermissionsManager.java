@@ -1,5 +1,6 @@
 package plugily.projects.thebridge.handlers;
 
+import org.bukkit.entity.Player;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
 
@@ -17,6 +18,7 @@ public class PermissionsManager {
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static String joinFullPerm = "thebridge.fullgames";
   private static String joinPerm = "thebridge.join.<arena>";
+  private static String allKits = "thebridge.kits";
 
   public static void init() {
     setupPermissions();
@@ -38,9 +40,22 @@ public class PermissionsManager {
     PermissionsManager.joinPerm = joinPerm;
   }
 
+  private static void setAllKitsPerm(String kitsPerm) {
+    PermissionsManager.allKits = kitsPerm;
+  }
+
+  public static String getAllKitsPerm() {
+    return allKits;
+  }
+
+  public static boolean gotKitsPerm(Player player){
+    return player.hasPermission(allKits);
+  }
+
   private static void setupPermissions() {
     PermissionsManager.setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "thebridge.fullgames"));
     PermissionsManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "thebridge.join.<arena>"));
+    PermissionsManager.setAllKitsPerm(plugin.getConfig().getString("Basic-Permissions.Kits-Permission", "thebridge.kits"));
     Debugger.debug(Level.INFO, "Basic permissions registered");
   }
 

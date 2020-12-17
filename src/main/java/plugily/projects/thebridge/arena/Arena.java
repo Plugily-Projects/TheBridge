@@ -55,6 +55,7 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
   private boolean ready = true, forceStart = false;
   private List<Base> bases = new ArrayList<>();
+  private Mode mode;
 
 
   public Arena(String id) {
@@ -67,6 +68,7 @@ public class Arena extends BukkitRunnable {
     }
     scoreboardManager = new ScoreboardManager(this);
   }
+
   public boolean isReady() {
     return ready;
   }
@@ -74,6 +76,7 @@ public class Arena extends BukkitRunnable {
   public void setReady(boolean ready) {
     this.ready = ready;
   }
+
   @Override
   public void run() {
     //idle task
@@ -154,14 +157,22 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
             //
             player.getInventory().clear();
-            player.setGameMode(GameMode.ADVENTURE);
+            player.setGameMode(GameMode.SURVIVAL);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+            if (!inBase(player)) {
+              for (Base base : getBases()) {
+                if (base.getPlayers().size() >= base.getMaximumSize()) continue;
+                //todo try to redo teams if they would be unfair (one team got more players than other)
+                base.addPlayer(player);
+              }
+            }
           }
-          //todo set team
+          teleportAllToBaseLocation();
+          //todo give kit
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
@@ -369,17 +380,43 @@ public class Arena extends BukkitRunnable {
     return bases;
   }
 
+  public boolean inBase(Player player) {
+    return getBases().stream().anyMatch(base -> base.getPlayers().contains(player));
+  }
+
+  /**
+   * Returns base where the player is
+   *
+   * @param p target player
+   * @return Base or null if not inside an base
+   * @see #inBase(Player) to check if player is playing
+   */
+  public Base getBase(Player p) {
+    if (p == null || !p.isOnline()) {
+      return null;
+    }
+    for (Base base : getBases()) {
+      for (Player player : base.getPlayers()) {
+        if (player.getUniqueId().equals(p.getUniqueId())) {
+          return base;
+        }
+      }
+    }
+    return null;
+  }
+
   public void setBases(List<Base> bases) {
     this.bases = bases;
   }
 
-  public void addBase(Base base){
+  public void addBase(Base base) {
     this.bases.add(base);
   }
 
-  public void removeBase(Base base){
+  public void removeBase(Base base) {
     this.bases.remove(base);
   }
+
   /**
    * Return game state of arena.
    *
@@ -505,11 +542,23 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToStartLocation(Player player) {
-    //todo
+    player.teleport(getMidLocation());
+  }
+
+  public void teleportToBaseLocation(Player player) {
+    player.teleport(getBase(player).getPlayerSpawnPoint());
   }
 
   private void teleportAllToStartLocation() {
-    //todo
+    for (Player player : players) {
+      player.teleport(getMidLocation());
+    }
+  }
+
+  private void teleportAllToBaseLocation() {
+    for (Player player : players) {
+      player.teleport(getBase(player).getPlayerSpawnPoint());
+    }
   }
 
   public void setForceStart(boolean forceStart) {
@@ -583,6 +632,7 @@ public class Arena extends BukkitRunnable {
       }
     }
   }
+
   /**
    * Get end location of arena.
    *
@@ -602,6 +652,51 @@ public class Arena extends BukkitRunnable {
     gameLocations.put(GameLocation.END, endLoc);
   }
 
+  /**
+   * Get mid location of arena.
+   *
+   * @return mid location of arena
+   */
+  @Nullable
+  public Location getMidLocation() {
+    return gameLocations.get(GameLocation.MID);
+  }
+
+  /**
+   * Set mid location of arena.
+   *
+   * @param midLoc new end location of arena
+   */
+  public void setMidLocation(Location midLoc) {
+    gameLocations.put(GameLocation.MID, midLoc);
+  }
+
+  /**
+   * Get spectator location of arena.
+   *
+   * @return end location of arena
+   */
+  @Nullable
+  public Location getSpectatorLocation() {
+    return gameLocations.get(GameLocation.SPECTATOR);
+  }
+
+  /**
+   * Set spectator location of arena.
+   *
+   * @param spectatorLoc new end location of arena
+   */
+  public void setSpectatorLocation(Location spectatorLoc) {
+    gameLocations.put(GameLocation.END, spectatorLoc);
+  }
+
+  public Mode getMode() {
+    return mode;
+  }
+
+  public void setMode(Mode mode) {
+    this.mode = mode;
+  }
 
   public int getOption(@NotNull ArenaOption option) {
     return arenaOptions.get(option);
@@ -620,6 +715,10 @@ public class Arena extends BukkitRunnable {
   }
 
   public enum GameLocation {
-    LOBBY, END
+    LOBBY, END, SPECTATOR, MID
+  }
+
+  public enum Mode {
+    HEARTS, POINTS
   }
 }

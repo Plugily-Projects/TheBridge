@@ -5,11 +5,15 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
@@ -170,6 +174,24 @@ public class Utils {
     }
 
     return s;
+  }
+
+  public static List<String> splitString(String string, int max) {
+    List<String> matchList = new ArrayList<>();
+    Pattern regex = Pattern.compile(".{1," + max + "}(?:\\s|$)", Pattern.DOTALL);
+    Matcher regexMatcher = regex.matcher(string);
+    while (regexMatcher.find()) {
+      matchList.add(plugin.getChatManager().colorRawMessage("&7") + regexMatcher.group());
+    }
+    return matchList;
+  }
+
+  public static ItemStack getPotion(PotionType type, int tier, boolean splash) {
+    ItemStack potion = new ItemStack(!splash ? Material.POTION : Material.SPLASH_POTION, 1);
+    PotionMeta meta = (PotionMeta) potion.getItemMeta();
+    meta.setBasePotionData(new PotionData(type, false, tier >= 2 && !splash));
+    potion.setItemMeta(meta);
+    return potion;
   }
 
 }

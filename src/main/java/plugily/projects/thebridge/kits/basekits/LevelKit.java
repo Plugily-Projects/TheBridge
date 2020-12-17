@@ -16,51 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package plugily.projects.thebridge.handlers.items;
+package plugily.projects.thebridge.kits.basekits;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
- * Created by Tom on 5/02/2016.
+ * Created by Tom on 14/08/2014.
  */
-public class SpecialItem {
+public abstract class LevelKit extends Kit {
 
-  public static final SpecialItem INVALID_ITEM = new SpecialItem("INVALID", new ItemStack(Material.BEDROCK), -1, DisplayStage.LOBBY);
-  private final String name;
-  private final ItemStack itemStack;
-  private int slot;
-  private final DisplayStage displayStage;
+  private int level;
 
-  public SpecialItem(String name, ItemStack itemStack, int slot, DisplayStage displayStage) {
-    this.name = name;
-    this.itemStack = itemStack;
-    this.slot = slot;
-    this.displayStage = displayStage;
+  public int getLevel() {
+    return level;
   }
 
-  public String getName() {
-    return name;
+  public void setLevel(int level) {
+    this.level = level;
   }
 
+  @Override
   public ItemStack getItemStack() {
-    return itemStack;
+    return new ItemBuilder(getMaterial())
+        .name(getName())
+        .lore(getDescription())
+        .lore(getPlugin().getChatManager().colorMessage("Unlocked level")
+            .replace("%NUMBER%", Integer.toString(getLevel())))
+        .build();
   }
-
-  public int getSlot() {
-    return slot;
-  }
-
-  public void setSlot(int slot) {
-    this.slot = slot;
-  }
-
-  public DisplayStage getDisplayStage() {
-    return displayStage;
-  }
-
-  public enum DisplayStage {
-    LOBBY, SPECTATOR
-  }
-
 }

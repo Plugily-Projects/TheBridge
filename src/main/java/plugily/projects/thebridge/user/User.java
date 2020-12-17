@@ -10,6 +10,8 @@ import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.player.TBPlayerStatisticChangeEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.kits.KitRegistry;
+import plugily.projects.thebridge.kits.basekits.Kit;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -28,6 +30,7 @@ public class User {
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private final Map<String, Double> cooldowns = new HashMap<>();
   private final Player player;
+  private Kit kit = KitRegistry.getDefaultKit();
   private boolean spectator = false;
   private boolean permanentSpectator = false;
 
@@ -103,6 +106,14 @@ public class User {
 
   public double getCooldown(String s) {
     return (!cooldowns.containsKey(s) || cooldowns.get(s) <= cooldownCounter) ? 0 : cooldowns.get(s) - cooldownCounter;
+  }
+
+  public Kit getKit() {
+    return kit;
+  }
+
+  public void setKit(Kit kit) {
+    this.kit = kit;
   }
 
 }
