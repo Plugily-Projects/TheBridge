@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
@@ -79,6 +80,12 @@ public class ChatEvents implements Listener {
     formatted = plugin.getChatManager().colorRawMessage(formatted);
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
+    formatted = StringUtils.replace(formatted, "%level%", String.valueOf(user.getStat(StatsStorage.StatisticType.LEVEL)));
+    if (user.isSpectator()) {
+      formatted = StringUtils.replace(formatted, "%kit%", plugin.getChatManager().colorMessage("Messages.DEAD_TAG_ON_DEATH"));
+    } else {
+      formatted = StringUtils.replace(formatted, "%kit%", user.getKit().getName());
+    }
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
     }
