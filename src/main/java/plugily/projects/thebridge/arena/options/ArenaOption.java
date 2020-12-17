@@ -37,6 +37,10 @@ public enum ArenaOption {
    */
   SIZE(4),
   /**
+   * How many points does an base need to win?
+   */
+  MODE_VALUE(5),
+  /**
    * Minimum players in arena needed to start.
    */
   MINIMUM_PLAYERS(2),

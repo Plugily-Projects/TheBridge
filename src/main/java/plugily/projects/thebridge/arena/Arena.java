@@ -161,7 +161,7 @@ public class Arena extends BukkitRunnable {
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-            setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
+            setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             if (!inBase(player)) {
               for (Base base : getBases()) {
@@ -170,9 +170,10 @@ public class Arena extends BukkitRunnable {
                 base.addPlayer(player);
               }
             }
+            plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+            player.updateInventory();
           }
           teleportAllToBaseLocation();
-          //todo give kit
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
@@ -203,7 +204,18 @@ public class Arena extends BukkitRunnable {
           ArenaManager.stopGame(false, this);
         } else {
           //winner check
-          //todo winner check
+          for (Base base : getBases()) {
+            if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)){
+              for (Player p : getPlayers()) {
+                p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                  chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.REACHED VALUE"), 5, 40, 5);
+                if (base.getPlayers().contains(p)) {
+                  p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                }
+              }
+              ArenaManager.stopGame(false, this);
+            }
+          }
         }
         setTimer(getTimer() - 1);
         break;
@@ -270,6 +282,9 @@ public class Arena extends BukkitRunnable {
         break;
       case RESTARTING:
         getPlayers().clear();
+        for (Base base : getBases()){
+          base.reset();
+        }
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           ArenaRegistry.shuffleBungeeArena();

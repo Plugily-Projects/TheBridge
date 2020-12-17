@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +23,9 @@ public class Base {
   private Location portalLocation1;
   private Location portalLocation2;
   private Integer maximumSize;
+  private Integer points = 0;
 
-  private List<Player> players;
+  private ArrayList<Player> players = new ArrayList<>();
 
   private Cuboid baseCuboid;
   private Cuboid portalCuboid;
@@ -85,7 +87,7 @@ public class Base {
     this.players.remove(player);
   }
 
-  public void setPlayers(List<Player> players) {
+  public void setPlayers(ArrayList<Player> players) {
     this.players = players;
   }
 
@@ -99,5 +101,22 @@ public class Base {
 
   public Integer getMaximumSize() {
     return maximumSize;
+  }
+
+  public Integer getPoints() {
+    return points;
+  }
+
+  public void setPoints(Integer points) {
+    this.points = points;
+  }
+
+  public void addPoint(){
+    this.points++;
+  }
+
+  public void reset() {
+    this.points = 0;
+    this.players = new ArrayList<>();
   }
 }
