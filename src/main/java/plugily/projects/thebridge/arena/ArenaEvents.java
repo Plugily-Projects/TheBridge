@@ -26,6 +26,7 @@ import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
@@ -185,7 +186,7 @@ public class ArenaEvents implements Listener {
     e.setDeathMessage("");
     e.getDrops().clear();
     e.setDroppedExp(0);
-   // plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
+    // plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
     e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     Player player = e.getEntity();
     if (arena.getArenaState() == ArenaState.STARTING) {
@@ -213,9 +214,12 @@ public class ArenaEvents implements Listener {
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
-      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+        if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
     }, 5);
   }
 
