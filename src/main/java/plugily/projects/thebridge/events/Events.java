@@ -25,6 +25,7 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.utils.Utils;
 
@@ -113,11 +114,11 @@ public class Events implements Listener {
     if (arena == null || !Utils.isNamed(itemStack)) {
       return;
     }
-    String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
+    String key = plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName();
     if (key == null) {
       return;
     }
-    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+    if (plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName().equalsIgnoreCase("Leave")) {
       event.setCancelled(true);
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());
@@ -125,7 +126,7 @@ public class Events implements Listener {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
     }
-    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("BaseSelector")) {
+    if (plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName().equalsIgnoreCase("BaseSelector")) {
       event.setCancelled(true);
       //todo Base Selector
     }
@@ -142,7 +143,7 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game
   public void onBlockBreakEvent(BlockBreakEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if (ArenaRegistry.isInArena(event.getPlayer()) && ArenaRegistry.getArena(event.getPlayer()).getArenaState() != ArenaState.IN_GAME) {
       event.setCancelled(true);
     }
   }
@@ -150,7 +151,7 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game
   public void onBuild(BlockPlaceEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if (ArenaRegistry.isInArena(event.getPlayer()) && ArenaRegistry.getArena(event.getPlayer()).getArenaState() != ArenaState.IN_GAME) {
       event.setCancelled(true);
     }
   }

@@ -117,6 +117,6 @@ public class Base {
 
   public void reset() {
     this.points = 0;
-    this.players = new ArrayList<>();
+    resetPlayers();
   }
 }

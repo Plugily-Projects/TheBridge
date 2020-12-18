@@ -3,6 +3,7 @@ package plugily.projects.thebridge.arena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +57,7 @@ public class Arena extends BukkitRunnable {
   private boolean ready = true, forceStart = false;
   private List<Base> bases = new ArrayList<>();
   private Mode mode;
+  private ArrayList<Block> placedBlocks = new ArrayList<>();
 
 
   public Arena(String id) {
@@ -205,7 +207,7 @@ public class Arena extends BukkitRunnable {
         } else {
           //winner check
           for (Base base : getBases()) {
-            if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)){
+            if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)) {
               for (Player p : getPlayers()) {
                 p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
                   chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.REACHED VALUE"), 5, 40, 5);
@@ -214,6 +216,7 @@ public class Arena extends BukkitRunnable {
                 }
               }
               ArenaManager.stopGame(false, this);
+              break;
             }
           }
         }
@@ -282,7 +285,7 @@ public class Arena extends BukkitRunnable {
         break;
       case RESTARTING:
         getPlayers().clear();
-        for (Base base : getBases()){
+        for (Base base : getBases()) {
           base.reset();
         }
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
@@ -533,9 +536,29 @@ public class Arena extends BukkitRunnable {
   }
 
   public void cleanUpArena() {
+    getBases().forEach(Base::reset);
+    resetPlacedBlocks();
     //todo
   }
 
+  public ArrayList<Block> getPlacedBlocks() {
+    return placedBlocks;
+  }
+
+  public void addPlacedBlock(Block placedBlock) {
+    this.placedBlocks.add(placedBlock);
+  }
+
+  public void removePlacedBlock(Block removedblock) {
+    this.placedBlocks.remove(removedblock);
+  }
+
+  public void resetPlacedBlocks() {
+    for (Block block : placedBlocks) {
+      block.setType(Material.AIR);
+    }
+    placedBlocks.clear();
+  }
 
   /**
    * Get lobby location of arena.

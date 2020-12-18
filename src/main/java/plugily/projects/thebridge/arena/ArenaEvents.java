@@ -11,6 +11,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -32,6 +34,8 @@ import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
+
+import java.util.HashMap;
 
 /**
  * @author Tigerpanzer_02
@@ -65,6 +69,49 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
+  public void onBlockBreakEvent(BlockBreakEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    arena.removePlacedBlock(event.getBlock());
+  }
+
+  @EventHandler
+  public void onBuild(BlockPlaceEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    arena.addPlacedBlock(event.getBlock());
+  }
+
+  private HashMap<Player, Player> hitList = new HashMap<>();
+
+  private void rewardLastAttacker(Player victim) {
+    if (hitList.containsKey(victim)) {
+      Player attacker = hitList.get(victim);
+      hitList.remove(victim);
+      //todo give attacker kill
+    }
+  }
+
+  @EventHandler
+  public void onHit(EntityDamageByEntityEvent e) {
+    if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+      Player victim = (Player) e.getEntity();
+      Player attack = (Player) e.getDamager();
+      if (!ArenaUtils.areInSameArena(victim, attack)) {
+        return;
+      }
+      hitList.remove(victim);
+      hitList.put(victim, attack);
+    }
+  }
+
+  @EventHandler
   public void onEntityDamage(EntityDamageEvent e) {
     if (!(e.getEntity() instanceof Player)) {
       return;
@@ -74,23 +121,28 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
-      e.setCancelled(true);
-    }
-    if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
-        if (e.getDamage() >= 20.0) {
-          //kill the player for suicidal death, else do not
-          victim.damage(1000.0);
+    //todo killer last damage player?
+    switch (e.getCause()) {
+      case DROWNING:
+        e.setCancelled(true);
+        break;
+      case FALL:
+        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
+          if (e.getDamage() >= 20.0) {
+            //kill the player for suicidal death, else do not
+            victim.damage(1000.0);
+          }
         }
-      }
-      e.setCancelled(true);
-    }
-    //kill the player and move to the spawn point
-    if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-      victim.damage(1000.0);
-      //todo teleport player to team postion
-      //victim.teleport(arena.getPlayerSpawnPoints().get(0));
+        e.setCancelled(true);
+        break;
+      case VOID:
+        //kill the player and move to the spawn point
+        rewardLastAttacker(victim);
+        victim.damage(1000.0);
+        victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
+        break;
+      default:
+        break;
     }
   }
 
@@ -102,9 +154,9 @@ public class ArenaEvents implements Listener {
 
     User user = plugin.getUserManager().getUser((Player) e.getEntity());
     if (user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
+      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
+      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", 5));
       NMS.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
