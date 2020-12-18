@@ -1,5 +1,5 @@
 /*
- * Village Defense - Protect villagers from hordes of zombies
+ * The Bridge - Protect villagers from hordes of zombies
  * Copyright (C) 2020  Plugily Projects - maintained by 2Wild4You, Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Utils;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
  * Created at 12.07.2019
  */

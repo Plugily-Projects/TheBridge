@@ -14,6 +14,7 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.thebridge.commands.arguments.admin.LocationWandArgument;
 import plugily.projects.thebridge.commands.arguments.admin.SpectateArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ForceStartArgument;
@@ -72,6 +73,7 @@ public class ArgumentsRegistry  implements CommandExecutor {
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
     new SpectateArgument(this);
+    new LocationWandArgument(this);
   }
 
   @Override

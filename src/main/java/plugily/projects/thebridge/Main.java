@@ -65,6 +65,7 @@ public class Main extends JavaPlugin {
   private UserManager userManager;
   private ChatManager chatManager;
   private SpecialItemManager specialItemManager;
+  private CuboidSelector cuboidSelector;
 
   @Override
   public void onEnable() {
@@ -194,6 +195,7 @@ public class Main extends JavaPlugin {
     kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     KitRegistry.init(this);
+    cuboidSelector = new CuboidSelector(this);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -299,6 +301,10 @@ public class Main extends JavaPlugin {
 
   public KitMenuHandler getKitMenuHandler() {
     return kitMenuHandler;
+  }
+
+  public CuboidSelector getCuboidSelector() {
+    return cuboidSelector;
   }
 
   private void saveAllUserStatistics() {

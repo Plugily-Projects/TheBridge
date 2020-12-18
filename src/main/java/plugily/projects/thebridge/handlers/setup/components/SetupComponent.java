@@ -16,12 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package plugily.projects.thebridge.kits.basekits;
+package plugily.projects.thebridge.handlers.setup.components;
+
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.thebridge.handlers.setup.SetupInventory;
 
 /**
- * Created by Tom on 25/07/2014.
+ * @author Tigerpanzer_02
+ * <p>
+ * Created at 08.06.2019
  */
-public abstract class FreeKit extends Kit {
+public interface SetupComponent {
 
+  void prepare(SetupInventory inventory);
+
+  void injectComponents(StaticPane pane);
 
 }
