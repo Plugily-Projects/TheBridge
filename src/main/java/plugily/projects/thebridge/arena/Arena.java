@@ -58,6 +58,7 @@ public class Arena extends BukkitRunnable {
   private List<Base> bases = new ArrayList<>();
   private Mode mode;
   private ArrayList<Block> placedBlocks = new ArrayList<>();
+  private HashMap<Player, Player> hits = new HashMap<>();
 
 
   public Arena(String id) {
@@ -538,7 +539,25 @@ public class Arena extends BukkitRunnable {
   public void cleanUpArena() {
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
+    resetHits();
     //todo
+  }
+
+  public HashMap<Player, Player> getHits() {
+    return hits;
+  }
+
+  public void addHits(Player victim, Player attacker) {
+    this.hits.remove(victim);
+    this.hits.put(victim, attacker);
+  }
+
+  public void removeHits(Player victim) {
+    this.hits.remove(victim);
+  }
+
+  public void resetHits() {
+    hits.clear();
   }
 
   public ArrayList<Block> getPlacedBlocks() {

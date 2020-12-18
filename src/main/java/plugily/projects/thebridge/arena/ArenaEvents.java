@@ -88,12 +88,10 @@ public class ArenaEvents implements Listener {
     arena.addPlacedBlock(event.getBlock());
   }
 
-  private HashMap<Player, Player> hitList = new HashMap<>();
-
-  private void rewardLastAttacker(Player victim) {
-    if (hitList.containsKey(victim)) {
-      Player attacker = hitList.get(victim);
-      hitList.remove(victim);
+  private void rewardLastAttacker(Arena arena, Player victim) {
+    if (arena.getHits().containsKey(victim)) {
+      Player attacker = arena.getHits().get(victim);
+      arena.removeHits(victim);
       //todo give attacker kill
     }
   }
@@ -106,8 +104,11 @@ public class ArenaEvents implements Listener {
       if (!ArenaUtils.areInSameArena(victim, attack)) {
         return;
       }
-      hitList.remove(victim);
-      hitList.put(victim, attack);
+      Arena arena = ArenaRegistry.getArena(victim);
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        return;
+      }
+      arena.addHits(victim, attack);
     }
   }
 
@@ -137,7 +138,7 @@ public class ArenaEvents implements Listener {
         break;
       case VOID:
         //kill the player and move to the spawn point
-        rewardLastAttacker(victim);
+        rewardLastAttacker(arena, victim);
         victim.damage(1000.0);
         victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
         break;
