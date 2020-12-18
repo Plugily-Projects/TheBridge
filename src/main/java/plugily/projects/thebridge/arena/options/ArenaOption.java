@@ -41,6 +41,10 @@ public enum ArenaOption {
    */
   MODE_VALUE(5),
   /**
+   * Reset blocks after round x
+   */
+  RESET_BLOCKS(0),
+  /**
    * Minimum players in arena needed to start.
    */
   MINIMUM_PLAYERS(2),

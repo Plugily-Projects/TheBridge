@@ -1,9 +1,6 @@
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -81,8 +78,8 @@ public class ArenaEvents implements Listener {
       event.setCancelled(true);
       return;
     }
-    if (arena.getPlacedBlocks().contains(event.getBlock())){
-    arena.removePlacedBlock(event.getBlock());
+    if (arena.getPlacedBlocks().contains(event.getBlock())) {
+      arena.removePlacedBlock(event.getBlock());
     } else {
       event.setCancelled(true);
     }
@@ -140,6 +137,27 @@ public class ArenaEvents implements Listener {
         e.setCancelled(true);
       }
       arena.addHits(victim, attack);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onPlayerMove(PlayerMoveEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if (arena.isResetRound()) {
+      event.setCancelled(true);
+      return;
+    }
+    if (arena.getBase(player).getPortalCuboid().isIn(player)) {
+      player.sendMessage("That is your own portal");
+      return;
+    }
+    if (arena.getBases().stream().anyMatch(base -> base.getPortalCuboid().isIn(player))) {
+      arena.resetRound();
+      player.teleport(arena.getBase(player).getPlayerSpawnPoint());
     }
   }
 
@@ -348,6 +366,7 @@ public class ArenaEvents implements Listener {
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());
         player.setAllowFlight(true);

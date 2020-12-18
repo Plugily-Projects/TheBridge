@@ -3,6 +3,7 @@ package plugily.projects.thebridge.arena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -59,6 +60,7 @@ public class Arena extends BukkitRunnable {
   private Mode mode;
   private ArrayList<Block> placedBlocks = new ArrayList<>();
   private HashMap<Player, Player> hits = new HashMap<>();
+  private int resetRound = 0;
 
 
   public Arena(String id) {
@@ -200,6 +202,24 @@ public class Arena extends BukkitRunnable {
           for (Player p : getPlayers()) {
             p.sendTitle(title, subtitle, 5, 40, 5);
           }
+        }
+
+        if (resetRound > 0) {
+          if (resetRound == 1) {
+            String title = chatManager.colorMessage("In-Game.Messages.Seconds-until-move").replace("%time%", String.valueOf(resetRound));
+            String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-untilmove-Subtitle").replace("%time%", String.valueOf(resetRound));
+            for (Player p : getPlayers()) {
+              p.sendTitle(title, subtitle, 5, 40, 5);
+              p.sendMessage("get some points");
+            }
+          } else {
+            String title = chatManager.colorMessage("In-Game.Messages.Seconds-until-move").replace("%time%", String.valueOf(resetRound));
+            String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-untilmove-Subtitle").replace("%time%", String.valueOf(resetRound));
+            for (Player p : getPlayers()) {
+              p.sendTitle(title, subtitle, 5, 40, 5);
+            }
+          }
+          resetRound--;
         }
 
         //no players - stop game
@@ -550,7 +570,33 @@ public class Arena extends BukkitRunnable {
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
     resetHits();
+    round = 0;
     //todo
+  }
+
+  int round;
+
+  public void resetRound() {
+    resetRound = 6;
+    if (round == arenaOptions.get(ArenaOption.RESET_BLOCKS)) {
+      resetPlacedBlocks();
+      round = 0;
+    }
+    resetHits();
+    for (Player player : getPlayersLeft()) {
+      player.teleport(getBase(player).getPlayerSpawnPoint());
+      player.sendMessage("Reset round");
+      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+      player.getInventory().clear();
+      plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+      player.updateInventory();
+    }
+    plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
+    round++;
+  }
+
+  public boolean isResetRound() {
+    return resetRound > 0;
   }
 
   public HashMap<Player, Player> getHits() {
