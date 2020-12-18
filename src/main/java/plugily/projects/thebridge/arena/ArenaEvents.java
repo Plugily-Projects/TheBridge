@@ -27,6 +27,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
@@ -122,23 +123,22 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    //todo killer last damage player?
     switch (e.getCause()) {
       case DROWNING:
         e.setCancelled(true);
         break;
       case FALL:
         if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
-          if (e.getDamage() >= 20.0) {
+          if (e.getDamage() >= victim.getHealth()) {
             //kill the player for suicidal death, else do not
             victim.damage(1000.0);
           }
+        } else {
+          e.setCancelled(true);
         }
-        e.setCancelled(true);
         break;
       case VOID:
         //kill the player and move to the spawn point
-        rewardLastAttacker(arena, victim);
         victim.damage(1000.0);
         victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
         break;
@@ -250,30 +250,46 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(false);
       return;
     }
-
-    User user = plugin.getUserManager().getUser(player);
-    user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-    user.setSpectator(true);
-    player.setCollidable(false);
-    player.setGameMode(GameMode.SURVIVAL);
-    ArenaUtils.hidePlayer(player, arena);
-    player.setAllowFlight(true);
-    player.setFlying(true);
-    player.getInventory().clear();
-    chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
-    if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
-      arena.addDeathPlayer(player);
-    }
-    //we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      e.getEntity().spigot().respawn();
-      for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
-        if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
-          continue;
-        }
-        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+    rewardLastAttacker(arena, player);
+    //if mode hearts and they are out it should set spec mode for them
+    if (arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
+      User user = plugin.getUserManager().getUser(player);
+      user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+      user.setSpectator(true);
+      player.setCollidable(false);
+      player.setGameMode(GameMode.SURVIVAL);
+      ArenaUtils.hidePlayer(player, arena);
+      player.setAllowFlight(true);
+      player.setFlying(true);
+      player.getInventory().clear();
+      chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
+      if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
+        arena.addDeathPlayer(player);
       }
-    }, 5);
+      //we must call it ticks later due to instant respawn bug
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        e.getEntity().spigot().respawn();
+        for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+          if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+            continue;
+          }
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+        }
+      }, 5);
+    } else {
+      User user = plugin.getUserManager().getUser(player);
+      user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
+      player.setGameMode(GameMode.SURVIVAL);
+      ArenaUtils.hidePlayersOutsideTheGame(player, arena);
+      player.getInventory().clear();
+      chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
+      //we must call it ticks later due to instant respawn bug
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        e.getEntity().spigot().respawn();
+        //todo give kit to player
+      }, 5);
+    }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -287,26 +303,30 @@ public class ArenaEvents implements Listener {
       e.setRespawnLocation(arena.getLobbyLocation());
       return;
     } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
-      e.setRespawnLocation(arena.getEndLocation());
+      e.setRespawnLocation(arena.getSpectatorLocation());
       return;
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      //todo respawn on player base
-      /*
-      if (player.getLocation().getWorld().equals(arena.getPlayerSpawnPoints().get(0).getWorld())) {
-        e.setRespawnLocation(player.getLocation());
+      if (arena.inBase(player)) {
+        e.setRespawnLocation(arena.getBase(player).getPlayerRespawnPoint());
+        player.setAllowFlight(false);
+        player.setFlying(false);
+        ArenaUtils.hidePlayersOutsideTheGame(player, arena);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
       } else {
-        e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
-      }*/
-      player.setAllowFlight(true);
-      player.setFlying(true);
-      user.setSpectator(true);
-      ArenaUtils.hidePlayer(player, arena);
-      player.setCollidable(false);
-      player.setGameMode(GameMode.SURVIVAL);
-      player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-      plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        e.setRespawnLocation(arena.getSpectatorLocation());
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        user.setSpectator(true);
+        ArenaUtils.hidePlayer(player, arena);
+        player.setCollidable(false);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+      }
     }
   }
 
