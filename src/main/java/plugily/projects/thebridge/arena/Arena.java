@@ -61,6 +61,7 @@ public class Arena extends BukkitRunnable {
   private ArrayList<Block> placedBlocks = new ArrayList<>();
   private HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
+  private int out = 0;
 
 
   public Arena(String id) {
@@ -229,15 +230,29 @@ public class Arena extends BukkitRunnable {
           //winner check
           for (Base base : getBases()) {
             if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)) {
-              for (Player p : getPlayers()) {
-                p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                  chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.REACHED VALUE"), 5, 40, 5);
-                if (base.getPlayers().contains(p)) {
-                  p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+              if (mode == Mode.POINTS) {
+                for (Player p : getPlayers()) {
+                  p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.REACHED VALUE"), 5, 40, 5);
+                  if (base.getPlayers().contains(p)) {
+                    p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                  }
+                }
+                ArenaManager.stopGame(false, this);
+                break;
+              }
+            }
+          }
+          if (mode == Mode.HEARTS) {
+            if (out >= bases.size() - 1) {
+              for (Player player : getPlayers()) {
+                if (!isDeathPlayer(player)){
+                  player.sendMessage("Won");
+                } else {
+                  player.sendMessage("Lose");
                 }
               }
               ArenaManager.stopGame(false, this);
-              break;
             }
           }
         }
@@ -415,6 +430,18 @@ public class Arena extends BukkitRunnable {
     setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
   }
 
+  public int getOut() {
+    return out;
+  }
+
+  public void setOut(int out) {
+    this.out = out;
+  }
+
+  public void addOut() {
+    this.out++;
+  }
+
   public List<Base> getBases() {
     return bases;
   }
@@ -571,6 +598,7 @@ public class Arena extends BukkitRunnable {
     resetPlacedBlocks();
     resetHits();
     round = 0;
+    resetRound = 0;
     //todo
   }
 

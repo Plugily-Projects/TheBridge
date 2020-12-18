@@ -35,6 +35,7 @@ import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Tigerpanzer_02
@@ -315,6 +316,12 @@ public class ArenaEvents implements Listener {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
       if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
         arena.addDeathPlayer(player);
+      }
+      if (arena.getMode() == Arena.Mode.HEARTS) {
+        List<Player> players = arena.getBase(player).getPlayers();
+        if (players.stream().allMatch(arena::isDeathPlayer)) {
+          arena.addOut();
+        }
       }
       //we must call it ticks later due to instant respawn bug
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
