@@ -98,11 +98,7 @@ public class MysqlManager implements UserDatabase {
           statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if (!stat.isPersistent()) continue;
-            if (stat == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || stat == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
-              user.setStat(stat, 1);
-            } else {
-              user.setStat(stat, 0);
-            }
+            user.setStat(stat, 0);
           }
         }
       } catch (SQLException e) {

@@ -14,6 +14,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaManager;
+import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
 
 import java.util.EnumMap;

@@ -1,5 +1,7 @@
 package plugily.projects.thebridge.commands.completion;
 
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 
