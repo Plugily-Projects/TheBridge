@@ -68,7 +68,7 @@ public class Reward {
   }
 
   public enum RewardType {
-    CREWMATE_WIN("win-crewmate"), CREWMATE_LOSE("lose-crewmate"), IMPOSTOR_WIN("win-impostor"), IMPOSTOR_LOSE("lose-impostor"),
+    WON("won"), LOSE("lose"), KILL("kill"), POINT("point"),
     END_GAME("endgame"), DEATH("death");
 
     private final String path;

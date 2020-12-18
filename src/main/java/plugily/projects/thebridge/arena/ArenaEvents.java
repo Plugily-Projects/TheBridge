@@ -27,6 +27,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
@@ -69,14 +70,22 @@ public class ArenaEvents implements Listener {
     e.getDismounted().addPassenger(e.getEntity());
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onBlockBreakEvent(BlockBreakEvent event) {
     Player player = event.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+    if (!canBuild(arena, player)) {
+      event.setCancelled(true);
+      return;
+    }
+    if (arena.getPlacedBlocks().contains(event.getBlock())){
     arena.removePlacedBlock(event.getBlock());
+    } else {
+      event.setCancelled(true);
+    }
   }
 
   @EventHandler
@@ -86,14 +95,32 @@ public class ArenaEvents implements Listener {
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+    if (!canBuild(arena, player)) {
+      event.setCancelled(true);
+      return;
+    }
     arena.addPlacedBlock(event.getBlock());
+  }
+
+  public boolean canBuild(Arena arena, Player player) {
+    for (Base base : arena.getBases()) {
+      if (base.getBaseCuboid().isIn(player)) {
+        player.sendMessage("CANNOT BUILD/BREAK INSIDE BASE");
+        return false;
+      }
+    }
+    return true;
   }
 
   private void rewardLastAttacker(Arena arena, Player victim) {
     if (arena.getHits().containsKey(victim)) {
       Player attacker = arena.getHits().get(victim);
       arena.removeHits(victim);
-      //todo give attacker kill
+      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.KILL);
+      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.KILLS, 1);
+      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
+      attacker.sendMessage("You killed victim");
+      victim.sendMessage("You were killed by attacker");
     }
   }
 
@@ -230,6 +257,8 @@ public class ArenaEvents implements Listener {
     victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
   }
 
+
+  //todo fast die -> just teleporting the player instead of death and respawn
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerDie(PlayerDeathEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getEntity());
