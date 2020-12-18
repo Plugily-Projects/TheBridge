@@ -124,7 +124,7 @@ public class ArenaEvents implements Listener {
     }
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent e) {
     if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
       Player victim = (Player) e.getEntity();
@@ -135,6 +135,9 @@ public class ArenaEvents implements Listener {
       Arena arena = ArenaRegistry.getArena(victim);
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
+      }
+      if (arena.isTeammate(victim, attack)) {
+        e.setCancelled(true);
       }
       arena.addHits(victim, attack);
     }

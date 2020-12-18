@@ -403,6 +403,16 @@ public class Arena extends BukkitRunnable {
     return getBases().stream().anyMatch(base -> base.getPlayers().contains(player));
   }
 
+  public List<Player> getTeammates(Player player) {
+    List<Player> mates = getBase(player).getPlayers();
+    mates.remove(player);
+    return mates;
+  }
+
+  public boolean isTeammate(Player player, Player check) {
+    return getTeammates(player).contains(check);
+  }
+
   /**
    * Returns base where the player is
    *
