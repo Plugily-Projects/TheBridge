@@ -151,8 +151,17 @@ public class ArenaRegistry {
         System.out.print("Instance " + id + " doesn't contains bases!");
         arena.setReady(false);
       }
-      //todo finish registry
+      if (bases < 2) {
+        System.out.print("Instance " + id + " doesn't contains 2 bases that are done!");
+        arena.setReady(false);
+      }
       arena.setMaximumPlayers(bases * arena.getOption(ArenaOption.SIZE));
+      if (config.contains(s + "mode")) {
+        arena.setMode(Arena.Mode.valueOf(config.getString(s + "mode").toUpperCase()));
+      } else {
+        arena.setMode(Arena.Mode.POINTS);
+      }
+      arena.setOptionValue(ArenaOption.MODE_VALUE, config.getInt(s + "modevalue", 5));
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
