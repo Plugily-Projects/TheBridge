@@ -82,12 +82,12 @@ public class PlayerAmountComponents implements SetupComponent {
     }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
-        .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumSize"))
+        .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumsize"))
         .name(plugin.getChatManager().colorRawMessage("&e&lSet Maximum Players Per Base Amount"))
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
         .lore(ChatColor.DARK_GRAY + "(how many players one base can hold)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumSize"))
+        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumsize"))
         .build(), e -> {
       ItemStack itemStack = e.getInventory().getItem(e.getSlot());
       if (itemStack == null || e.getCurrentItem() == null) {
@@ -103,7 +103,7 @@ public class PlayerAmountComponents implements SetupComponent {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
         itemStack.setAmount(1);
       }
-      config.set("instances." + arena.getId() + ".maximumSize", e.getCurrentItem().getAmount());
+      config.set("instances." + arena.getId() + ".maximumsize", e.getCurrentItem().getAmount());
       arena.setOptionValue(ArenaOption.SIZE, e.getCurrentItem().getAmount());
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();

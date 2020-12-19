@@ -51,7 +51,7 @@ public class CreateArgument {
         if (ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
           player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
-          createInstanceInConfig(args[1], player.getWorld().getName());
+          createInstanceInConfig(args[1]);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------");
           player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
           player.sendMessage("");
@@ -64,7 +64,7 @@ public class CreateArgument {
     });
   }
 
-  private void createInstanceInConfig(String id, String worldName) {
+  private void createInstanceInConfig(String id) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
@@ -76,7 +76,6 @@ public class CreateArgument {
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
-    config.set(path + "world", worldName);
     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
     Arena arena = new Arena(id);

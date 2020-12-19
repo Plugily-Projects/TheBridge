@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
@@ -121,7 +122,7 @@ public class SpawnComponents implements SetupComponent {
       .lore(ChatColor.GRAY + "after you selected it with the location wand")
       .lore(ChatColor.DARK_GRAY + "[location where all bases and lines")
       .lore(ChatColor.DARK_GRAY + "are in (+ players can build inside)]")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".Endlocation"))
+      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".arenalocation1"))
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
@@ -131,7 +132,7 @@ public class SpawnComponents implements SetupComponent {
       }
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".arenalocation1", selection.getFirstPos());
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".arenalocation2", selection.getSecondPos());
-      arena.setEndLocation(player.getLocation());
+      arena.setArenaBorder(new Cuboid(selection.getFirstPos(), selection.getSecondPos()));
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aArena location for arena " + arena.getId() + " set at your location!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 4, 0);

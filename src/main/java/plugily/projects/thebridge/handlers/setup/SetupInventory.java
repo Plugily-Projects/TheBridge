@@ -25,10 +25,7 @@ import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.handlers.setup.components.ArenaRegisterComponent;
-import plugily.projects.thebridge.handlers.setup.components.MiscComponents;
-import plugily.projects.thebridge.handlers.setup.components.PlayerAmountComponents;
-import plugily.projects.thebridge.handlers.setup.components.SpawnComponents;
+import plugily.projects.thebridge.handlers.setup.components.*;
 
 import java.util.Random;
 
@@ -44,6 +41,9 @@ public class SetupInventory {
   private final Arena arena;
   private final Player player;
   private Gui gui;
+  private Gui bases;
+  private int basesDone;
+  private Gui modes;
   private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
@@ -51,23 +51,36 @@ public class SetupInventory {
     this.arena = arena;
     this.player = player;
     this.setupUtilities = new SetupUtilities(config, arena);
-    prepareGui();
+    this.basesDone = 0;
+    prepareGuis();
   }
 
   public static void init(Main plugin) {
     SetupInventory.plugin = plugin;
   }
 
-  private void prepareGui() {
+  private void prepareGuis() {
     this.gui = new Gui(plugin, 2, "The Bridge Arena Setup");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-    StaticPane pane = new StaticPane(9, 4);
-    this.gui.addPane(pane);
+    StaticPane gui = new StaticPane(9, 4);
+    this.gui.addPane(gui);
 
-    prepareComponents(pane);
+    this.bases = new Gui(plugin, 2, "The Bridge Setup > Base");
+    this.bases.setOnGlobalClick(e -> e.setCancelled(true));
+    StaticPane bases = new StaticPane(9, 4);
+    this.bases.addPane(bases);
+
+    this.modes = new Gui(plugin, 2, "The Bridge Setup > Mode");
+    this.modes.setOnGlobalClick(e -> e.setCancelled(true));
+    StaticPane modes = new StaticPane(9, 4);
+    this.modes.addPane(modes);
+
+    prepareComponentsGui(gui);
+    prepareComponentsBase(bases);
+    prepareComponentsMode(modes);
   }
 
-  private void prepareComponents(StaticPane pane) {
+  private void prepareComponentsGui(StaticPane pane) {
     SpawnComponents spawnComponents = new SpawnComponents();
     spawnComponents.prepare(this);
     spawnComponents.injectComponents(pane);
@@ -83,6 +96,18 @@ public class SetupInventory {
     ArenaRegisterComponent arenaRegisterComponent = new ArenaRegisterComponent();
     arenaRegisterComponent.prepare(this);
     arenaRegisterComponent.injectComponents(pane);
+  }
+
+  private void prepareComponentsBase(StaticPane pane) {
+    BaseComponent baseComponent = new BaseComponent();
+    baseComponent.prepare(this);
+    baseComponent.injectComponents(pane);
+  }
+
+  private void prepareComponentsMode(StaticPane pane) {
+    ModeComponent modeComponent = new ModeComponent();
+    modeComponent.prepare(this);
+    modeComponent.injectComponents(pane);
   }
 
   private void sendProTip(Player p) {
@@ -116,6 +141,16 @@ public class SetupInventory {
     gui.show(player);
   }
 
+  public void openBases() {
+    sendProTip(player);
+    bases.show(player);
+  }
+
+  public void openModes() {
+    sendProTip(player);
+    modes.show(player);
+  }
+
   public Main getPlugin() {
     return plugin;
   }
@@ -126,6 +161,14 @@ public class SetupInventory {
 
   public Arena getArena() {
     return arena;
+  }
+
+  public int getBasesDone() {
+    return basesDone;
+  }
+
+  public void setBasesDone(int basesDone) {
+    this.basesDone = basesDone;
   }
 
   public Player getPlayer() {

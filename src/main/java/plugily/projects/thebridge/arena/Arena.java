@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
@@ -62,6 +63,7 @@ public class Arena extends BukkitRunnable {
   private HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
   private int out = 0;
+  private Cuboid arenaBorder;
 
 
   public Arena(String id) {
@@ -837,6 +839,14 @@ public class Arena extends BukkitRunnable {
 
   public void setMode(Mode mode) {
     this.mode = mode;
+  }
+
+  public void setArenaBorder(Cuboid arenaBorder) {
+    this.arenaBorder = arenaBorder;
+  }
+
+  public Cuboid getArenaBorder() {
+    return arenaBorder;
   }
 
   public int getOption(@NotNull ArenaOption option) {

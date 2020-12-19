@@ -1,6 +1,7 @@
 package plugily.projects.thebridge.arena.base;
 
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class Base {
 
-  private String color;
+  private Color color;
   private Location baseLocation1;
   private Location baseLocation2;
   private Location playerSpawnPoint;
@@ -30,7 +31,7 @@ public class Base {
   private Cuboid baseCuboid;
   private Cuboid portalCuboid;
 
-  public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
+  public Base(Color color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
     this.baseLocation1 = baseLocation1;
     this.baseLocation2 = baseLocation2;
@@ -43,7 +44,7 @@ public class Base {
     this.maximumSize = maximumSize;
   }
 
-  public String getColor() {
+  public Color getColor() {
     return color;
   }
 

@@ -1,12 +1,17 @@
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.Location;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.utils.Debugger;
 
 import java.util.ArrayList;
@@ -109,13 +114,45 @@ public class ArenaRegistry {
       }
       arena = new Arena(id);
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
-      arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
 
 
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-
+      arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setMidLocation(LocationSerializer.getLocation(config.getString(s + "midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setSpectatorLocation(LocationSerializer.getLocation(config.getString(s + "spectatorlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setArenaBorder(new Cuboid(LocationSerializer.getLocation(config.getString(s + "arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(config.getString(s + "arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
+      int bases = 0;
+      if (config.contains(s + "bases")) {
+        if (config.isConfigurationSection(s + "bases")) {
+          for (String baseID : config.getConfigurationSection(s + "bases").getKeys(false)) {
+            if (config.isSet(s + "bases." + baseID + ".isdone")) {
+              arena.addBase(new Base(
+                config.getColor("instances." + arena.getId() + ".bases." + baseID + ".color"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".baselocation1"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".baselocation2"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".portallocation1"),
+                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".portallocation2"),
+                config.getInt("instances." + arena.getId() + ".maximumsize")
+              ));
+              bases++;
+            } else {
+              System.out.println("Non configured bases instances found for arena " + id);
+              arena.setReady(false);
+            }
+          }
+        } else {
+          System.out.println("Non configured bases in arena " + id);
+          arena.setReady(false);
+        }
+      } else {
+        System.out.print("Instance " + id + " doesn't contains bases!");
+        arena.setReady(false);
+      }
+      //todo finish registry
+      arena.setMaximumPlayers(bases * arena.getOption(ArenaOption.SIZE));
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);

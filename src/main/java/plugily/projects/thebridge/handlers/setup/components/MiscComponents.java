@@ -113,7 +113,7 @@ public class MiscComponents implements SetupComponent {
       locs.add(signLoc);
       config.set("instances." + arena.getId() + ".signs", locs);
       ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 5, 0);
+    }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
         .name(plugin.getChatManager().colorRawMessage("&e&lSet Map Name"))
@@ -139,7 +139,7 @@ public class MiscComponents implements SetupComponent {
           return Prompt.END_OF_CONVERSATION;
         }
       }).buildFor(player);
-    }), 6, 0);
+    }), 8, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_INGOT.parseItem())
         .name(plugin.getChatManager().colorRawMessage("&6&l► Enhancements Addon ◄ &8(AD)"))

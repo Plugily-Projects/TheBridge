@@ -18,8 +18,12 @@
 
 package plugily.projects.thebridge.arena;
 
+import org.bukkit.GameMode;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.utils.NMS;
@@ -48,6 +52,27 @@ public class ArenaUtils {
   public static void showPlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
       NMS.showPlayer(player, p);
+    }
+  }
+
+  public static void resetPlayerAfterGame(Player player) {
+    for (Player players : plugin.getServer().getOnlinePlayers()) {
+      NMS.showPlayer(players, player);
+      NMS.showPlayer(player, players);
+    }
+    player.setGlowing(false);
+    player.setGameMode(GameMode.SURVIVAL);
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+    player.setFlying(false);
+    player.setAllowFlight(false);
+    player.getInventory().clear();
+    player.getInventory().setArmorContents(null);
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setFireTicks(0);
+    player.setFoodLevel(20);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.loadInventory(plugin, player);
     }
   }
 

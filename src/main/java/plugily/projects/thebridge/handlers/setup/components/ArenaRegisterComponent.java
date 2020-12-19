@@ -34,6 +34,7 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaUtils;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.ArenaSign;
 
@@ -82,40 +83,48 @@ public class ArenaRegisterComponent implements SetupComponent {
         e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
         return;
       }
-      //todo write arena register component
-      for (String s : new String[] {"lobbylocation", "Startlocation", "Endlocation"}) {
+      for (String s : new String[] {"lobbylocation", "midlocation", "endlocation", "spectatorlocation"}) {
         if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s)
             .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (cannot be world spawn location)"));
           return;
         }
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".doors") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure doors properly!"));
+      if (config.getConfigurationSection("instances." + arena.getId() + ".bases") == null || config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false).size() < 2) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure bases properly!"));
+        return;
+      }
+      if (setupInventory.getBasesDone() < 2) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure bases properly!"));
+        return;
+      }
+      if (config.isSet("instances." + arena.getId() + ".minimumplayers")) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure minimumplayers properly!"));
+        return;
+      }
+      if (config.isSet("instances." + arena.getId() + ".maximumsize")) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure maximumsize properly!"));
+        return;
+      }
+      if (config.isSet("instances." + arena.getId() + ".mode")) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure mode properly!"));
         return;
       }
       e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
       ConfigUtils.saveConfig(plugin, config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
-      ArenaRegistry.unregisterArena(arena);
-
-      for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
-        if (arenaSign.getArena().equals(setupInventory.getArena())) {
-          signsToUpdate.add(arenaSign.getSign());
-        }
-      }
-      arena = ArenaUtils.initializeArena(arena.getId());
+      ArenaRegistry.unregisterArena(setupInventory.getArena());
+      plugin.getSignManager().getArenaSigns().stream().filter(arenaSign -> arenaSign.getArena().equals(setupInventory.getArena()))
+        .forEach(arenaSign -> signsToUpdate.add(arenaSign.getSign()));
       arena.setReady(true);
-      arena.setMinimumPlayers(config.getInt("instances." + arena.getId() + ".minimumplayers"));
-      arena.setMaximumPlayers(config.getInt("instances." + arena.getId() + ".maximumplayers"));
-      arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
-      arena.setLobbyLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
-      arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
+      arena.setMaximumPlayers(setupInventory.getBasesDone() * arena.getOption(ArenaOption.SIZE));
       ArenaRegistry.registerArena(arena);
       arena.start();
+      plugin.getSignManager().getArenaSigns().clear();
       for (Sign s : signsToUpdate) {
         plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
+        plugin.getSignManager().updateSigns();
       }
     }), 2, 1);
   }
