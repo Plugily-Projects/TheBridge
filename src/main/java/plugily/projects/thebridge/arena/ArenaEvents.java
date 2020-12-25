@@ -152,6 +152,9 @@ public class ArenaEvents implements Listener {
       event.setCancelled(true);
       return;
     }
+    if (!arena.inBase(player)) {
+      return;
+    }
     if (arena.getBase(player).getPortalCuboid().isIn(player)) {
       player.sendMessage("That is your own portal");
       return;
