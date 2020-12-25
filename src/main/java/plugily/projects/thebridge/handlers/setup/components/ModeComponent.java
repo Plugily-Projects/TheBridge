@@ -58,11 +58,10 @@ public class ModeComponent implements SetupComponent {
       config.set("instances." + arena.getId() + ".modevalue", e.getCurrentItem().getAmount());
       arena.setOptionValue(ArenaOption.MODE_VALUE, e.getCurrentItem().getAmount());
       ConfigUtils.saveConfig(plugin, config, "arenas");
-      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+      new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 0, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
-      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("mode"))
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Mode"))
       .lore(ChatColor.GRAY + "LEFT click to set HEARTS")
       .lore(ChatColor.GRAY + "RIGHT click to set POINTS")
@@ -74,10 +73,10 @@ public class ModeComponent implements SetupComponent {
       if (e.isLeftClick()) {
         mode = Arena.Mode.HEARTS;
       }
-      config.set("instances." + arena.getId() + ".mode", mode);
+      config.set("instances." + arena.getId() + ".mode", mode.toString());
       arena.setMode(mode);
       ConfigUtils.saveConfig(plugin, config, "arenas");
-      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+      new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
   }

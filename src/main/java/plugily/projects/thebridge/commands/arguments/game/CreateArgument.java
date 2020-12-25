@@ -70,7 +70,6 @@ public class CreateArgument {
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 10);
     config.set(path + "mapname", id);

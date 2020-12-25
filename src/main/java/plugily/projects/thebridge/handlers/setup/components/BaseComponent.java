@@ -15,6 +15,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 public class BaseComponent implements SetupComponent {
 
   private SetupInventory setupInventory;
-  private HashMap<Player, Integer> baseId = new HashMap<>();
 
   @Override
   public void prepare(SetupInventory setupInventory) {
@@ -45,13 +45,13 @@ public class BaseComponent implements SetupComponent {
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Color"))
       .lore(ChatColor.GRAY + "Click to set base color name")
-      .lore("", plugin.getChatManager().colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".color")))
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".bases." + getId(player) + ".color"))
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
         public String getPromptText(ConversationContext context) {
-          return plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&ePlease type in chat color name! Please use one of them: " + Arrays.toString(ChatColor.values()));
+          return plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&ePlease type in chat color name (USE UPPERCASE)!");
         }
 
         @Override
@@ -61,7 +61,7 @@ public class BaseComponent implements SetupComponent {
           }
           String color = ChatColor.valueOf(input).name();
           player.sendRawMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aColor of base " + getId(player) + " set to " + color));
-          config.set("instances." + arena.getId() + ".bases." + getId(player) + ".color", ChatColor.valueOf(input));
+          config.set("instances." + arena.getId() + ".bases." + getId(player) + ".color", color);
           ConfigUtils.saveConfig(plugin, config, "arenas");
           new SetupInventory(arena, player).openBases();
           return Prompt.END_OF_CONVERSATION;
@@ -175,23 +175,25 @@ public class BaseComponent implements SetupComponent {
         LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1"),
         LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2"),
         config.getInt("instances." + arena.getId() + ".maximumsize")
-        ));
+      ));
       ConfigUtils.saveConfig(plugin, config, "arenas");
-      baseId.remove(player);
+      BaseUtilities.getBaseId().remove(player);
       setupInventory.setBasesDone(setupInventory.getBasesDone() + 1);
-    }), 4, 0);
+    }), 5, 0);
 
 
   }
 
   public int getId(Player player) {
-    if (!baseId.containsKey(player)) {
+    if (!BaseUtilities.check(setupInventory.getArena(), player)) {
       int id = 0;
       if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases") != null) {
         id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases").getKeys(false).size() + 1;
       }
-      baseId.put(player, id);
+      HashMap<String, Integer> secondMap = new HashMap<>();
+      secondMap.put(setupInventory.getArena().getId(), id);
+      BaseUtilities.getBaseId().put(player, secondMap);
     }
-    return baseId.get(player);
+    return BaseUtilities.getBaseId().get(player).get(setupInventory.getArena().getId());
   }
 }
