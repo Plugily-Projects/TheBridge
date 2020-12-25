@@ -160,6 +160,27 @@ public class MiscComponents implements SetupComponent {
       e.getWhoClicked().closeInventory();
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
     }), 8, 1);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+      .name(plugin.getChatManager().colorRawMessage("&e&lEdit Base"))
+      .lore(ChatColor.GRAY + "Here you can add/edit a base")
+      .lore(ChatColor.GRAY + "Make sure to register the base before continuing!")
+      .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      new SetupInventory(arena, player).openBases();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+    }), 0, 1);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+      .name(plugin.getChatManager().colorRawMessage("&e&lEdit the mode"))
+      .lore(ChatColor.GRAY + "Here you can edit the mode and there")
+      .lore(ChatColor.GRAY + "values!")
+      .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      new SetupInventory(arena, player).openModes();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+    }), 2, 1);
+
   }
 
 }

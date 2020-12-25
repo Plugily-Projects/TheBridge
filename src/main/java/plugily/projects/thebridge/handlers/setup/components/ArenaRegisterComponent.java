@@ -126,7 +126,7 @@ public class ArenaRegisterComponent implements SetupComponent {
         plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
         plugin.getSignManager().updateSigns();
       }
-    }), 2, 1);
+    }), 4, 1);
   }
 
 }

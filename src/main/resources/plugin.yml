@@ -1,4 +1,4 @@
-name: thebridge
+name: TheBridge
 main: plugily.projects.thebridge.Main
 authors: [2Wild4You, Tigerpanzer]
 version: 0.0.1

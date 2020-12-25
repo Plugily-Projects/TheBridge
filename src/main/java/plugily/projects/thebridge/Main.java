@@ -24,15 +24,16 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.PlaceholderManager;
 import plugily.projects.thebridge.handlers.hologram.HologramManager;
-import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.handlers.party.PartyHandler;
 import plugily.projects.thebridge.handlers.party.PartySupportInitializer;
 import plugily.projects.thebridge.handlers.rewards.RewardsFactory;
+import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.SignManager;
 import plugily.projects.thebridge.kits.KitMenuHandler;
 import plugily.projects.thebridge.kits.KitRegistry;
+import plugily.projects.thebridge.kits.basekits.Kit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.user.UserManager;
 import plugily.projects.thebridge.user.data.MysqlManager;
@@ -74,13 +75,13 @@ public class Main extends JavaPlugin {
     }
 
     long start = System.currentTimeMillis();
-
+    setupFiles();
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
+    Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode")) {
@@ -92,7 +93,6 @@ public class Main extends JavaPlugin {
     }
 
     configPreferences = new ConfigPreferences(this);
-    setupFiles();
     initializeClasses();
     checkUpdate();
     Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
@@ -192,9 +192,11 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsFactory(this);
     specialItemManager = new SpecialItemManager(this);
     specialItemManager.registerItems();
+    Kit.init(this);
+    KitRegistry.init(this);
+    SetupInventory.init(this);
     kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
-    KitRegistry.init(this);
     cuboidSelector = new CuboidSelector(this);
   }
 
@@ -231,7 +233,7 @@ public class Main extends JavaPlugin {
       return;
     }
     //todo update checker
-    UpdateChecker.init(this, 0).requestUpdateCheck().whenComplete((result, exception) -> {
+    UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }
@@ -251,7 +253,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql")) {
+    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "kits")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if (!file.exists()) {
         saveResource(fileName + ".yml", false);
