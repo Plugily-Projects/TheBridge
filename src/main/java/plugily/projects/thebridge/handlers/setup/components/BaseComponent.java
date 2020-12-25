@@ -105,7 +105,7 @@ public class BaseComponent implements SetupComponent {
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1", selection.getFirstPos());
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2", selection.getSecondPos());
       arena.setEndLocation(player.getLocation());
-      player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aBase location for arena " + arena.getId() + " set with your selection!"));
+      player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortal location for arena " + arena.getId() + " set with your selection!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 0);
 
@@ -144,41 +144,40 @@ public class BaseComponent implements SetupComponent {
       .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure base location properly!"));
+      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1") == null) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure base location properly!"));
         return;
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure portal location properly!"));
+      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1") == null) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure portal location properly!"));
         return;
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure spawnpoint properly!"));
+      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint") == null) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure spawnpoint properly!"));
         return;
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure respawnpoint properly!"));
+      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint") == null) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure respawnpoint properly!"));
         return;
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases." + getId(player) + ".color") == null) {
-        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure color properly!"));
+      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".color") == null) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure color properly!"));
         return;
       }
       player.sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new base: " + getId(player)));
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", true);
       arena.addBase(new Base(
         config.getColor("instances." + arena.getId() + ".bases." + getId(player) + ".color"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1"),
-        LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2"),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1")),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2")),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint")),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint")),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1")),
+        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2")),
         config.getInt("instances." + arena.getId() + ".maximumsize")
       ));
       ConfigUtils.saveConfig(plugin, config, "arenas");
       BaseUtilities.getBaseId().remove(player);
-      setupInventory.setBasesDone(setupInventory.getBasesDone() + 1);
     }), 5, 0);
 
 
@@ -188,7 +187,7 @@ public class BaseComponent implements SetupComponent {
     if (!BaseUtilities.check(setupInventory.getArena(), player)) {
       int id = 0;
       if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases") != null) {
-        id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases").getKeys(false).size() + 1;
+        id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases").getKeys(false).size();
       }
       HashMap<String, Integer> secondMap = new HashMap<>();
       secondMap.put(setupInventory.getArena().getId(), id);

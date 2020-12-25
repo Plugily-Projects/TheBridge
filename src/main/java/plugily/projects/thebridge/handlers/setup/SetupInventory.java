@@ -42,7 +42,6 @@ public class SetupInventory {
   private final Player player;
   private Gui gui;
   private Gui bases;
-  private int basesDone;
   private Gui modes;
   private final SetupUtilities setupUtilities;
 
@@ -51,7 +50,6 @@ public class SetupInventory {
     this.arena = arena;
     this.player = player;
     this.setupUtilities = new SetupUtilities(config, arena);
-    this.basesDone = 0;
     prepareGuis();
   }
 
@@ -161,14 +159,6 @@ public class SetupInventory {
 
   public Arena getArena() {
     return arena;
-  }
-
-  public int getBasesDone() {
-    return basesDone;
-  }
-
-  public void setBasesDone(int basesDone) {
-    this.basesDone = basesDone;
   }
 
   public Player getPlayer() {

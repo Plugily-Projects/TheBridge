@@ -62,17 +62,17 @@ public class ArenaRegisterComponent implements SetupComponent {
     ItemStack registeredItem;
     if (!setupInventory.getArena().isReady()) {
       registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
-          .name(plugin.getChatManager().colorRawMessage("&e&lRegister Arena - Finish Setup"))
-          .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
-          .lore(ChatColor.GRAY + "It will validate and register arena.")
-          .build();
+        .name(plugin.getChatManager().colorRawMessage("&e&lRegister Arena - Finish Setup"))
+        .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
+        .lore(ChatColor.GRAY + "It will validate and register arena.")
+        .build();
     } else {
       registeredItem = new ItemBuilder(Material.BARRIER)
-          .name(plugin.getChatManager().colorRawMessage("&a&lArena Registered - Congratulations"))
-          .lore(ChatColor.GRAY + "This arena is already registered!")
-          .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
-          .lore(ChatColor.GRAY + "You can play on this arena now!")
-          .build();
+        .name(plugin.getChatManager().colorRawMessage("&a&lArena Registered - Congratulations"))
+        .lore(ChatColor.GRAY + "This arena is already registered!")
+        .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
+        .lore(ChatColor.GRAY + "You can play on this arena now!")
+        .build();
     }
     pane.addItem(new GuiItem(registeredItem, e -> {
       Arena arena = setupInventory.getArena();
@@ -83,30 +83,38 @@ public class ArenaRegisterComponent implements SetupComponent {
         e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
         return;
       }
-      for (String s : new String[] {"lobbylocation", "midlocation", "endlocation", "spectatorlocation"}) {
+      for (String s : new String[]{"lobbylocation", "midlocation", "endlocation", "spectatorlocation"}) {
         if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s)
-            .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+          .equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (cannot be world spawn location)"));
           return;
         }
       }
-      if (config.getConfigurationSection("instances." + arena.getId() + ".bases") == null || config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false).size() < 2) {
+      if (config.getConfigurationSection("instances." + arena.getId() + ".bases") == null || config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false).size() < 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure bases properly!"));
         return;
       }
-      if (setupInventory.getBasesDone() < 2) {
+      int basesDone = 0;
+      if (config.isConfigurationSection("instances." + arena.getId() + ".bases")) {
+        for (String baseID : config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false)) {
+          if (config.isSet("instances." + arena.getId() +".bases." + baseID + ".isdone")) {
+            basesDone++;
+          }
+        }
+      }
+      if (basesDone < 2) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure bases properly!"));
         return;
       }
-      if (config.isSet("instances." + arena.getId() + ".minimumplayers")) {
+      if (!config.isSet("instances." + arena.getId() + ".minimumplayers")) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure minimumplayers properly!"));
         return;
       }
-      if (config.isSet("instances." + arena.getId() + ".maximumsize")) {
+      if (!config.isSet("instances." + arena.getId() + ".maximumsize")) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure maximumsize properly!"));
         return;
       }
-      if (config.isSet("instances." + arena.getId() + ".mode")) {
+      if (!config.isSet("instances." + arena.getId() + ".mode")) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure mode properly!"));
         return;
       }
@@ -118,7 +126,7 @@ public class ArenaRegisterComponent implements SetupComponent {
       plugin.getSignManager().getArenaSigns().stream().filter(arenaSign -> arenaSign.getArena().equals(setupInventory.getArena()))
         .forEach(arenaSign -> signsToUpdate.add(arenaSign.getSign()));
       arena.setReady(true);
-      arena.setMaximumPlayers(setupInventory.getBasesDone() * arena.getOption(ArenaOption.SIZE));
+      arena.setMaximumPlayers(basesDone * arena.getOption(ArenaOption.SIZE));
       ArenaRegistry.registerArena(arena);
       arena.start();
       plugin.getSignManager().getArenaSigns().clear();

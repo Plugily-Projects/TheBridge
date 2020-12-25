@@ -129,12 +129,12 @@ public class ArenaRegistry {
             if (config.isSet(s + "bases." + baseID + ".isdone")) {
               arena.addBase(new Base(
                 config.getColor("instances." + arena.getId() + ".bases." + baseID + ".color"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".baselocation1"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".baselocation2"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".portallocation1"),
-                LocationSerializer.getLocation("instances." + arena.getId() + ".bases." + baseID + ".portallocation2"),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation1")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation2")),
                 config.getInt("instances." + arena.getId() + ".maximumsize")
               ));
               bases++;
