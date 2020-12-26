@@ -79,5 +79,42 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
+    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
+      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks"))
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet reset blocks round"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "(After how many rounds should we reset blocks?)")
+      .lore(ChatColor.DARK_GRAY + "(SHIFT LEFT CLICK to disable reset)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".resetblocks"))
+      .build(), e -> {
+      ItemStack itemStack = e.getInventory().getItem(e.getSlot());
+      if (itemStack == null || e.getCurrentItem() == null) {
+        return;
+      }
+      if (e.getClick().isRightClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+      }
+      if (e.getClick().isLeftClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+      }
+      if (e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
+        e.getCurrentItem().setAmount(1);
+      }
+      if (itemStack.getAmount() < 1) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
+        itemStack.setAmount(1);
+      }
+      if (e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
+        config.set("instances." + arena.getId() + ".resetblocks", 0);
+        arena.setOptionValue(ArenaOption.RESET_BLOCKS, 0);
+      } else {
+        config.set("instances." + arena.getId() + ".resetblocks", e.getCurrentItem().getAmount());
+        arena.setOptionValue(ArenaOption.RESET_BLOCKS, e.getCurrentItem().getAmount());
+      }
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openModes();
+    }), 2, 0);
+
   }
 }

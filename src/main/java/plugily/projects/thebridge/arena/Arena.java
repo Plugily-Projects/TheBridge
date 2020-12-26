@@ -173,10 +173,23 @@ public class Arena extends BukkitRunnable {
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             if (!inBase(player)) {
               for (Base base : getBases()) {
+                if (base.getPlayers().size() == 0){
+                  base.addPlayer(player);
+                  break;
+                }
+              }
+            }
+            if (!inBase(player)) {
+              for (Base base : getBases()) {
                 if (base.getPlayers().size() >= base.getMaximumSize()) continue;
                 //todo try to redo teams if they would be unfair (one team got more players than other)
                 base.addPlayer(player);
+                break;
               }
+            }
+            //fallback
+            if (!inBase(player)) {
+              getBases().get(0).addPlayer(player);
             }
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
@@ -475,7 +488,7 @@ public class Arena extends BukkitRunnable {
     }
     for (Base base : getBases()) {
       for (Player player : base.getPlayers()) {
-        if (player.getUniqueId().equals(p.getUniqueId())) {
+        if (player == p) {
           return base;
         }
       }
@@ -608,7 +621,7 @@ public class Arena extends BukkitRunnable {
 
   public void resetRound() {
     resetRound = 6;
-    if (round == arenaOptions.get(ArenaOption.RESET_BLOCKS)) {
+    if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && round == arenaOptions.get(ArenaOption.RESET_BLOCKS)) {
       resetPlacedBlocks();
       round = 0;
     }

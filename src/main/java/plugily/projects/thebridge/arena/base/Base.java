@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Base {
 
-  private Color color;
+  private String color;
   private Location baseLocation1;
   private Location baseLocation2;
   private Location playerSpawnPoint;
@@ -31,7 +31,7 @@ public class Base {
   private Cuboid baseCuboid;
   private Cuboid portalCuboid;
 
-  public Base(Color color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
+  public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
     this.baseLocation1 = baseLocation1;
     this.baseLocation2 = baseLocation2;
@@ -44,7 +44,7 @@ public class Base {
     this.maximumSize = maximumSize;
   }
 
-  public Color getColor() {
+  public String getColor() {
     return color;
   }
 

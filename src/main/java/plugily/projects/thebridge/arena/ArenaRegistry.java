@@ -128,7 +128,7 @@ public class ArenaRegistry {
           for (String baseID : config.getConfigurationSection(s + "bases").getKeys(false)) {
             if (config.isSet(s + "bases." + baseID + ".isdone")) {
               arena.addBase(new Base(
-                config.getColor("instances." + arena.getId() + ".bases." + baseID + ".color"),
+                config.getString("instances." + arena.getId() + ".bases." + baseID + ".color"),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint")),
@@ -162,6 +162,7 @@ public class ArenaRegistry {
         arena.setMode(Arena.Mode.POINTS);
       }
       arena.setOptionValue(ArenaOption.MODE_VALUE, config.getInt(s + "modevalue", 5));
+      arena.setOptionValue(ArenaOption.RESET_BLOCKS, config.getInt(s + "resetblocks", 0));
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);

@@ -118,6 +118,10 @@ public class ArenaRegisterComponent implements SetupComponent {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure mode properly!"));
         return;
       }
+      if (!config.isSet("instances." + arena.getId() + ".resetblocks")) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure resetblocks properly!"));
+        return;
+      }
       e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
       ConfigUtils.saveConfig(plugin, config, "arenas");

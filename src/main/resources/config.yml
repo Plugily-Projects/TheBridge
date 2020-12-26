@@ -28,6 +28,13 @@ Basic-Permissions:
   # use 'thebridge.join.*' to enable access to all arenas
   Join-Permission: "thebridge.join.<arena>"
 
+Time-Manager:
+  Start-On-Full-Lobby: 15
+  Waiting-Time-Lobby: 60
+  # No one wins after that time amount
+  Gameplay: 500
+  Round-Reset: 5
+
 # Should we enable short commands such as /start and /leave
 Enable-Short-Commands: false
 

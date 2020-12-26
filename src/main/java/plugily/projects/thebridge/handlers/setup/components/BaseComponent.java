@@ -20,7 +20,6 @@ import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class BaseComponent implements SetupComponent {
@@ -167,7 +166,7 @@ public class BaseComponent implements SetupComponent {
       player.sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new base: " + getId(player)));
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", true);
       arena.addBase(new Base(
-        config.getColor("instances." + arena.getId() + ".bases." + getId(player) + ".color"),
+        config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".color"),
         LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1")),
         LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2")),
         LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint")),

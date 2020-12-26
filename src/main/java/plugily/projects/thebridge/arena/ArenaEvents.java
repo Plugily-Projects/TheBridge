@@ -159,9 +159,13 @@ public class ArenaEvents implements Listener {
       player.sendMessage("That is your own portal");
       return;
     }
-    if (arena.getBases().stream().anyMatch(base -> base.getPortalCuboid().isIn(player))) {
-      arena.resetRound();
-      player.teleport(arena.getBase(player).getPlayerSpawnPoint());
+    for (Base base : arena.getBases()){
+      if (base.getPortalCuboid().isIn(player)) {
+        arena.resetRound();
+        player.teleport(arena.getBase(player).getPlayerSpawnPoint());
+        base.addPoint();
+        return;
+      }
     }
   }
 
