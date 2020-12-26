@@ -30,7 +30,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.kits.basekits.PremiumKit;
@@ -59,11 +61,11 @@ public class NakedKit extends PremiumKit implements Listener {
 
   private void setupArmorTypes() {
     Stream.of(Material.LEATHER_BOOTS, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_HELMET,
-        XMaterial.GOLDEN_BOOTS.parseMaterial(), XMaterial.GOLDEN_CHESTPLATE.parseMaterial(), XMaterial.GOLDEN_LEGGINGS.parseMaterial(),
-        XMaterial.GOLDEN_HELMET.parseMaterial(), Material.DIAMOND_BOOTS, Material.DIAMOND_LEGGINGS, Material.DIAMOND_CHESTPLATE,
-        Material.DIAMOND_HELMET, Material.IRON_CHESTPLATE, Material.IRON_BOOTS, Material.IRON_HELMET, Material.IRON_LEGGINGS,
-        Material.CHAINMAIL_BOOTS, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_HELMET)
-    .forEach(armorTypes::add);
+      XMaterial.GOLDEN_BOOTS.parseMaterial(), XMaterial.GOLDEN_CHESTPLATE.parseMaterial(), XMaterial.GOLDEN_LEGGINGS.parseMaterial(),
+      XMaterial.GOLDEN_HELMET.parseMaterial(), Material.DIAMOND_BOOTS, Material.DIAMOND_LEGGINGS, Material.DIAMOND_CHESTPLATE,
+      Material.DIAMOND_HELMET, Material.IRON_CHESTPLATE, Material.IRON_BOOTS, Material.IRON_HELMET, Material.IRON_LEGGINGS,
+      Material.CHAINMAIL_BOOTS, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_HELMET)
+      .forEach(armorTypes::add);
   }
 
   @Override
@@ -79,6 +81,12 @@ public class NakedKit extends PremiumKit implements Listener {
     itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
     player.getInventory().addItem(itemStack);
     player.getInventory().addItem(new ItemStack(Material.SADDLE));
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_WOOL").get().parseMaterial(), 64));
+
   }
 
   @Override

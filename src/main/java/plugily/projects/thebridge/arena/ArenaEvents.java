@@ -75,7 +75,7 @@ public class ArenaEvents implements Listener {
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    if (!canBuild(arena, player)) {
+    if (!canBuild(arena, player, event.getBlock().getLocation())) {
       event.setCancelled(true);
       return;
     }
@@ -93,16 +93,16 @@ public class ArenaEvents implements Listener {
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    if (!canBuild(arena, player)) {
+    if (!canBuild(arena, player, event.getBlock().getLocation())) {
       event.setCancelled(true);
       return;
     }
     arena.addPlacedBlock(event.getBlock());
   }
 
-  public boolean canBuild(Arena arena, Player player) {
+  public boolean canBuild(Arena arena, Player player, Location location) {
     for (Base base : arena.getBases()) {
-      if (base.getBaseCuboid().isIn(player)) {
+      if (base.getBaseCuboid().isIn(location)) {
         player.sendMessage("CANNOT BUILD/BREAK INSIDE BASE");
         return false;
       }

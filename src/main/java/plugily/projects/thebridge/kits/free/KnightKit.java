@@ -18,12 +18,17 @@
 
 package plugily.projects.thebridge.kits.free;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
+import pl.plajerlair.commonsbox.minecraft.misc.ColorUtil;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.kits.basekits.FreeKit;
 import plugily.projects.thebridge.utils.Utils;
@@ -50,9 +55,13 @@ public class KnightKit extends FreeKit {
   @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
-    ArmorHelper.setArmor(player, ArmorHelper.ArmorType.LEATHER);
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_WOOL").get().parseMaterial(), 64));
   }
 
   @Override

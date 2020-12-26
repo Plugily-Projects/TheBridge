@@ -18,6 +18,7 @@
 
 package plugily.projects.thebridge.kits;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -31,6 +32,7 @@ import plugily.projects.thebridge.kits.premium.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 

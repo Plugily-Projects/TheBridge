@@ -23,7 +23,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.kits.basekits.PremiumKit;
@@ -36,24 +40,30 @@ import java.util.List;
  */
 public class PremiumHardcoreKit extends PremiumKit {
 
-    public PremiumHardcoreKit() {
-        setName(getPlugin().getChatManager().colorMessage("KIT HARDCORE NAME"));
-        List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("KIT HARDCORE DESC"), 40);
-        this.setDescription(description.toArray(new String[0]));
-        KitRegistry.registerKit(this);
-    }
+  public PremiumHardcoreKit() {
+    setName(getPlugin().getChatManager().colorMessage("KIT HARDCORE NAME"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("KIT HARDCORE DESC"), 40);
+    this.setDescription(description.toArray(new String[0]));
+    KitRegistry.registerKit(this);
+  }
 
-    @Override
-    public boolean isUnlockedByPlayer(Player player) {
-        return PermissionsManager.gotKitsPerm(player) || player.hasPermission("thebridge.kit.premiumhardcore");
-    }
+  @Override
+  public boolean isUnlockedByPlayer(Player player) {
+    return PermissionsManager.gotKitsPerm(player) || player.hasPermission("thebridge.kit.premiumhardcore");
+  }
 
-    @Override
-    public void giveKitItems(Player player) {
+  @Override
+  public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
-        new Enchantment[] {Enchantment.DAMAGE_ALL}, new int[] {11}));
+      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{11}));
     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(6);
     player.getInventory().addItem(new ItemStack(Material.SADDLE));
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_WOOL").get().parseMaterial(), 64));
+
   }
 
   @Override

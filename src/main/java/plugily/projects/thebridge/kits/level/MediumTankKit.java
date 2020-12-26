@@ -26,6 +26,9 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.kits.basekits.LevelKit;
 import plugily.projects.thebridge.utils.Utils;
@@ -37,26 +40,31 @@ import java.util.List;
  */
 public class MediumTankKit extends LevelKit {
 
-    public MediumTankKit() {
-        setName(getPlugin().getChatManager().colorMessage("Messages.KITS_MEDIUM_TANK_NAME"));
-        List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_MEDIUM_TANK_DESCRIPTION"), 40);
-        this.setDescription(description.toArray(new String[0]));
-        setLevel(getKitsConfig().getInt("Required-Level.MediumTank"));
-        KitRegistry.registerKit(this);
-    }
+  public MediumTankKit() {
+    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_MEDIUM_TANK_NAME"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_MEDIUM_TANK_DESCRIPTION"), 40);
+    this.setDescription(description.toArray(new String[0]));
+    setLevel(getKitsConfig().getInt("Required-Level.MediumTank"));
+    KitRegistry.registerKit(this);
+  }
 
-    @Override
-    public boolean isUnlockedByPlayer(Player player) {
-        return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("villagedefense.kit.mediumtank");
-    }
+  @Override
+  public boolean isUnlockedByPlayer(Player player) {
+    return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("villagedefense.kit.mediumtank");
+  }
 
-    @Override
+  @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(32.0);
     player.setHealth(32.0);
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_WOOL").get().parseMaterial(), 64));
 
   }
 
