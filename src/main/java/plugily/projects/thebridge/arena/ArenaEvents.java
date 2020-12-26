@@ -141,6 +141,8 @@ public class ArenaEvents implements Listener {
     }
   }
 
+  private HashMap<Player, Long> cooldownPortal = new HashMap<>();
+
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
@@ -155,12 +157,18 @@ public class ArenaEvents implements Listener {
     if (!arena.inBase(player)) {
       return;
     }
+    if (cooldownPortal.containsKey(player)) {
+      if (cooldownPortal.get(player) <= System.currentTimeMillis() - 5000) cooldownPortal.remove(player);
+      return;
+    }
     if (arena.getBase(player).getPortalCuboid().isIn(player)) {
+      cooldownPortal.put(player, System.currentTimeMillis());
       player.sendMessage("That is your own portal");
       return;
     }
-    for (Base base : arena.getBases()){
+    for (Base base : arena.getBases()) {
       if (base.getPortalCuboid().isIn(player)) {
+        cooldownPortal.put(player, System.currentTimeMillis());
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
         base.addPoint();

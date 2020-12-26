@@ -104,6 +104,7 @@ public class SpectatorEvents implements Listener {
     }
     Player player = (Player) event.getEntity();
     if (plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setFoodLevel(20);
       event.setCancelled(true);
     }
   }

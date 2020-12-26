@@ -134,7 +134,15 @@ public class Events implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if (event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
+    if (event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null) {
+      return;
+    }
+    if (arena.getArenaState() != ArenaState.IN_GAME) {
       event.setFoodLevel(20);
       event.setCancelled(true);
     }
