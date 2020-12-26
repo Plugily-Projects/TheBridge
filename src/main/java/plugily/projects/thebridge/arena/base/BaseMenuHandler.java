@@ -31,6 +31,7 @@ public class BaseMenuHandler implements Listener {
   private final String fullTeam;
   private final String emptyTeam;
   private final String insideTeam;
+  private final String teamName;
   private final SpecialItem baseItem;
 
   public BaseMenuHandler(Main plugin) {
@@ -39,6 +40,7 @@ public class BaseMenuHandler implements Listener {
     fullTeam = plugin.getChatManager().colorMessage("TEAM IS FULL");
     emptyTeam = plugin.getChatManager().colorMessage("EMPTY TEAM");
     insideTeam = plugin.getChatManager().colorMessage("INSIDE TEAM");
+    teamName = plugin.getChatManager().colorMessage("Team Name");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -49,7 +51,7 @@ public class BaseMenuHandler implements Listener {
     int x = 0;
     int y = 0;
     for (Base base : arena.getBases()) {
-      ItemStack itemStack = new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_WOOL").get().parseMaterial(), base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
+      ItemStack itemStack = new ItemStack(XMaterial.matchXMaterial(base.getColor().toUpperCase() + "_WOOL").get().parseMaterial(), base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
       if (base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
       } else {
@@ -58,7 +60,7 @@ public class BaseMenuHandler implements Listener {
       if (base.getPlayers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
-
+      itemStack = new ItemBuilder(itemStack).name(teamName).build();
       pane.addItem(new GuiItem(itemStack, e -> {
         e.setCancelled(true);
         if (!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
