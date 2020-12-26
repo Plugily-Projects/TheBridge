@@ -15,6 +15,7 @@ import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaEvents;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.*;
 import plugily.projects.thebridge.events.spectator.SpectatorEvents;
@@ -195,6 +196,7 @@ public class Main extends JavaPlugin {
     Kit.init(this);
     KitRegistry.init(this);
     SetupInventory.init(this);
+    new BaseMenuHandler(this);
     kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     cuboidSelector = new CuboidSelector(this);

@@ -81,6 +81,7 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
+      event.getBlock().getDrops().clear();
     } else {
       event.setCancelled(true);
     }
