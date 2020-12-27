@@ -19,7 +19,10 @@
 
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -38,7 +41,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -48,12 +50,10 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.level.ArcherKit;
-import plugily.projects.thebridge.kits.premium.NakedKit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class ArenaEvents implements Listener {
   public boolean canBuild(Arena arena, Player player, Location location) {
     for (Base base : arena.getBases()) {
       if (base.getBaseCuboid().isIn(location)) {
-        player.sendMessage("CANNOT BUILD/BREAK INSIDE BASE");
+        player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
         return false;
       }
     }
@@ -138,8 +138,8 @@ public class ArenaEvents implements Listener {
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.KILL);
       plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.KILLS, 1);
       plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-      attacker.sendMessage("You killed victim");
-      victim.sendMessage("You were killed by attacker");
+      attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Killed").replace("%VICTIM%", victim.getName()));
+      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Death").replace("%PLAYER%", victim.getName()).replace("%ATTACKER%", attacker.getName()));
     }
   }
 
@@ -162,7 +162,7 @@ public class ArenaEvents implements Listener {
     }
   }
 
-  private HashMap<Player, Long> cooldownPortal = new HashMap<>();
+  private final HashMap<Player, Long> cooldownPortal = new HashMap<>();
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerMove(PlayerMoveEvent event) {
@@ -184,7 +184,7 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getBase(player).getPortalCuboid().isIn(player)) {
       cooldownPortal.put(player, System.currentTimeMillis());
-      player.sendMessage("That is your own portal");
+      player.sendMessage(chatManager.colorMessage("In-Game.Messages.Portal.Own", player));
       return;
     }
     for (Base base : arena.getBases()) {
@@ -192,7 +192,9 @@ public class ArenaEvents implements Listener {
         cooldownPortal.put(player, System.currentTimeMillis());
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
-        base.addPoint();
+        arena.getBase(player).addPoint();
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getColor()).replace("%base_jumped%", base.getColor()));
+        arena.getScoreboardManager().resetBaseCache();
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
         return;
@@ -434,7 +436,11 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
     if (e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
-      e.setResult(Event.Result.DENY);
+      if (ArenaRegistry.getArena(((Player) e.getWhoClicked())).getArenaState() != ArenaState.IN_GAME) {
+        if (e.getClickedInventory() == e.getWhoClicked().getInventory()) {
+          e.setResult(Event.Result.DENY);
+        }
+      }
     }
   }
 

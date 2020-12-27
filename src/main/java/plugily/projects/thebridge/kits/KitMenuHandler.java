@@ -30,14 +30,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.events.player.TBPlayerChooseKitEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
-
 import plugily.projects.thebridge.kits.basekits.Kit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Utils;
@@ -57,13 +55,13 @@ public class KitMenuHandler implements Listener {
   public KitMenuHandler(Main plugin) {
     this.plugin = plugin;
     this.kitItem = plugin.getSpecialItemManager().getSpecialItem(SpecialItemManager.SpecialItems.KIT_SELECTOR.getName());
-    unlockedString = plugin.getChatManager().colorMessage("UNLOCKED LORE");
-    lockedString = plugin.getChatManager().colorMessage("LOCKED LORE");
+    unlockedString = plugin.getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlocked");
+    lockedString = plugin.getChatManager().colorMessage("Kits.Kit-Menu.Lores.Locked");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   public void createMenu(Player player) {
-    Gui gui = new Gui(plugin, Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("open kit menu"));
+    Gui gui = new Gui(plugin, Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Kits.Kit-Menu.Title"));
     StaticPane pane = new StaticPane(9, gui.getRows());
     gui.addPane(pane);
     int x = 0;
@@ -82,21 +80,18 @@ public class KitMenuHandler implements Listener {
           return;
         }
         Arena arena = ArenaRegistry.getArena(player);
-        if (!ItemUtils.isItemStackNamed(e.getCurrentItem()) || arena == null) {
-          return;
-        }
         TBPlayerChooseKitEvent event = new TBPlayerChooseKitEvent(player, KitRegistry.getKit(e.getCurrentItem()), arena);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
           return;
         }
         if (!kit.isUnlockedByPlayer(player)) {
-          player.sendMessage(plugin.getChatManager().colorMessage("Kit not unlocked").replace("%KIT%", kit.getName()));
+          player.sendMessage(plugin.getChatManager().colorMessage("Kits.Not-Unlocked-Message").replace("%KIT%", kit.getName()));
           return;
         }
         User user = plugin.getUserManager().getUser(player);
         user.setKit(kit);
-        player.sendMessage(plugin.getChatManager().colorMessage("kit choose message").replace("%KIT%", kit.getName()));
+        player.sendMessage(plugin.getChatManager().colorMessage("Kits.Choose-Message").replace("%KIT%", kit.getName()));
       }), x, y);
       x++;
       if (x == 9) {

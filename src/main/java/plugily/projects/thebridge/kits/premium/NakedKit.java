@@ -52,8 +52,8 @@ public class NakedKit extends PremiumKit implements Listener {
   private final List<Material> armorTypes = new ArrayList<>();
 
   public NakedKit() {
-    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_WILD_NAKED_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_WILD_NAKED_DESCRIPTION"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     getPlugin().getServer().getPluginManager().registerEvents(this, getPlugin());
     KitRegistry.registerKit(this);

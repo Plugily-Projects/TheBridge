@@ -32,6 +32,8 @@ Commands:
   Location-Teleport-Invalid: "&cLocation to teleport is invalid!"
   Wrong-Usage: "&cWrong usage. Do %correct%"
   Admin-Commands:
+    Teleported-To-Player: "&aTeleported to player!"
+    Player-Not-Found: "&cPlayer not found!"
     Success-Reload: "&aArenas reloaded!"
     List-Command:
       Header: "&aTheBridge &6arenas:"
@@ -74,56 +76,57 @@ Commands:
 # %MIN_PLAYERS% - Returns back the amount of minimum players needed to start the game
 # %PLAYERS% - The amount of players in the arena currently (dead + alive players)
 # %TIME% - Returns the time back in seconds.
-# %formatted_time% - Returns time formatted.
-# %bases% - Returns all bases formatted
-# %base_color% - Returns players base color
-# %base% - Returns base name (color)
-# %base_players% - Returns players on team
-# %base_players_left% - Returns players on team that are not out (e.g. Hearts mode)
-# %formatted_points% - It multiplies and set colors for the points (See Scoreboard.Mode)
-# %mode_value% - Returns the value player needs to win
-# %mode% - Returns the mode that player plays
-# %local_kills% - Returns kills at that round
-# %local_mode_points% - Returns mode points at that round
-# %local_deaths% - Returns deaths at that round
+# %FORMATTED_TIME% - Returns time formatted.
+# %BASES%- Returns all bases formatted
+# %BASE_COLOR% - Returns players base color
+# %BASE% - Returns base name (color)
+# %BASE_PLAYERS% - Returns players on team
+# %BASE_YOU% - Returns Scoreboard.Bases.Inside if you are on that base
+# %FORMATTED_POINTS% - It multiplies and set colors for the points (See Scoreboard.Mode)
+# %MODE_VALUE% - Returns the value player needs to win
+# %MODE% - Returns the mode that player plays
+# %LOCAL_KILLS% - Returns kills at that round
+# %LOCAL_SCORED_POINTS% - Returns mode points at that round
+# %LOCAL_DEATHS% - Returns deaths at that round
 Scoreboard:
   Title: "&e&lTheBridge"
   Bases:
-    Format: "%base% (%base_players%) %formatted_points%"
-    No-Base: "---"
+    Format: "%BASE% &7(&f%BASE_PLAYERS%&7) &e%BASE_YOU% %FORMATTED_POINTS%"
+    Not-Inside: "--"
+    Inside: "(You)"
   Mode:
-    Points:
-      Got-Points: "&a●"
-      Missing-Points: "&7●"
-    Hearts:
-      Got-Hearts: "&c♥"
-      Missing-Hearts: "&7♥"
+    POINTS:
+      Got: "&a●"
+      Missing: "&7●"
+    HEARTS:
+      Got: "&c♥"
+      Missing: "&7♥"
   Content:
     # Contents of scoreboard while wave is running
     Playing:
-      - "&fTime Left: &e%formatted_time%"
+      - "&fTime Left: &e%FORMATTED_TIME%"
       - "&fTeams:"
-      - "%bases%"
+      - "%BASES%"
       - ""
-      - "&fKills: &e%local_kills%"
-      - "&fDeaths: &e%local_deaths%"
-      - "&fGoals: &e%local_mode_points%"
+      - "&fKills: &e%LOCAL_KILLS%"
+      - "&fDeaths: &e%LOCAL_DEATHS%"
+      - "&fScored: &e%LOCAL_SCORED_POINTS%"
       - ""
-      - "&fMode: &e%mode%"
+      - "&fMode: &e%MODE%"
       - ""
       - "&ewww.plugily.xyz"
     Waiting:
-      - "&fPlayers: &e%players%"
+      - "&fPlayers: &e%PLAYERS%"
       - ""
-      - "&fMinimum Players: &e%min_players%"
+      - "&fMinimum Players: &e%MIN_PLAYERS%"
       - ""
       - "&ewww.plugily.xyz"
     Starting:
-      - "&fStarting In: &e%time%"
+      - "&fStarting In: &e%TIME%"
       - ""
-      - "&fPlayers: &e%players%"
+      - "&fPlayers: &e%PLAYERS%"
       - ""
-      - "&fMinimum Players: &e%min_players%"
+      - "&fMinimum Players: &e%MIN_PLAYERS%"
       - ""
       - "&ewww.plugily.xyz"
 
@@ -136,12 +139,13 @@ Bossbar:
   In-Game-Info: "&e&lPlaying &f&lTHEBRIDGE &e&lon &b&lPLUGILY.XYZ"
   Game-Ended: "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
 
+
 Kits:
   Kit-Menu:
     Title: "Kit Menu"
-    Unlocked-Kit-Lore: "&aUNLOCKED!"
-    Locked-Lores:
-      Locked-Lore: "&cLOCKED!"
+    Lores:
+      Locked: "&cLOCKED!"
+      Unlocked: "&aUNLOCKED!"
       Unlock-At-Level: "&aUnlocks at level %NUMBER%"
       Unlock-In-Store: "&bUnlock this in the store!"
   Not-Unlocked-Message: "&cYou haven't unlocked &b%KIT%&c yet!"
@@ -149,37 +153,40 @@ Kits:
   Open-Kit-Menu: "Open Kit Menu"
   Ability-Still-On-Cooldown: "&cThis ability is on cooldown! Wait %COOLDOWN% more seconds!"
   # Kit descriptions and kit items wraps their descriptions every 40 characters and don't support \n character
+  Bridge:
+    Name: "&2Bridge"
+    Description: "&7Basic bridge kit like the one you know!"
   Knight:
-    Kit-Name: "&2Knight"
-    Kit-Description: "&7This is the one and only knight kit! Many people think this is the worst kit! I must admit they are totally wrong!"
+    Name: "&2Knight"
+    Description: "&7This is the one and only knight kit! Many people think this is the worst kit! I must admit they are totally wrong!"
   Light-Tank:
-    Kit-Name: "&2Light Tank"
-    Kit-Description: "&7You are Junior tank!"
+    Name: "&2Light Tank"
+    Description: "&7You are Junior tank!"
   Archer:
-    Kit-Name: "&6Archer"
-    Kit-Description: "&7Start with a extra amount of arrows, leather armor and a wooden sword. Archers are loved by the villagers, know that!"
-  Healer:
-    Kit-Name: "&6Healer"
-    Kit-Description: "&7Being a healer is the same as being loved. You are able to heal your teammates."
-  Medium-Tank:
-    Kit-Name: "&6Medium Tank"
-    Kit-Description: "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
+    Name: "&6Archer"
+    Description: "&7Start with a extra amount of arrows, leather armor and a wooden sword. Archers are loved by the villagers, know that!"
   Hardcore:
-    Kit-Name: "&6Hardcore"
-    Kit-Description: "&7You'll see yourself why this is hardcore"
+    Name: "&6Hardcore"
+    Description: "&7You'll see yourself why this is hardcore"
+  Healer:
+    Name: "&6Healer"
+    Description: "&7Being a healer is the same as being loved. You are able to heal your teammates."
+  Medium-Tank:
+    Name: "&6Medium Tank"
+    Description: "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
   Terminator:
-    Kit-Name: "&6Terminator"
-    Kit-Description: "&7Easily kill those zombies with your strength powers!"
+    Name: "&6Terminator"
+    Description: "&7Easily kill those zombies with your strength powers!"
   Heavy-Tank:
-    Kit-Name: "&bHeavy Tank"
-    Kit-Description: "&7Start off with iron armor and a double amount of hearts! Yup, that's right, you'll be the last man standing!"
+    Name: "&bHeavy Tank"
+    Description: "&7Start off with iron armor and a double amount of hearts! Yup, that's right, you'll be the last man standing!"
   Wild-Naked:
-    Kit-Name: "&bWild Naked"
-    Kit-Description: "&7You are the ultimate master! You start off with a iron Sharpness VI and Smite II sword!"
+    Name: "&bWild Naked"
+    Description: "&7You are the ultimate master! You start off with a iron Sharpness VI and Smite II sword!"
     Cannot-Wear-Armor: "&cYou can't wear armor with the Wild Naked kit!"
   Premium-Hardcore:
-    Kit-Name: "&bPremium Hardcore Master"
-    Kit-Description: "&7One hit most zombies with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
+    Name: "&bPremium Hardcore Master"
+    Description: "&7One hit most zombies with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
 
 In-Game:
   Plugin-Prefix: "&e[TheBridge] "
@@ -215,6 +222,18 @@ In-Game:
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Death: "&b%PLAYER% &7died by %ATTACKER%!"
+    Death-Own: "&b%PLAYER% &7died!"
+    Killed: "&aYou killed %VICTIM%"
+    Build-Break: "&7You can not build and break here"
+    Seconds-Left-Title: "Time is running out!"
+    Seconds-left-Subtitle: "%time% seconds left"
+    Portal:
+      Own: "&7That is your own portal"
+      Opponent: "&7%base% %player% jumped into %base_jumped%!"
+    Blocked:
+      Run: "&7Get some points"
+      Title: "&7Round reset - You can not move!"
+      Subtitle: "%seconds%"
     Game-End-Messages:
       Summary-Message:
         - "&a&m--------------------------------------------------"
@@ -222,14 +241,14 @@ In-Game:
         - ""
         - "%summary%"
         - ""
-        - ""
-        - "&e&lReached wave: &7%wave% &8(best %player_best_wave%)"
-        - "&6&lTotal zombies killed: &7%zombies%"
-        - "&c&lTotal coins spent: &7%orbs_spent%"
-        - ""
         - "&a&m--------------------------------------------------"
-      Summary-Base-Hearts-Win: "&7%BASE% survived successfully!"
-      Summary-Base-Points-Win: "&7%BASE% got the most points!"
+      Summary-Base-Hearts-Win: "&7%base% survived successfully!"
+      Summary-Base-Points-Win: "&7%base% got the most points!"
+      Titles:
+        Lose: "GAME OVER"
+        Win: "WINNER"
+      Subtitles:
+        Reached: "Points got reached by %base%"
     Admin-Messages:
       Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
 
@@ -264,27 +283,36 @@ Arena-Selector:
       - " "
       - "&eClick to join this arena"
 
-Base-Names:
-  BLACK: "&0BLACK"
-  DARK_BLUE: "&1DARK_BLUE"
-  DARK_GREEN: "&2DARK_GREEN"
-  DARK_AQUA: "&3DARK_CYAN"
-  DARK_RED: "&4DARK_RED"
-  DARK_PURPLE: "&5DARK_PURPLE"
-  GOLD: "&6GOLD"
-  LIGHT_GRAY: "&7LIGHT_GRAY"
-  DARK_GRAY: "&8DARK_GRAY"
-  INDIGO: "&9INDIGO"
-  LIME_GREEN: "&aLIME_GREEN"
-  AQUA: "&bAQUA"
-  RED: "&cRED"
-  PINK: "&dPINK"
-  YELLOW: "&eYELLOW"
-  WHITE: "&fWHITE"
-  BOLD: "&lBOLD"
-  STRIKETHROUGH: "&mSTIKETHROUGH"
-  UNDERLINED: "&nUNDERLINED"
-  ITALIC: "&oITALIC"
+Bases:
+  Team:
+    Full: "Team is full"
+    Empty: "Team is empty"
+    Inside: "Your team"
+    Name: "Base - %base%"
+    Menu-Name: "Base Menu"
+    Base-Choose: "You are now on base %base%"
+    Member: "You are already member of it!"
+  Colors:
+    BLACK: "&0BLACK"
+    DARK_BLUE: "&1DARK_BLUE"
+    DARK_GREEN: "&2DARK_GREEN"
+    DARK_AQUA: "&3DARK_CYAN"
+    DARK_RED: "&4DARK_RED"
+    DARK_PURPLE: "&5DARK_PURPLE"
+    GOLD: "&6GOLD"
+    LIGHT_GRAY: "&7LIGHT_GRAY"
+    DARK_GRAY: "&8DARK_GRAY"
+    INDIGO: "&9INDIGO"
+    LIME_GREEN: "&aLIME_GREEN"
+    AQUA: "&bAQUA"
+    RED: "&cRED"
+    PINK: "&dPINK"
+    YELLOW: "&eYELLOW"
+    WHITE: "&fWHITE"
+    BOLD: "&lBOLD"
+    STRIKETHROUGH: "&mSTRIKETHROUGH"
+    UNDERLINED: "&nUNDERLINED"
+    ITALIC: "&oITALIC"
 
 Validator:
   Invalid-Arena-Configuration: "[TheBridge] Arena %arena% has invalid configuration! Missing node: %error%"

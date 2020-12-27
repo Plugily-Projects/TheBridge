@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -46,9 +45,8 @@ public class ArcherKit extends LevelKit {
 
   public ArcherKit() {
     this.setLevel(getKitsConfig().getInt("Required-Level.Archer"));
-    this.setName(getPlugin().getChatManager().colorMessage("Messages.KITS_ARCHER_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_ARCHER_DESCRIPTION"), 40);
-    this.setDescription(description.toArray(new String[0]));
+    setName(getPlugin().getChatManager().colorMessage("Kits.Archer.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Archer.Description"), 40);this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }
 

@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,8 +44,8 @@ import java.util.List;
 public class HealerKit extends LevelKit {
 
   public HealerKit() {
-    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_HEALER_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_HEALER_DESCRIPTION"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Healer.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Healer.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     setLevel(getKitsConfig().getInt("Required-Level.Healer"));
     KitRegistry.registerKit(this);

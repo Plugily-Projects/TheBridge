@@ -22,7 +22,6 @@ package plugily.projects.thebridge.arena;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -32,8 +31,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -45,7 +42,6 @@ import plugily.projects.thebridge.api.events.game.TBGameStopEvent;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
-import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.handlers.party.GameParty;
 import plugily.projects.thebridge.handlers.rewards.Reward;
@@ -54,9 +50,7 @@ import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.NMS;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Tigerpanzer_02
@@ -327,15 +321,29 @@ public class ArenaManager {
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
-      //todo
       if (!quickStop) {
-            /*if () {
-              user.addStat(StatsStorage.StatisticType.WINS, 1);
-              plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
-            } else {
+        switch (arena.getMode()) {
+          case HEARTS:
+            if (arena.isDeathPlayer(player)) {
               user.addStat(StatsStorage.StatisticType.LOSES, 1);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-             */
+            } else {
+              user.addStat(StatsStorage.StatisticType.WINS, 1);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
+            }
+            break;
+          case POINTS:
+            if (arena.getWinner().getPlayers().contains(player)) {
+              user.addStat(StatsStorage.StatisticType.LOSES, 1);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+            } else {
+              user.addStat(StatsStorage.StatisticType.WINS, 1);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
+            }
+            break;
+          default:
+            break;
+        }
       }
       //the default walk & fly speed
       player.setFlySpeed(0.1f);
@@ -376,7 +384,17 @@ public class ArenaManager {
   private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {
     String formatted = msg;
 
-    //todo
+    switch (arena.getMode()) {
+      case POINTS:
+        formatted = StringUtils.replace(formatted, "%summary%", LanguageManager.getLanguageMessage("In-Game.Messages.Game-End-Messages.Summary-Base-Points-Win"));
+        break;
+      case HEARTS:
+        formatted = StringUtils.replace(formatted, "%summary%", LanguageManager.getLanguageMessage("In-Game.Messages.Game-End-Messages.Summary-Base-Hearts-Win"));
+        break;
+      default:
+        break;
+    }
+    formatted = StringUtils.replace(formatted, "%base%", arena.getWinner().getColor());
 
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

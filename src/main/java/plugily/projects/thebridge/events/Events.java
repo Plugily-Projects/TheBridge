@@ -19,11 +19,6 @@
 
 package plugily.projects.thebridge.events;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,8 +32,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
@@ -96,9 +89,9 @@ public class Events implements Listener {
     if (event.getPlayer().isOp() || event.getPlayer().hasPermission("thebridge.admin") || event.getPlayer().hasPermission("thebridge.command.bypass")) {
       return;
     }
-    if (command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("thebridge")
+    if (command.equalsIgnoreCase("tb") || command.equalsIgnoreCase("thebridge")
       || event.getMessage().contains("thebridgeadmin") || event.getMessage().contains("leave")
-      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
+      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("tba")) {
       return;
     }
     event.setCancelled(true);
@@ -137,7 +130,7 @@ public class Events implements Listener {
     if (key == null) {
       return;
     }
-    if (plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName().equalsIgnoreCase("Leave")) {
+    if (key.equals(SpecialItemManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
       event.setCancelled(true);
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());

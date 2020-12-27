@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -46,8 +45,8 @@ import java.util.List;
 public class TerminatorKit extends LevelKit {
 
   public TerminatorKit() {
-    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_TERMINATOR_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_TERMINATOR_DESCRIPTION"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Terminator.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Terminator.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     setLevel(getKitsConfig().getInt("Required-Level.Terminator"));
     KitRegistry.registerKit(this);

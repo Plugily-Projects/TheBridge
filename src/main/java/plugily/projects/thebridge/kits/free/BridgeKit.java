@@ -41,8 +41,8 @@ import java.util.List;
 public class BridgeKit extends FreeKit {
 
   public BridgeKit() {
-    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_LIGHT_TANK_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_LIGHT_TANK_DESCRIPTION)"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Bridge.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Bridge.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }

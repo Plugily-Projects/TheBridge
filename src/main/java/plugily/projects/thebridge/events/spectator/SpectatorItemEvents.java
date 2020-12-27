@@ -20,7 +20,6 @@
 
 package plugily.projects.thebridge.events.spectator;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.SkullType;
 import org.bukkit.World;
@@ -73,10 +72,10 @@ public class SpectatorItemEvents implements Listener {
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"))) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }

@@ -120,7 +120,7 @@ public class ChatManager {
         message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
         break;
       case DEATH:
-        message = formatMessage(a, colorMessage("In-Game.Messages.Death"), p);
+        message = formatMessage(a, colorMessage("In-Game.Messages.Death-Own"), p);
         break;
       default:
         return; //likely won't ever happen

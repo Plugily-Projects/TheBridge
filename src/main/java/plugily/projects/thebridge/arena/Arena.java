@@ -19,14 +19,18 @@
 
 package plugily.projects.thebridge.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -44,11 +48,6 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import plugily.projects.thebridge.utils.NMS;
 
 import java.util.*;
@@ -78,12 +77,12 @@ public class Arena extends BukkitRunnable {
   private boolean ready = true, forceStart = false;
   private List<Base> bases = new ArrayList<>();
   private Mode mode;
-  private ArrayList<Block> placedBlocks = new ArrayList<>();
-  private HashMap<Player, Player> hits = new HashMap<>();
+  private final ArrayList<Block> placedBlocks = new ArrayList<>();
+  private final HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
   private int out = 0;
   private Cuboid arenaBorder;
-
+  private Base winner;
 
   public Arena(String id) {
     this.id = id;
@@ -193,7 +192,7 @@ public class Arena extends BukkitRunnable {
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             if (!inBase(player)) {
               for (Base base : getBases()) {
-                if (base.getPlayers().size() == 0){
+                if (base.getPlayers().size() == 0) {
                   base.addPlayer(player);
                   break;
                 }
@@ -229,9 +228,15 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
         if (getTimer() <= 0) {
+          Base highestValue = bases.get(0);
+          for (Base base : bases) {
+            if (highestValue.getPoints() < base.getPoints()) {
+              highestValue = base;
+            }
+          }
+          winner = highestValue;
           ArenaManager.stopGame(false, this);
         }
-
         if (getTimer() == 30 || getTimer() == 60 || getTimer() == 120) {
           String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
           String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
@@ -241,18 +246,12 @@ public class Arena extends BukkitRunnable {
         }
 
         if (resetRound > 0) {
-          if (resetRound == 1) {
-            String title = chatManager.colorMessage("In-Game.Messages.Seconds-until-move").replace("%time%", String.valueOf(resetRound));
-            String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-untilmove-Subtitle").replace("%time%", String.valueOf(resetRound));
-            for (Player p : getPlayers()) {
-              p.sendTitle(title, subtitle, 5, 40, 5);
-              p.sendMessage("get some points");
-            }
-          } else {
-            String title = chatManager.colorMessage("In-Game.Messages.Seconds-until-move").replace("%time%", String.valueOf(resetRound));
-            String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-untilmove-Subtitle").replace("%time%", String.valueOf(resetRound));
-            for (Player p : getPlayers()) {
-              p.sendTitle(title, subtitle, 5, 40, 5);
+          String title = chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound));
+          String subtitle = chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle").replace("%seconds%", String.valueOf(resetRound));
+          for (Player p : getPlayers()) {
+            p.sendTitle(title, subtitle, 5, 40, 5);
+            if (resetRound == 1) {
+              p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
             }
           }
           resetRound--;
@@ -265,10 +264,11 @@ public class Arena extends BukkitRunnable {
           //winner check
           for (Base base : getBases()) {
             if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)) {
+              winner = base;
               if (mode == Mode.POINTS) {
                 for (Player p : getPlayers()) {
                   p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.REACHED VALUE"), 5, 40, 5);
+                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getColor()), 5, 40, 5);
                   if (base.getPlayers().contains(p)) {
                     p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
                   }
@@ -281,10 +281,11 @@ public class Arena extends BukkitRunnable {
           if (mode == Mode.HEARTS) {
             if (out >= bases.size() - 1) {
               for (Player player : getPlayers()) {
-                if (!isDeathPlayer(player)){
-                  player.sendMessage("Won");
+                if (!isDeathPlayer(player)) {
+                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                  winner = getBase(player);
                 } else {
-                  player.sendMessage("Lose");
+                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
                 }
               }
               ArenaManager.stopGame(false, this);
@@ -486,7 +487,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public List<Player> getTeammates(Player player) {
-    if (getBase(player).getPlayers().size() == 1){
+    if (getBase(player).getPlayers().size() == 1) {
       return null;
     }
     List<Player> mates = getBase(player).getPlayers();
@@ -520,6 +521,10 @@ public class Arena extends BukkitRunnable {
       }
     }
     return null;
+  }
+
+  public Base getWinner() {
+    return winner;
   }
 
   public void setBases(List<Base> bases) {
@@ -640,6 +645,7 @@ public class Arena extends BukkitRunnable {
     resetHits();
     round = 0;
     resetRound = 0;
+    winner = null;
     //todo
   }
 

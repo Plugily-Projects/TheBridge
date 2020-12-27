@@ -42,7 +42,7 @@ public abstract class LevelKit extends Kit {
     return new ItemBuilder(getMaterial())
         .name(getName())
         .lore(getDescription())
-        .lore(getPlugin().getChatManager().colorMessage("Unlocked level")
+        .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-At-Level")
             .replace("%NUMBER%", Integer.toString(getLevel())))
         .build();
   }

@@ -108,7 +108,7 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.4b20</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

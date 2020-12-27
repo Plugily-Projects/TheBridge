@@ -42,8 +42,8 @@ import java.util.List;
 public class PremiumHardcoreKit extends PremiumKit {
 
   public PremiumHardcoreKit() {
-    setName(getPlugin().getChatManager().colorMessage("KIT HARDCORE NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("KIT HARDCORE DESC"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Premium-Hardcore.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Premium-Hardcore.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }

@@ -32,7 +32,7 @@ public abstract class PremiumKit extends Kit {
     return new ItemBuilder(new ItemStack(getMaterial()))
         .name(getName())
         .lore(getDescription())
-        .lore(getPlugin().getChatManager().colorMessage("UNLOCK ON STORE"))
+        .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-In-Store"))
         .build();
   }
 }

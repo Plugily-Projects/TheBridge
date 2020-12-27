@@ -43,8 +43,8 @@ import java.util.List;
 public class HeavyTankKit extends PremiumKit {
 
   public HeavyTankKit() {
-    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_HEAVY_TANK_NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_HEAVY_TANK_DESCRIPTION"), 40);
+    setName(getPlugin().getChatManager().colorMessage("Kits.Heavy-Tank.Name"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Heavy-Tank.Description"), 40);
     this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }

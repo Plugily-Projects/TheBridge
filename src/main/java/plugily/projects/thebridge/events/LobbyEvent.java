@@ -38,7 +38,10 @@ import plugily.projects.thebridge.arena.ArenaState;
  */
 public class LobbyEvent implements Listener {
 
+  private final Main plugin;
+
   public LobbyEvent(Main plugin) {
+    this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -56,5 +59,4 @@ public class LobbyEvent implements Listener {
     player.setFireTicks(0);
     player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
   }
-
 }
