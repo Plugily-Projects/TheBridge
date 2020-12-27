@@ -25,6 +25,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
@@ -37,28 +38,28 @@ import plugily.projects.thebridge.utils.Utils;
 import java.util.List;
 
 /**
- * Created by Tom on 28/07/2015.
+ * Created by Tigerpanzer_02 on 27.12.2020.
  */
-public class PremiumHardcoreKit extends PremiumKit {
+public class HeavyTankKit extends PremiumKit {
 
-  public PremiumHardcoreKit() {
-    setName(getPlugin().getChatManager().colorMessage("KIT HARDCORE NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("KIT HARDCORE DESC"), 40);
+  public HeavyTankKit() {
+    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_HEAVY_TANK_NAME"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_HEAVY_TANK_DESCRIPTION"), 40);
     this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return PermissionsManager.gotKitsPerm(player) || player.hasPermission("thebridge.kit.premiumhardcore");
+    return player.hasPermission("thebridge.kit.heavytankkit") || PermissionsManager.gotKitsPerm(player);
   }
-
   @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
-      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{11}));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(6);
-    player.getInventory().addItem(new ItemStack(Material.SADDLE));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.STICK), new Enchantment[] {Enchantment.DURABILITY, Enchantment.DAMAGE_ALL}, new int[] {10, 2}));
+    player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+    player.setHealth(40.0);
+    ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
@@ -69,13 +70,11 @@ public class PremiumHardcoreKit extends PremiumKit {
 
   @Override
   public Material getMaterial() {
-    return Material.DIAMOND_SWORD;
+    return Material.DIAMOND_CHESTPLATE;
   }
 
   @Override
   public void reStock(Player player) {
     //no restock items for this kit
   }
-
-
 }

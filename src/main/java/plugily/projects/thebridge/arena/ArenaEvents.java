@@ -1,3 +1,22 @@
+/*
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.*;
@@ -20,7 +39,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -28,12 +46,14 @@ import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
-import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.rewards.Reward;
+import plugily.projects.thebridge.kits.level.ArcherKit;
+import plugily.projects.thebridge.kits.premium.NakedKit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -173,6 +193,8 @@ public class ArenaEvents implements Listener {
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
         base.addPoint();
+        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
+        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
         return;
       }
     }
@@ -220,9 +242,13 @@ public class ArenaEvents implements Listener {
 
     User user = plugin.getUserManager().getUser((Player) e.getEntity());
     if (user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", 5));
+      int cooldown = 5;
+      if ((user.getKit() instanceof ArcherKit)) {
+        cooldown = 3;
+      }
+      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", 5));
+      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       NMS.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
@@ -276,13 +302,15 @@ public class ArenaEvents implements Listener {
       return;
     }
     //we won't allow to suicide
-    if (attacker.equals(victim)) {
+    if (attacker == victim) {
       e.setCancelled(true);
       return;
     }
-    //todo do not kill player from same team
     Arena arena = ArenaRegistry.getArena(attacker);
-
+    if (arena.isTeammate(victim, attacker)) {
+      e.setCancelled(true);
+      return;
+    }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
 
@@ -360,7 +388,6 @@ public class ArenaEvents implements Listener {
       //we must call it ticks later due to instant respawn bug
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         e.getEntity().spigot().respawn();
-        //todo give kit to player
       }, 5);
     }
   }

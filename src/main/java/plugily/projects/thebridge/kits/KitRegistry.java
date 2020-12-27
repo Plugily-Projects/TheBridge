@@ -1,6 +1,6 @@
 /*
- * The Bridge - Protect villagers from hordes of zombies
- * Copyright (C) 2020  Plugily Projects - maintained by 2Wild4You, Tigerpanzer_02 and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.kits;
@@ -25,6 +26,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.kits.basekits.FreeKit;
 import plugily.projects.thebridge.kits.basekits.Kit;
+import plugily.projects.thebridge.kits.free.BridgeKit;
 import plugily.projects.thebridge.kits.free.KnightKit;
 import plugily.projects.thebridge.kits.free.LightTankKit;
 import plugily.projects.thebridge.kits.level.*;
@@ -47,7 +49,7 @@ public class KitRegistry {
   private static Kit defaultKit = null;
   private static Main plugin;
   private static final List<Class<?>> classKitNames = Arrays.asList(LightTankKit.class, ArcherKit.class, HealerKit.class,
-          MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class);
+          MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class);
 
   private KitRegistry() {
   }
@@ -110,7 +112,7 @@ public class KitRegistry {
   }
 
   private static void setupGameKits() {
-    KnightKit knightkit = new KnightKit();
+    BridgeKit bridgeKit = new BridgeKit();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "kits");
     for (Class<?> kitClass : classKitNames) {
       if (config.getBoolean("Enabled-Game-Kits." + kitClass.getSimpleName().replace("Kit", ""))) {
@@ -123,7 +125,7 @@ public class KitRegistry {
       }
     }
 
-    KitRegistry.setDefaultKit(knightkit);
+    KitRegistry.setDefaultKit(bridgeKit);
   }
 
 }

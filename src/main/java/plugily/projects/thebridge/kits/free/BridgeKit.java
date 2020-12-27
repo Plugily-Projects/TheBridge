@@ -17,65 +17,66 @@
  *
  */
 
-package plugily.projects.thebridge.kits.premium;
+package plugily.projects.thebridge.kits.free;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
+import pl.plajerlair.commonsbox.minecraft.misc.ColorUtil;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.PremiumKit;
+import plugily.projects.thebridge.kits.basekits.FreeKit;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
 
-/**
- * Created by Tom on 28/07/2015.
- */
-public class PremiumHardcoreKit extends PremiumKit {
+public class BridgeKit extends FreeKit {
 
-  public PremiumHardcoreKit() {
-    setName(getPlugin().getChatManager().colorMessage("KIT HARDCORE NAME"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("KIT HARDCORE DESC"), 40);
+  public BridgeKit() {
+    setName(getPlugin().getChatManager().colorMessage("Messages.KITS_LIGHT_TANK_NAME"));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Messages.KITS_LIGHT_TANK_DESCRIPTION)"), 40);
     this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return PermissionsManager.gotKitsPerm(player) || player.hasPermission("thebridge.kit.premiumhardcore");
+    return true;
   }
 
   @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
-      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{11}));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(6);
-    player.getInventory().addItem(new ItemStack(Material.SADDLE));
+    player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10));
+    player.getInventory().addItem(XMaterial.BOW.parseItem());
+    player.getInventory().addItem(XMaterial.ARROW.parseItem());
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 3}));
+    player.getInventory().addItem(new ItemStack(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial(), 1));
+    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    player.setHealth(20.0);
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+    ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
     player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial(), 64));
-
   }
 
   @Override
   public Material getMaterial() {
-    return Material.DIAMOND_SWORD;
+    return Material.GOLDEN_APPLE;
   }
 
   @Override
   public void reStock(Player player) {
     //no restock items for this kit
   }
-
-
 }

@@ -17,33 +17,31 @@
  *
  */
 
-package plugily.projects.thebridge.api.events.game;
+package plugily.projects.thebridge.commands.arguments.game;
 
-import org.bukkit.event.HandlerList;
-import plugily.projects.thebridge.api.events.TheBridgeEvent;
-import plugily.projects.thebridge.arena.Arena;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
+import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
+import plugily.projects.thebridge.utils.Utils;
 
 /**
  * @author Tigerpanzer_02
- * @since 1.0.0
  * <p>
- * Called when arena is stopped.
+ * Created at 27.12.2020
  */
-public class TBGameStopEvent extends TheBridgeEvent {
+public class SelectKitArgument {
 
-  private static final HandlerList HANDLERS = new HandlerList();
-
-  public TBGameStopEvent(Arena arena) {
-    super(arena);
-  }
-
-  public static HandlerList getHandlerList() {
-    return HANDLERS;
-  }
-
-  @Override
-  public HandlerList getHandlers() {
-    return HANDLERS;
+  public SelectKitArgument(ArgumentsRegistry registry) {
+    registry.mapArgument("villagedefense", new CommandArgument("selectkit", "villagedefense.command.selectkit", CommandArgument.ExecutorType.PLAYER) {
+      @Override
+      public void execute(CommandSender sender, String[] args) {
+        if (!Utils.checkIsInGameInstance((Player) sender)) {
+          return;
+        }
+        registry.getPlugin().getKitMenuHandler().createMenu((Player) sender);
+      }
+    });
   }
 
 }

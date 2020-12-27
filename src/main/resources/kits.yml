@@ -9,14 +9,15 @@ Required-Level:
   Terminator: 20
   Hardcore: 100
 
-# Here you can disable Village Defense preconfigured kits.
+# Here you can disable TheBridges preconfigured kits.
 # Set 'false' to disable.
 Enabled-Game-Kits:
   Archer: true
   Hardcore: true
   Healer: true
-  # Knight is default kit, it cannot be disabled
-  #Knight: true
+  # Bridge is default kit, it cannot be disabled
+  # Bridge: true
+  Knight: true
   LightTank: true
   MediumTank: true
   Naked: true
