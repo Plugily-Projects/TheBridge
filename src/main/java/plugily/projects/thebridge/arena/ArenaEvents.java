@@ -235,7 +235,11 @@ public class ArenaEvents implements Listener {
       case VOID:
         //kill the player and move to the spawn point
         victim.damage(1000.0);
-        victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
+        if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+          victim.teleport(arena.getLobbyLocation());
+        }
+        if (arena.getBase(victim) != null)
+          victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
         break;
       default:
         break;
@@ -247,8 +251,15 @@ public class ArenaEvents implements Listener {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
-
     User user = plugin.getUserManager().getUser((Player) e.getEntity());
+    Arena arena = ArenaRegistry.getArena(user.getPlayer());
+    if (arena == null) {
+      return;
+    }
+    if (arena.isResetRound()) {
+      e.setCancelled(true);
+      return;
+    }
     if (user.getCooldown("bow_shot") == 0) {
       int cooldown = 5;
       if ((user.getKit() instanceof ArcherKit)) {
@@ -408,6 +419,8 @@ public class ArenaEvents implements Listener {
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
       if (arena.inBase(player)) {
+        //todo only if void death
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
         e.setRespawnLocation(arena.getBase(player).getPlayerRespawnPoint());
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -418,9 +431,9 @@ public class ArenaEvents implements Listener {
         plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
         if (!arena.getHits().containsKey(player)) {
           chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
-          user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-          user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         }
+        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+        user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         rewardLastAttacker(arena, player);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());

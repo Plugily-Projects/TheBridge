@@ -232,6 +232,7 @@ In-Game:
     Portal:
       Own: "&7That is your own portal"
       Opponent: "&7%base% %player% jumped into %base_jumped%!"
+      Hologram: "%base%;Jump into this portal!"
     Blocked:
       Run: "&7Get some points"
       Title: "&7Round reset - You can not move!"
@@ -288,7 +289,7 @@ Arena-Selector:
 Bases:
   Team:
     Full: "Team is full"
-    Empty: "Team is empty"
+    Empty: "You can join this team"
     Inside: "Your team"
     Name: "Base - %base%"
     Menu-Name: "Base Menu"

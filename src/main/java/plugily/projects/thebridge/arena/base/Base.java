@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class Base {
 
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
+
+  private ArmorStandHologram armorStandHologram;
 
   public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
@@ -144,8 +147,17 @@ public class Base {
     this.points++;
   }
 
+  public ArmorStandHologram getArmorStandHologram() {
+    return armorStandHologram;
+  }
+
+  public void setArmorStandHologram(ArmorStandHologram armorStandHologram) {
+    this.armorStandHologram = armorStandHologram;
+  }
+
   public void reset() {
     this.points = 0;
     resetPlayers();
+
   }
 }

@@ -34,7 +34,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.ArenaSign;
@@ -131,6 +130,7 @@ public class ArenaRegisterComponent implements SetupComponent {
       plugin.getSignManager().getArenaSigns().stream().filter(arenaSign -> arenaSign.getArena().equals(setupInventory.getArena()))
         .forEach(arenaSign -> signsToUpdate.add(arenaSign.getSign()));
       arena.setReady(true);
+      arena.setOptionValue(ArenaOption.SIZE, config.getInt("instances." + arena.getId() + ".maximumsize", 3));
       arena.setMaximumPlayers(basesDone * arena.getOption(ArenaOption.SIZE));
       ArenaRegistry.registerArena(arena);
       arena.start();

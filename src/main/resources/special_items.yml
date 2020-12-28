@@ -41,7 +41,7 @@ Player-List:
   displayname: "&a&lAlive Players &7(Right Click)"
   lore:
     - "&7Right-click to see alive players list"
-  material-name: HEAD
+  material-name: PLAYER_HEAD
   slot: 0
   stage: spectator
 

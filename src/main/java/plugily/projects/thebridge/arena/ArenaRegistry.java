@@ -19,19 +19,18 @@
 
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
+import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.utils.Debugger;
+import plugily.projects.thebridge.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +145,7 @@ public class ArenaRegistry {
         if (config.isConfigurationSection(s + "bases")) {
           for (String baseID : config.getConfigurationSection(s + "bases").getKeys(false)) {
             if (config.isSet(s + "bases." + baseID + ".isdone")) {
-              arena.addBase(new Base(
+              Base base = new Base(
                 config.getString("instances." + arena.getId() + ".bases." + baseID + ".color"),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
@@ -155,7 +154,13 @@ public class ArenaRegistry {
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation1")),
                 LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation2")),
                 config.getInt("instances." + arena.getId() + ".maximumsize")
-              ));
+              );
+              arena.addBase(base);
+              ArmorStandHologram portal = new ArmorStandHologram(Utils.getBlockCenter(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portalhologram"))));
+              for (String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
+                portal.appendLine(str.replace("%base%", base.getFormattedColor()));
+              }
+              base.setArmorStandHologram(portal);
               bases++;
             } else {
               System.out.println("Non configured bases instances found for arena " + id);
@@ -174,6 +179,7 @@ public class ArenaRegistry {
         System.out.print("Instance " + id + " doesn't contains 2 bases that are done!");
         arena.setReady(false);
       }
+      arena.setOptionValue(ArenaOption.SIZE, config.getInt("instances." + arena.getId() + ".maximumsize", 3));
       arena.setMaximumPlayers(bases * arena.getOption(ArenaOption.SIZE));
       if (config.contains(s + "mode")) {
         arena.setMode(Arena.Mode.valueOf(config.getString(s + "mode").toUpperCase()));

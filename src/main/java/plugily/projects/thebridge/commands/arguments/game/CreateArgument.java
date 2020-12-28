@@ -21,7 +21,6 @@ package plugily.projects.thebridge.commands.arguments.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -34,10 +33,8 @@ import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.setup.SetupInventory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tigerpanzer_02 & 2Wild4You
@@ -90,7 +87,6 @@ public class CreateArgument {
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", 2);
-    config.set(path + "maximumplayers", 10);
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);

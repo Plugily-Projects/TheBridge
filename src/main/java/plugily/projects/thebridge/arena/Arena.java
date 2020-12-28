@@ -190,6 +190,7 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+            //todo Fix if all players on same base because they selected it
             if (!inBase(player)) {
               getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get().addPlayer(player);
             }
@@ -626,7 +627,6 @@ public class Arena extends BukkitRunnable {
     round = 0;
     resetRound = 0;
     winner = null;
-    //todo
   }
 
   int round;
