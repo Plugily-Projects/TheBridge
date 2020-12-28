@@ -134,12 +134,11 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator() || !ArenaRegistry.isInArena(player)) {
+    if (!plugin.getUserManager().getUser(player).isSpectator()) {
       return;
     }
     if (player.getLocation().getY() < 1) {
-      //todo teleport player to team spot
-      //player.teleport(ArenaRegistry.getArena(player).getPlayerSpawnPoints().get(0));
+      player.teleport(ArenaRegistry.getArena(player).getSpectatorLocation());
     }
     event.setCancelled(true);
   }

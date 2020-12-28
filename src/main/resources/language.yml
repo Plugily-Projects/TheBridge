@@ -79,7 +79,8 @@ Commands:
 # %FORMATTED_TIME% - Returns time formatted.
 # %BASES%- Returns all bases formatted
 # %BASE_COLOR% - Returns players base color
-# %BASE% - Returns base name (color)
+# %BASE% - Returns base name (color name)
+# %BASE_FORMATTED% - Returns base name colored like you want (See Bases.Color)
 # %BASE_PLAYERS% - Returns players on team
 # %BASE_YOU% - Returns Scoreboard.Bases.Inside if you are on that base
 # %FORMATTED_POINTS% - It multiplies and set colors for the points (See Scoreboard.Mode)
@@ -91,7 +92,7 @@ Commands:
 Scoreboard:
   Title: "&e&lTheBridge"
   Bases:
-    Format: "%BASE% &7(&f%BASE_PLAYERS%&7) &e%BASE_YOU% %FORMATTED_POINTS%"
+    Format: "%BASE_FORMATTED% &7(&f%BASE_PLAYERS%&7) &e%BASE_YOU% %FORMATTED_POINTS%"
     Not-Inside: "--"
     Inside: "(You)"
   Mode:
@@ -197,6 +198,7 @@ In-Game:
   Dead-Tag-On-Death: "&8Dead"
   Game-Chat-Format: "&6[&5%base%&6]&6[%kit%&6] %player%: &f%message%"
   Death-Screen: "&cYou died!"
+  Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
   You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
   You-Leveled-Up: "&7You leveled up! You're now level %NUMBER%!"
   Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /vd leave!"
@@ -226,7 +228,7 @@ In-Game:
     Killed: "&aYou killed %VICTIM%"
     Build-Break: "&7You can not build and break here"
     Seconds-Left-Title: "Time is running out!"
-    Seconds-left-Subtitle: "%time% seconds left"
+    Seconds-Left-Subtitle: "%time% seconds left"
     Portal:
       Own: "&7That is your own portal"
       Opponent: "&7%base% %player% jumped into %base_jumped%!"
@@ -271,7 +273,7 @@ Signs:
     - "&5[%playersize%/%maxplayers%]"
 
 Arena-Selector:
-  Inv-Title: "Arena selector"
+  Inv-Title: "TheBridge > Arena selector"
   Item:
     Lore:
       - "&eTheBridge &f- &e%mapname%"
@@ -302,8 +304,8 @@ Bases:
     GOLD: "&6GOLD"
     LIGHT_GRAY: "&7LIGHT_GRAY"
     DARK_GRAY: "&8DARK_GRAY"
-    INDIGO: "&9INDIGO"
-    LIME_GREEN: "&aLIME_GREEN"
+    BLUE: "&9BLUE"
+    GREEN: "&aLIME_GREEN"
     AQUA: "&bAQUA"
     RED: "&cRED"
     PINK: "&dPINK"

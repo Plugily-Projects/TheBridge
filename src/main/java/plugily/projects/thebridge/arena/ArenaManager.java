@@ -242,7 +242,7 @@ public class ArenaManager {
       if (arena.getPlayersLeft().size() - 1 > 1) {
         //plugin.getCorpseHandler().spawnCorpse(player, arena);
       } else {
-        stopGame(false, arena);
+        stopGame(true, arena);
       }
     }
     //the default fly speed
@@ -394,7 +394,7 @@ public class ArenaManager {
       default:
         break;
     }
-    formatted = StringUtils.replace(formatted, "%base%", arena.getWinner().getColor());
+    formatted = StringUtils.replace(formatted, "%base%", arena.getWinner().getFormattedColor());
 
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

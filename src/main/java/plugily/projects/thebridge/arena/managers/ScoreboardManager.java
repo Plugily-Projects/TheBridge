@@ -163,6 +163,7 @@ public class ScoreboardManager {
   private String formatBase(String line, User user, Base base) {
     String formattedLine = line;
     formattedLine = StringUtils.replace(formattedLine, "%BASE%", base.getColor());
+    formattedLine = StringUtils.replace(formattedLine, "%BASE_FORMATTED%", base.getFormattedColor());
     formattedLine = StringUtils.replace(formattedLine, "%BASE_PLAYERS%", String.valueOf(base.getPlayers().size()));
     boolean baseYou = false;
     if (formattedLine.contains("%BASE_YOU%")) baseYou = true;

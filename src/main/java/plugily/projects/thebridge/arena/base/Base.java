@@ -20,10 +20,11 @@
 package plugily.projects.thebridge.arena.base;
 
 
-import org.bukkit.Color;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.thebridge.handlers.language.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,20 +36,20 @@ import java.util.List;
  */
 public class Base {
 
-  private String color;
-  private Location baseLocation1;
-  private Location baseLocation2;
-  private Location playerSpawnPoint;
-  private Location playerRespawnPoint;
-  private Location portalLocation1;
-  private Location portalLocation2;
-  private Integer maximumSize;
+  private final String color;
+  private final Location baseLocation1;
+  private final Location baseLocation2;
+  private final Location playerSpawnPoint;
+  private final Location playerRespawnPoint;
+  private final Location portalLocation1;
+  private final Location portalLocation2;
+  private final Integer maximumSize;
   private Integer points = 0;
 
   private ArrayList<Player> players = new ArrayList<>();
 
-  private Cuboid baseCuboid;
-  private Cuboid portalCuboid;
+  private final Cuboid baseCuboid;
+  private final Cuboid portalCuboid;
 
   public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
@@ -65,6 +66,10 @@ public class Base {
 
   public String getColor() {
     return color;
+  }
+
+  public String getFormattedColor() {
+    return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("Bases.Colors." + getColor()) + "&r");
   }
 
   public Location getBaseLocation1() {
@@ -117,6 +122,10 @@ public class Base {
 
   public List<Player> getPlayers() {
     return players;
+  }
+
+  public Integer getPlayersSize() {
+    return players.size();
   }
 
   public Integer getMaximumSize() {

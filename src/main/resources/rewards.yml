@@ -36,17 +36,15 @@ rewards:
   endgame:
     - say %MAPNAME% has ended!
     - say Ooh and there were playing %PLAYERAMOUNT% players
-  # Commands executed when crewmates wins the game
-  win-crewmate:
-    - say I won the game!
-  # Commands executed when crewmates loses the game
-  lose-crewmate:
-    - say I lost the game!
   death:
     - say I died!
-  # Commands executed when impostors wins the game
-  win-impostor:
-    - say Impostors for the win!
-  # Commands executed when impostors loses the game
-  lose-impostor:
-    - say Impostors lost!
+  won:
+    - say You won!
+  lose:
+    - say You lose!
+  kill:
+    - You killed someone! Here you could give players coins ;)
+  point:
+    - You scored ;)
+  resetround:
+    - Round gets reset!

@@ -191,20 +191,7 @@ public class Arena extends BukkitRunnable {
             setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             if (!inBase(player)) {
-              for (Base base : getBases()) {
-                if (base.getPlayers().size() == 0) {
-                  base.addPlayer(player);
-                  break;
-                }
-              }
-            }
-            if (!inBase(player)) {
-              for (Base base : getBases()) {
-                if (base.getPlayers().size() >= base.getMaximumSize()) continue;
-                //todo try to redo teams if they would be unfair (one team got more players than other)
-                base.addPlayer(player);
-                break;
-              }
+              getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get().addPlayer(player);
             }
             //fallback
             if (!inBase(player)) {
@@ -268,7 +255,7 @@ public class Arena extends BukkitRunnable {
               if (mode == Mode.POINTS) {
                 for (Player p : getPlayers()) {
                   p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getColor()), 5, 40, 5);
+                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getFormattedColor()), 5, 40, 5);
                   if (base.getPlayers().contains(p)) {
                     p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
                   }
@@ -333,11 +320,10 @@ public class Arena extends BukkitRunnable {
             }
           }
 
-          chatManager.broadcast(this, chatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
             user.getPlayer().setCollidable(true);
+            user.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", user.getPlayer()));
             plugin.getUserManager().saveAllStatistic(user);
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
@@ -487,18 +473,12 @@ public class Arena extends BukkitRunnable {
   }
 
   public List<Player> getTeammates(Player player) {
-    if (getBase(player).getPlayers().size() == 1) {
-      return null;
-    }
-    List<Player> mates = getBase(player).getPlayers();
+    List<Player> mates = new ArrayList<>(getBase(player).getPlayers());
     mates.remove(player);
     return mates;
   }
 
   public boolean isTeammate(Player player, Player check) {
-    if (getTeammates(player) == null) {
-      return false;
-    }
     return getTeammates(player).contains(check);
   }
 
@@ -513,7 +493,7 @@ public class Arena extends BukkitRunnable {
     if (p == null || !p.isOnline()) {
       return null;
     }
-    for (Base base : getBases()) {
+    for (Base base : bases) {
       for (Player player : base.getPlayers()) {
         if (player == p) {
           return base;
@@ -583,7 +563,7 @@ public class Arena extends BukkitRunnable {
     player.setWalkSpeed(0.2f);
     Location location = getLobbyLocation();
     if (location == null) {
-      System.out.print("LobbyLocation isn't intialized for arena " + getId());
+      System.out.print("LobbyLocation isn't initialized for arena " + getId());
       return;
     }
     player.teleport(location);

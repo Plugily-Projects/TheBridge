@@ -55,7 +55,7 @@ public class BridgeKit extends FreeKit {
   @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10));
-    player.getInventory().addItem(XMaterial.BOW.parseItem());
+    player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
     player.getInventory().addItem(XMaterial.ARROW.parseItem());
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 3}));

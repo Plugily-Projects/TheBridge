@@ -38,9 +38,11 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -72,12 +74,16 @@ public class SpectatorItemEvents implements Listener {
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-        e.setCancelled(true);
-        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"))) {
+      String key = plugin.getSpecialItemManager().getRelatedSpecialItem(stack).getName();
+      if (key == null) {
+        return;
+      }
+      if (key.equals(SpecialItemManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
+      } else if (key.equals(SpecialItemManager.SpecialItems.PLAYERS_LIST.getName())) {
+        e.setCancelled(true);
+        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
       }
     }
   }
@@ -93,10 +99,7 @@ public class SpectatorItemEvents implements Listener {
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = Utils.setPlayerHead(player, meta);
         meta.setDisplayName(player.getName());
-
-        //todo set team
-
-        //meta.setLore(Collections.singletonList(team));
+        meta.setLore(Collections.singletonList(ArenaRegistry.getArena(player).getBase(player).getFormattedColor()));
         NMS.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
@@ -113,7 +116,7 @@ public class SpectatorItemEvents implements Listener {
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
     e.setCancelled(true);

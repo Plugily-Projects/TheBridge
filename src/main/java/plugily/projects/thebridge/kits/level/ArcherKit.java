@@ -58,7 +58,7 @@ public class ArcherKit extends LevelKit {
   @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.DURABILITY, 10));
+    player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
     player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
     player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
     Arena arena = ArenaRegistry.getArena(player);

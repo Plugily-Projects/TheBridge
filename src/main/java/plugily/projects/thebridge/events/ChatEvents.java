@@ -99,8 +99,10 @@ public class ChatEvents implements Listener {
     formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
     if (user.getArena().getBase(user.getPlayer()) == null) {
       formatted = StringUtils.replace(formatted, "%base%", LanguageManager.getLanguageMessage("Scoreboard.Bases.Not-Inside"));
+      formatted = StringUtils.replace(formatted, "%base_formatted%", LanguageManager.getLanguageMessage("Scoreboard.Bases.Not-Inside"));
     } else {
       formatted = StringUtils.replace(formatted, "%base%", user.getArena().getBase(user.getPlayer()).getColor());
+      formatted = StringUtils.replace(formatted, "%base_formatted%", user.getArena().getBase(user.getPlayer()).getFormattedColor());
     }
     if (user.isSpectator()) {
       formatted = StringUtils.replace(formatted, "%kit%", plugin.getChatManager().colorMessage("Messages.DEAD_TAG_ON_DEATH"));

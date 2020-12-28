@@ -85,7 +85,7 @@ public class BaseMenuHandler implements Listener {
       if (base.getPlayers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
-      itemStack = new ItemBuilder(itemStack).name(teamName.replace("%base%", base.getColor())).build();
+      itemStack = new ItemBuilder(itemStack).name(teamName.replace("%base%", base.getFormattedColor())).build();
       pane.addItem(new GuiItem(itemStack, e -> {
         e.setCancelled(true);
         if (!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
@@ -108,7 +108,7 @@ public class BaseMenuHandler implements Listener {
           arena.getBase(player).removePlayer(player);
         }
         base.addPlayer(player);
-        player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Base-Choose").replace("%base%", base.getColor()));
+        player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Base-Choose").replace("%base%", base.getFormattedColor()));
         e.getWhoClicked().closeInventory();
       }), x, y);
       x++;

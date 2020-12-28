@@ -41,7 +41,7 @@ Player-List:
   displayname: "&a&lAlive Players &7(Right Click)"
   lore:
     - "&7Right-click to see alive players list"
-  material-name: COMPASS
+  material-name: HEAD
   slot: 0
   stage: spectator
 
@@ -49,7 +49,7 @@ Spectator-Options:
   displayname: "&b&lSpectator Settings &7(Right Click)"
   lore:
     - "&7Right-click to adjust spectator settings"
-  material-name: COMPASS
+  material-name: COMPARATOR
   slot: 4
   stage: spectator
 

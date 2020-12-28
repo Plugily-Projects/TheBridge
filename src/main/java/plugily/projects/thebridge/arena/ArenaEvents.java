@@ -54,6 +54,7 @@ import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -155,8 +156,13 @@ public class ArenaEvents implements Listener {
       if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
-      if (arena.isTeammate(victim, attack)) {
+      if (plugin.getUserManager().getUser(attack).isSpectator()) {
         e.setCancelled(true);
+        return;
+      }
+      if (arena.isTeammate(attack, victim)) {
+        e.setCancelled(true);
+        return;
       }
       arena.addHits(victim, attack);
     }
@@ -171,7 +177,7 @@ public class ArenaEvents implements Listener {
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    if (arena.isResetRound()) {
+    if (arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
       event.setCancelled(true);
       return;
     }
@@ -193,7 +199,7 @@ public class ArenaEvents implements Listener {
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
         arena.getBase(player).addPoint();
-        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getColor()).replace("%base_jumped%", base.getColor()));
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getColor()));
         arena.getScoreboardManager().resetBaseCache();
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
@@ -292,10 +298,6 @@ public class ArenaEvents implements Listener {
       return;
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
-    if (ArenaRegistry.isInArena(attacker)) {
-      e.setCancelled(true);
-      e.getDamager().remove();
-    }
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
@@ -309,20 +311,21 @@ public class ArenaEvents implements Listener {
       return;
     }
     Arena arena = ArenaRegistry.getArena(attacker);
-    if (arena.isTeammate(victim, attacker)) {
+    if (plugin.getUserManager().getUser(attacker).isSpectator()) {
       e.setCancelled(true);
       return;
     }
+    if (arena.isTeammate(attacker, victim)) {
+      e.setCancelled(true);
+      return;
+    }
+    arena.addHits(victim, attacker);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-    victim.damage(100.0);
-
-    User user = plugin.getUserManager().getUser(attacker);
-
-    user.addStat(StatsStorage.StatisticType.KILLS, 1);
-    user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-
-
-    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
+    if (victim.getHealth() - e.getDamage() < 0) {
+      return;
+    }
+    DecimalFormat df = new DecimalFormat("##.##");
+    attacker.sendMessage(victim.getName() + " §c♥ " + df.format(victim.getHealth() - e.getDamage()));
   }
 
 
@@ -337,7 +340,7 @@ public class ArenaEvents implements Listener {
     e.getDrops().clear();
     e.setDroppedExp(0);
     // plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
-    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 7 * 20, 0));
     Player player = e.getEntity();
     if (arena.getArenaState() == ArenaState.STARTING) {
       return;
@@ -347,11 +350,9 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(false);
       return;
     }
-    rewardLastAttacker(arena, player);
     //if mode hearts and they are out it should set spec mode for them
     if (arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
       User user = plugin.getUserManager().getUser(player);
-      user.addStat(StatsStorage.StatisticType.DEATHS, 1);
       user.setSpectator(true);
       player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
@@ -359,7 +360,6 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(true);
       player.setFlying(true);
       player.getInventory().clear();
-      chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
       if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
         arena.addDeathPlayer(player);
       }
@@ -381,12 +381,9 @@ public class ArenaEvents implements Listener {
       }, 5);
     } else {
       User user = plugin.getUserManager().getUser(player);
-      user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-      user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
       player.setGameMode(GameMode.SURVIVAL);
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
       player.getInventory().clear();
-      chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
       //we must call it ticks later due to instant respawn bug
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         e.getEntity().spigot().respawn();
@@ -419,6 +416,12 @@ public class ArenaEvents implements Listener {
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
         plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+        if (!arena.getHits().containsKey(player)) {
+          chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
+          user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+          user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
+        }
+        rewardLastAttacker(arena, player);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());
         player.setAllowFlight(true);
@@ -459,6 +462,4 @@ public class ArenaEvents implements Listener {
       }
     }
   }
-
-
 }
