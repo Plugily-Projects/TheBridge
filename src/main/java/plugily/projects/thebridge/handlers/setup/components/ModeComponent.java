@@ -80,7 +80,7 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 0, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
+    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Mode"))
       .lore(ChatColor.GRAY + "LEFT click to set HEARTS")
       .lore(ChatColor.GRAY + "RIGHT click to set POINTS")
@@ -98,7 +98,7 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
+    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_TORCH)
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks"))
       .name(plugin.getChatManager().colorRawMessage("&e&lSet reset blocks round"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")

@@ -250,7 +250,7 @@ public class ArenaManager {
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
-    arena.teleportToEndLocation(player);
+    arena.teleportToLobby(player);
     if (!user.isSpectator()) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
@@ -286,7 +286,7 @@ public class ArenaManager {
       }
       NMS.showPlayer(player, players);
     }
-    arena.teleportToEndLocation(player);
+    arena.teleportToLobby(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);

@@ -336,7 +336,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     DecimalFormat df = new DecimalFormat("##.##");
-    attacker.sendMessage(victim.getName() + " §c♥ " + df.format(victim.getHealth() - e.getDamage()));
+    attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Bow-Damage-Format").replace("%victim%", victim.getName()).replace("%hearts%", df.format(victim.getHealth() - e.getDamage())));
   }
 
 

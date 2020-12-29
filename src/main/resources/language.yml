@@ -116,7 +116,7 @@ Scoreboard:
       - "&fScored: &e%LOCAL_SCORED_POINTS%"
       - ""
       - "&fMode: &e%MODE%"
-      - "&f%ONLYIFRESETBLOCKS%Block reset after %RESET_BLOCKS% rounds"
+      - "&f%ONLYIFRESETBLOCKS%Block reset in %RESET_BLOCKS% rounds"
       - ""
       - "&ewww.plugily.xyz"
     Waiting:
@@ -202,6 +202,7 @@ In-Game:
   Game-Chat-Format: "&6[&5%base%&6]&6[%kit%&6] %player%: &f%message%"
   Death-Screen: "&cYou died!"
   Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
+  Bow-Damage-Format: "%victim%  &c♥ %hearts%"
   You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
   You-Leveled-Up: "&7You leveled up! You're now level %NUMBER%!"
   Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /vd leave!"

@@ -28,6 +28,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -90,7 +91,7 @@ public class BaseComponent implements SetupComponent {
       }).buildFor(player);
     }), 0, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BEDROCK.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Base Location"))
       .lore(ChatColor.GRAY + "Click to set the base location")
       .lore(ChatColor.GRAY + "after you selected it with the location wand")
@@ -110,7 +111,7 @@ public class BaseComponent implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Location"))
       .lore(ChatColor.GRAY + "Click to set the portal location")
       .lore(ChatColor.GRAY + "after you selected it with the location wand")
@@ -134,7 +135,7 @@ public class BaseComponent implements SetupComponent {
 
     String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
       + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet SpawnPoint Location"))
       .lore(ChatColor.GRAY + "Click to set the spawn point location")
       .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -148,7 +149,7 @@ public class BaseComponent implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 3, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.LAPIS_BLOCK.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet ReSpawnPoint Location"))
       .lore(ChatColor.GRAY + "Click to set the respawn point location")
       .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -162,7 +163,7 @@ public class BaseComponent implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 4, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Hologram Location"))
       .lore(ChatColor.GRAY + "Click to set the portal hologram location")
       .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -177,7 +178,7 @@ public class BaseComponent implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 5, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lFinish Base"))
       .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
       .build(), e -> {

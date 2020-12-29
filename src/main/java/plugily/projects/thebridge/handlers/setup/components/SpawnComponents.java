@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -87,7 +88,7 @@ public class SpawnComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.COMPASS.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Spectator Location"))
       .lore(ChatColor.GRAY + "Click to set the spectator location")
       .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -102,7 +103,7 @@ public class SpawnComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BEACON.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Mid Location"))
       .lore(ChatColor.GRAY + "Click to set the mid location")
       .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -117,7 +118,7 @@ public class SpawnComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 3, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BEDROCK.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Arena Location"))
       .lore(ChatColor.GRAY + "Click to set the arena location")
       .lore(ChatColor.GRAY + "after you selected it with the location wand")

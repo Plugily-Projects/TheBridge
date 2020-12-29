@@ -25,9 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.ConversationContext;
@@ -36,18 +33,14 @@ import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Door;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.ArenaSign;
-import plugily.projects.thebridge.utils.Utils;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
 
 import java.util.List;
@@ -108,11 +101,12 @@ public class MiscComponents implements SetupComponent {
         return;
       }
       plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Messages.SIGNS_SIGN_CREATED"));
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
       String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
       List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
       locs.add(signLoc);
       config.set("instances." + arena.getId() + ".signs", locs);
+      plugin.getSignManager().updateSigns();
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 7, 0);
 
@@ -162,7 +156,7 @@ public class MiscComponents implements SetupComponent {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
     }), 8, 1);
 
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.CHEST.parseItem())
       .name(plugin.getChatManager().colorRawMessage("&e&lEdit Base"))
       .lore(ChatColor.GRAY + "Here you can add/edit a base")
       .lore(ChatColor.GRAY + "Make sure to register the base before continuing!")
@@ -172,7 +166,7 @@ public class MiscComponents implements SetupComponent {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
     }), 0, 1);
 
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.LEVER.parseItem())
       .name(plugin.getChatManager().colorRawMessage("&e&lEdit the mode"))
       .lore(ChatColor.GRAY + "Here you can edit the mode and there")
       .lore(ChatColor.GRAY + "values!")
