@@ -124,6 +124,7 @@ public class ArenaRegisterComponent implements SetupComponent {
       }
       e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
+      config.set("instances." + arena.getId() + ".resettime", 5);
       ConfigUtils.saveConfig(plugin, config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());

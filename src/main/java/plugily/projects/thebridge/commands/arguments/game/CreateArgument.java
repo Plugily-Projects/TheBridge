@@ -33,6 +33,7 @@ import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.setup.SetupInventory;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,6 @@ import java.util.ArrayList;
  * <p>
  * Created at 31.10.2020
  */
-//todo add/change values
 public class CreateArgument {
 
   private final ArgumentsRegistry registry;
@@ -73,7 +73,7 @@ public class CreateArgument {
           player.sendMessage("");
           player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/tb " + args[1] + " edit" + ChatColor.GREEN + "!");
           player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
-          //player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
+          player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
         }
       }

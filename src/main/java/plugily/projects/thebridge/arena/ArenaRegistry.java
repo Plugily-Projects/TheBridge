@@ -188,6 +188,7 @@ public class ArenaRegistry {
       }
       arena.setOptionValue(ArenaOption.MODE_VALUE, config.getInt(s + "modevalue", 5));
       arena.setOptionValue(ArenaOption.RESET_BLOCKS, config.getInt(s + "resetblocks", 0));
+      arena.setOptionValue(ArenaOption.RESET_TIME, config.getInt(s + "resettime", 5));
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);

@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 
 /**
  * @author Tigerpanzer_02 & 2Wild4You
@@ -39,7 +40,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getIdentifier() {
-    return "thebridge";
+    return "TheBridge";
   }
 
   @Override
@@ -49,7 +50,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getVersion() {
-    return "1.0.1";
+    return "1.0.0";
   }
 
   @Override
@@ -68,6 +69,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
       case "loses":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+      case "points":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORED_POINTS));
+      case "level":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL));
       default:
         return handleArenaPlaceholderRequest(id);
     }
@@ -93,6 +98,14 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return arena.getArenaState().getFormattedName();
       case "mapname":
         return arena.getMapName();
+      case "mode":
+        return arena.getMode().toString();
+      case "basesize":
+        return arena.getBases().get(0).getMaximumSize().toString();
+      case "modevalue":
+        return String.valueOf(arena.getOption(ArenaOption.MODE_VALUE));
+      case "resetblocks":
+        return String.valueOf(arena.getOption(ArenaOption.RESET_BLOCKS));
       default:
         return null;
     }

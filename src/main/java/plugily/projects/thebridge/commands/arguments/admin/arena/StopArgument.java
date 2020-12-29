@@ -47,7 +47,7 @@ public class StopArgument {
         }
         if (ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
           ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
-          //todo execute success command message
+          sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&e[TheBridge] &aArena successfully stopped!"));
         }
       }
     });

@@ -419,8 +419,9 @@ public class ArenaEvents implements Listener {
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
       if (arena.inBase(player)) {
-        //todo only if void death
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+        if (e.getPlayer().getLastDamageCause() != null && e.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID) {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+        }
         e.setRespawnLocation(arena.getBase(player).getPlayerRespawnPoint());
         player.setAllowFlight(false);
         player.setFlying(false);

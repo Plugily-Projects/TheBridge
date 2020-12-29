@@ -19,31 +19,23 @@
 
 package plugily.projects.thebridge.api;
 
-import plugily.projects.thebridge.ConfigPreferences;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.utils.MessageUtils;
-import plugily.projects.thebridge.user.data.MysqlManager;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.thebridge.ConfigPreferences;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.user.data.MysqlManager;
+import plugily.projects.thebridge.utils.MessageUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -131,7 +123,6 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    //todo
     DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), KILLS("kills", true),
     LOSES("loses", true), WINS("wins", true), LOCAL_DEATHS("local_deaths",false),
     LOCAL_KILLS("local_kills", false), LEVEL("level", true), SCORED_POINTS("points", true),

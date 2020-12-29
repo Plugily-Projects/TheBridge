@@ -108,7 +108,6 @@ public class ScoreboardManager {
   private List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    //todo per base scoreboard
     if (arena.getArenaState() == ArenaState.IN_GAME) {
       lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing");
     } else {
@@ -120,6 +119,9 @@ public class ScoreboardManager {
       }
     }
     for (String line : lines) {
+      if (line.contains("%ONLYIFRESETBLOCKS%") && arena.getOption(ArenaOption.RESET_BLOCKS) == 0) {
+        continue;
+      }
       if (line.contains("%BASES%")) {
         if (cachedBaseFormat.isEmpty()) {
           for (Base base : arena.getBases()) {
@@ -148,6 +150,8 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS_LEFT%", String.valueOf(arena.getPlayersLeft()));
     formattedLine = StringUtils.replace(formattedLine, "%MODE%", String.valueOf(arena.getMode()));
     formattedLine = StringUtils.replace(formattedLine, "%MODE_VALUE%", String.valueOf(arena.getOption(ArenaOption.MODE_VALUE)));
+    formattedLine = StringUtils.replace(formattedLine, "%ONLYIFRESETBLOCKS%", "");
+    formattedLine = StringUtils.replace(formattedLine, "%RESET_BLOCKS%", String.valueOf(arena.getOption(ArenaOption.RESET_BLOCKS) - arena.getRound()));
     formattedLine = StringUtils.replace(formattedLine, "%LOCAL_KILLS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%LOCAL_SCORED_POINTS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS)));
     formattedLine = StringUtils.replace(formattedLine, "%LOCAL_DEATHS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_DEATHS)));

@@ -19,17 +19,15 @@
 
 package plugily.projects.thebridge.user.data;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.user.User;
-import plugily.projects.thebridge.utils.MessageUtils;
 import plugily.projects.thebridge.utils.Debugger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.thebridge.utils.MessageUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -53,7 +51,6 @@ public class MysqlManager implements UserDatabase {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
-        // TODO
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + getTableName() + "` (\n"
           + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
           + "  `name` varchar(32) NOT NULL,\n"
@@ -61,6 +58,8 @@ public class MysqlManager implements UserDatabase {
           + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `level` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `points` int(11) NOT NULL DEFAULT '0',\n"
           + "  `loses` int(11) NOT NULL DEFAULT '0'\n"
           + ");");
       } catch (SQLException e) {

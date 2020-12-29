@@ -190,16 +190,28 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
-            //todo Fix if all players on same base because they selected it
+            // get base with min players
+            Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
+            // add player to min base if he got no base
             if (!inBase(player)) {
-              getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get().addPlayer(player);
+              minPlayers.addPlayer(player);
             }
-            //fallback
+            // fallback
             if (!inBase(player)) {
               getBases().get(0).addPlayer(player);
             }
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
+          }
+          //check if not only one base got players
+          Base maxPlayers = getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
+          Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
+          if (maxPlayers.getPlayersSize() == getPlayers().size()) {
+            for (int i = 0; i < maxPlayers.getPlayersSize() / 2; i++) {
+              Player move = maxPlayers.getPlayers().get(i);
+              minPlayers.addPlayer(move);
+              maxPlayers.removePlayer(move);
+            }
           }
           teleportAllToBaseLocation();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -632,7 +644,7 @@ public class Arena extends BukkitRunnable {
   int round;
 
   public void resetRound() {
-    resetRound = 6;
+    resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
     if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && round == arenaOptions.get(ArenaOption.RESET_BLOCKS)) {
       resetPlacedBlocks();
       round = 0;
@@ -640,7 +652,7 @@ public class Arena extends BukkitRunnable {
     resetHits();
     for (Player player : getPlayersLeft()) {
       player.teleport(getBase(player).getPlayerSpawnPoint());
-      player.sendMessage("Reset round");
+      player.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Reset"));
       player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
       player.getInventory().clear();
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
@@ -648,6 +660,10 @@ public class Arena extends BukkitRunnable {
     }
     plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
     round++;
+  }
+
+  public int getRound() {
+    return round;
   }
 
   public boolean isResetRound() {

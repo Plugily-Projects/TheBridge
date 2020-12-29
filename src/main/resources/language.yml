@@ -86,6 +86,8 @@ Commands:
 # %FORMATTED_POINTS% - It multiplies and set colors for the points (See Scoreboard.Mode)
 # %MODE_VALUE% - Returns the value player needs to win
 # %MODE% - Returns the mode that player plays
+# %RESET_BLOCKS% - Returns after how many rounds the blocks got reset
+# %ONLYIFRESETBLOCKS% - Hides the line if resetblocks is disabled
 # %LOCAL_KILLS% - Returns kills at that round
 # %LOCAL_SCORED_POINTS% - Returns mode points at that round
 # %LOCAL_DEATHS% - Returns deaths at that round
@@ -114,6 +116,7 @@ Scoreboard:
       - "&fScored: &e%LOCAL_SCORED_POINTS%"
       - ""
       - "&fMode: &e%MODE%"
+      - "&f%ONLYIFRESETBLOCKS%Block reset after %RESET_BLOCKS% rounds"
       - ""
       - "&ewww.plugily.xyz"
     Waiting:
@@ -234,6 +237,7 @@ In-Game:
       Opponent: "&7%base% %player% jumped into %base_jumped%!"
       Hologram: "%base%;Jump into this portal!"
     Blocked:
+      Reset: "Movement is disabled while round reset"
       Run: "&7Get some points"
       Title: "&7Round reset - You can not move!"
       Subtitle: "%seconds%"
