@@ -97,10 +97,10 @@ public class Main extends JavaPlugin {
 
     long start = System.currentTimeMillis();
     setupFiles();
+    saveDefaultConfig();
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
-    saveDefaultConfig();
 
     Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
 
