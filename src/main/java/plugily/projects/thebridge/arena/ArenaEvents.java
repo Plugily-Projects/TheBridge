@@ -365,41 +365,24 @@ public class ArenaEvents implements Listener {
     if (arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
       User user = plugin.getUserManager().getUser(player);
       user.setSpectator(true);
-      player.setCollidable(false);
-      player.setGameMode(GameMode.SURVIVAL);
       ArenaUtils.hidePlayer(player, arena);
-      player.setAllowFlight(true);
-      player.setFlying(true);
       player.getInventory().clear();
       if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
         arena.addDeathPlayer(player);
       }
-      if (arena.getMode() == Arena.Mode.HEARTS) {
-        List<Player> players = arena.getBase(player).getPlayers();
-        if (players.stream().allMatch(arena::isDeathPlayer)) {
-          arena.addOut();
-        }
+      List<Player> players = arena.getBase(player).getPlayers();
+      if (players.stream().allMatch(arena::isDeathPlayer)) {
+        arena.addOut();
       }
-      //we must call it ticks later due to instant respawn bug
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        e.getEntity().spigot().respawn();
-        for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
-          if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
-            continue;
-          }
-          player.getInventory().setItem(item.getSlot(), item.getItemStack());
-        }
-      }, 5);
     } else {
-      User user = plugin.getUserManager().getUser(player);
       player.setGameMode(GameMode.SURVIVAL);
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
       player.getInventory().clear();
-      //we must call it ticks later due to instant respawn bug
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        e.getEntity().spigot().respawn();
-      }, 5);
     }
+    //we must call it ticks later due to instant respawn bug
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      e.getEntity().spigot().respawn();
+    }, 5);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -418,7 +401,7 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if (arena.inBase(player)) {
+      if (arena.inBase(player) && !user.isSpectator()) {
         if (e.getPlayer().getLastDamageCause() != null && e.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID) {
           player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
         }
@@ -446,6 +429,12 @@ public class ArenaEvents implements Listener {
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+          if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+            continue;
+          }
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+        }
       }
     }
   }
