@@ -1,2 +1,5 @@
-### 0.0.1 Alpha (31.10.2020)
-* Initial project skeleton created
+### 1.0.1 Release (31.12.2020)
+* Added UpdateChecker
+
+### 1.0.0 Release (31.12.2020)
+* Full release of TheBridge

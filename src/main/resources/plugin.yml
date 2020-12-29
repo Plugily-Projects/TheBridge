@@ -1,14 +1,14 @@
-name: TheBridge
+name: ${project.name}
 main: plugily.projects.thebridge.Main
-authors: [2Wild4You, Tigerpanzer]
-version: 0.0.1
+authors: [ Tigerpanzer, 2Wild4You ]
+version: ${project.version}
 api-version: 1.13
-softdepend: [PlaceholderAPI]
+softdepend: [ PlaceholderAPI ]
 
 commands:
   thebridge:
     description: thebridge commands
-    aliases: [tb, bridge]
+    aliases: [ tb, bridge ]
   thebridgeAdmin:
     description: thebridge admin commands
-    aliases: [tba, bridgeadmin]
+    aliases: [ tba, bridgeadmin ]
