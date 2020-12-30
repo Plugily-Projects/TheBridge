@@ -201,8 +201,8 @@
                 <version>3.2.0</version>
                 <configuration>
                     <windowtitle>The Bridge API docs for v${project.version}</windowtitle>
-                    <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking The Bridge with your plugin.
+                    <description>Minecraft competitive minigame.
+                        TheBridge - Defend your base and try to wipe out the others! API documentation for hooking The Bridge with your plugin.
                     </description>
                     <destDir>minecraft/thebridge</destDir>
                     <isOffline>false</isOffline>
