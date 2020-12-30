@@ -645,6 +645,7 @@ public class Arena extends BukkitRunnable {
 
   public void resetRound() {
     resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
+    round++;
     if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && getOption(ArenaOption.RESET_BLOCKS) - getRound() == 0) {
       resetPlacedBlocks();
       round = 0;
@@ -659,7 +660,6 @@ public class Arena extends BukkitRunnable {
       player.updateInventory();
     }
     plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
-    round++;
   }
 
   public int getRound() {
