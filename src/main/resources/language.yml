@@ -237,6 +237,7 @@ In-Game:
       Own: "&7That is your own portal"
       Opponent: "&7%base% %player% jumped into %base_jumped%!"
       Hologram: "%base%;Jump into this portal!"
+      Out: "This base is already out!"
     Blocked:
       Reset: "Movement is disabled while round reset"
       Run: "&7Get some points"

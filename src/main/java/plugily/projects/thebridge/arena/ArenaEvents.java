@@ -195,6 +195,11 @@ public class ArenaEvents implements Listener {
     }
     for (Base base : arena.getBases()) {
       if (base.getPortalCuboid().isIn(player)) {
+        if (base.getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
+          cooldownPortal.put(player, System.currentTimeMillis());
+          player.sendMessage(chatManager.colorMessage("In-Game.Messages.Portal.Out", player));
+          return;
+        }
         cooldownPortal.put(player, System.currentTimeMillis());
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
