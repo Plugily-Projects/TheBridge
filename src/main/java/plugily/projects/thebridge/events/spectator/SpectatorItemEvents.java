@@ -1,6 +1,7 @@
+
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.events.spectator;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.SkullType;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,17 +37,18 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.role.Role;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.items.SpecialItemManager;
+import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.Collections;
 import java.util.Set;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 05.08.2018
+ * Created at 23.11.2020
  */
 public class SpectatorItemEvents implements Listener {
 
@@ -70,12 +74,16 @@ public class SpectatorItemEvents implements Listener {
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-        e.setCancelled(true);
-        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      String key = plugin.getSpecialItemManager().getRelatedSpecialItem(stack).getName();
+      if (key == null) {
+        return;
+      }
+      if (key.equals(SpecialItemManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
+      } else if (key.equals(SpecialItemManager.SpecialItems.PLAYERS_LIST.getName())) {
+        e.setCancelled(true);
+        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
       }
     }
   }
@@ -85,27 +93,14 @@ public class SpectatorItemEvents implements Listener {
       chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
 
-    //Get the raw role message and replace old placeholder, we don't want to do this inside the for loop.
-    String roleRaw = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
-    roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role%");
-
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = Utils.setPlayerHead(player, meta);
         meta.setDisplayName(player.getName());
-
-        String role = roleRaw;
-        if (Role.isRole(Role.MURDERER, player)) {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
-        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
-        } else {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
-        }
-        meta.setLore(Collections.singletonList(role));
-        skull.setDurability((short) SkullType.PLAYER.ordinal());
+        meta.setLore(Collections.singletonList(ArenaRegistry.getArena(player).getBase(player).getFormattedColor()));
+        NMS.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
       }
@@ -116,15 +111,12 @@ public class SpectatorItemEvents implements Listener {
   @EventHandler
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
-    if (ArenaRegistry.getArena(p) == null) {
-      return;
-    }
     Arena arena = ArenaRegistry.getArena(p);
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+    if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
     e.setCancelled(true);

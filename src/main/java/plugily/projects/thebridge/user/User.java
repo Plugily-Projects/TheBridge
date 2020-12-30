@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +14,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.user;
+
+import plugily.projects.thebridge.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
-import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.player.TBPlayerStatisticChangeEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.kits.KitRegistry;
+import plugily.projects.thebridge.kits.basekits.Kit;
 
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 03.08.2018
+ * Created at 31.10.2020
  */
 public class User {
 
@@ -45,6 +49,7 @@ public class User {
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private final Map<String, Double> cooldowns = new HashMap<>();
   private final Player player;
+  private Kit kit = KitRegistry.getDefaultKit();
   private boolean spectator = false;
   private boolean permanentSpectator = false;
 
@@ -68,8 +73,8 @@ public class User {
     return spectator;
   }
 
-  public void setSpectator(boolean b) {
-    spectator = b;
+  public void setSpectator(boolean spectator) {
+    this.spectator = spectator;
   }
 
   public boolean isPermanentSpectator() {
@@ -120,6 +125,14 @@ public class User {
 
   public double getCooldown(String s) {
     return (!cooldowns.containsKey(s) || cooldowns.get(s) <= cooldownCounter) ? 0 : cooldowns.get(s) - cooldownCounter;
+  }
+
+  public Kit getKit() {
+    return kit;
+  }
+
+  public void setKit(Kit kit) {
+    this.kit = kit;
   }
 
 }

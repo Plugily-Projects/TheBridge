@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments;
@@ -32,6 +33,8 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.thebridge.commands.arguments.admin.LocationWandArgument;
+import plugily.projects.thebridge.commands.arguments.admin.SpectateArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ReloadArgument;
@@ -45,19 +48,15 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 11.01.2019
+ * Created at 31.10.2020
  */
-public class ArgumentsRegistry implements CommandExecutor {
+public class ArgumentsRegistry  implements CommandExecutor {
 
   private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
   private final Main plugin;
@@ -85,6 +84,8 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaderboardArgument(this, chatManager);
     new LeaveArgument(this, chatManager);
     new StatsArgument(this, chatManager);
+    new SelectBaseArgument(this);
+    new SelectKitArgument(this);
 
     //register admin related arguments
     new DeleteArgument(this, chatManager);
@@ -92,6 +93,8 @@ public class ArgumentsRegistry implements CommandExecutor {
     new ListArenasArgument(this, chatManager);
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
+    new SpectateArgument(this);
+    new LocationWandArgument(this);
   }
 
   @Override
@@ -128,8 +131,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             //does it make sense that it is a list?
             for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty()) break;
-              if (Utils.hasPermission(sender, perm)){
+              if (perm.isEmpty() || Utils.hasPermission(sender, perm)) {
                 break;
               }
               //user has no permission to execute command
@@ -181,14 +183,14 @@ public class ArgumentsRegistry implements CommandExecutor {
   }
 
   private void sendAdminHelpCommand(CommandSender sender) {
-    sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "thebridge " + ChatColor.GRAY + plugin.getDescription().getVersion());
+    sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Murder Mystery " + ChatColor.GRAY + plugin.getDescription().getVersion());
     sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
     if (sender instanceof Player) {
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
     }
     List<LabelData> data = mappedArguments.get("thebridgeadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
-    data.add(new LabelData("/mm &6<arena>&f edit", "/mm <arena> edit",
+    data.add(new LabelData("/tb &6<arena>&f edit", "/tb <arena> edit",
       "&7Edit existing arena\n&6Permission: &7thebridge.admin.edit"));
     data.addAll(mappedArguments.get("thebridge").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
@@ -209,8 +211,8 @@ public class ArgumentsRegistry implements CommandExecutor {
   /**
    * Maps new argument to the main command
    *
-   * @param mainCommand mother command ex. /mm
-   * @param argument    argument to map ex. leave (for /mm leave)
+   * @param mainCommand mother command ex. /tb
+   * @param argument    argument to map ex. leave (for /tb leave)
    */
   public void mapArgument(String mainCommand, CommandArgument argument) {
     List<CommandArgument> args = mappedArguments.getOrDefault(mainCommand, new ArrayList<>());
@@ -231,3 +233,4 @@ public class ArgumentsRegistry implements CommandExecutor {
   }
 
 }
+

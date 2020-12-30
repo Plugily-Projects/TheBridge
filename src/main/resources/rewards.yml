@@ -18,20 +18,17 @@
 #       ^ YOU CAN EVEN SWAP CHANCE WITH PLAYER!
 #    - chance(50):eco give %PLAYER% 10                # Console has 10% chance to give player 10$
 #
-#   You can unlock full potential of rewards using our script engine! (since 4.0.0)
+#   You can unlock full potential of rewards using our script engine!
 #    Just add example reward:
 #    - script:player.sendMessage("oh, hi %PLAYER%");      # It will send "oh, hi <player name>" to player! 100% plain java!
-#    - script:arena.setWave(1);                           # Sets the wave to 1!
 #    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
-#    arena - thebridge arena (API methods https://jd.plugily.xyz/apidocs/minecraft/thebridge/plugily/projects/thebridge/arena/Arena.html)
 #            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 #
-#                            Whole documentation of scripts soon!
 
 # Rewards must be enabled via config.yml first!
 rewards:
@@ -39,21 +36,15 @@ rewards:
   endgame:
     - say %MAPNAME% has ended!
     - say Ooh and there were playing %PLAYERAMOUNT% players
-  # Commands executed when detective is killed
-  detectivekill:
-    - eco give %PLAYER% 2
-    - chance(10):eco give %PLAYER% 8
-  # Commands executed when murderer is killed
-  murdererkill:
-    - eco give %PLAYER% 2
-    - chance(10):eco give %PLAYER% 8
-  # Commands executed when player wins the game
-  win:
-    - say I won the game!
-  # Commands executed when player loses the game
-  lose:
-    - say I lost the game!
   death:
     - say I died!
-  gold_pickup:
-    - say You picked up gold!
+  won:
+    - say You won!
+  lose:
+    - say You lose!
+  kill:
+    - You killed someone! Here you could give players coins ;)
+  point:
+    - You scored ;)
+  resetround:
+    - Round gets reset!

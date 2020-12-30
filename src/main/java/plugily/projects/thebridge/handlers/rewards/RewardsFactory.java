@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.handlers.rewards;
+
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.utils.Debugger;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.utils.Debugger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,9 +40,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 03.08.2018
+ * Created at 31.10.2020
  */
 public class RewardsFactory {
 
@@ -64,13 +67,6 @@ public class RewardsFactory {
       return;
     }
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
-      return;
-    }
-    ScriptEngine engine = new ScriptEngine();
-    engine.setValue("player", player);
-    engine.setValue("server", Bukkit.getServer());
-    engine.setValue("arena", arena);
     for (Reward reward : rewards) {
       if (reward.getType() == type) {
         //cannot execute if chance wasn't met
@@ -88,6 +84,10 @@ public class RewardsFactory {
             player.performCommand(command);
             break;
           case SCRIPT:
+            ScriptEngine engine = new ScriptEngine();
+            engine.setValue("player", player);
+            engine.setValue("server", Bukkit.getServer());
+            engine.setValue("arena", arena);
             engine.execute(command);
             break;
           default:
@@ -126,5 +126,6 @@ public class RewardsFactory {
     }
     Debugger.debug(Level.INFO, "[RewardsFactory] Registered all rewards took {0}ms", System.currentTimeMillis() - start);
   }
+
 
 }

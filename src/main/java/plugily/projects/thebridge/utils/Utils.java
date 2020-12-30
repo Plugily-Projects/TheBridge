@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +14,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.utils;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.handlers.ChatManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +48,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 06.10.2018
+ * Created at 31.10.2020
  */
 public class Utils {
 
   private static Main plugin;
-  private static ChatManager chatManager;
 
   private Utils() {
   }
 
   public static void init(Main plugin) {
     Utils.plugin = plugin;
-    Utils.chatManager = plugin.getChatManager();
   }
 
   /**
@@ -99,7 +100,7 @@ public class Utils {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(chatManager.colorMessage("In-Game.Cooldown-Format", p)
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
           .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
         ticks += 10;
       }
@@ -119,12 +120,12 @@ public class Utils {
   }
 
   public static Location getBlockCenter(Location location) {
-    return location.add(0.5, 0, 0.5);
+    return location.clone().add(0.5, 0, 0.5);
   }
 
   public static boolean checkIsInGameInstance(Player player) {
-    if (ArenaRegistry.getArena(player) == null) {
-      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Not-Playing", player));
+    if (!ArenaRegistry.isInArena(player)) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Not-Playing", player));
       return false;
     }
     return true;
@@ -134,22 +135,27 @@ public class Utils {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Permission"));
+    sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
     return false;
   }
 
+  @SuppressWarnings("deprecation")
   public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
     if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
       return CompletableFuture.supplyAsync(() -> {
         meta.setPlayerProfile(player.getPlayerProfile());
         return meta;
       }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of "+ player.getName() +" failed!");
+        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
         return meta;
       }).join();
     }
 
-    meta.setOwningPlayer(player);
+    if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_12_R1)) {
+      meta.setOwningPlayer(player);
+    } else {
+      meta.setOwner(player.getName());
+    }
     return meta;
   }
 
@@ -187,6 +193,24 @@ public class Utils {
     }
 
     return s;
+  }
+
+  public static List<String> splitString(String string, int max) {
+    List<String> matchList = new ArrayList<>();
+    Pattern regex = Pattern.compile(".{1," + max + "}(?:\\s|$)", Pattern.DOTALL);
+    Matcher regexMatcher = regex.matcher(string);
+    while (regexMatcher.find()) {
+      matchList.add(plugin.getChatManager().colorRawMessage("&7") + regexMatcher.group());
+    }
+    return matchList;
+  }
+
+  public static ItemStack getPotion(PotionType type, int tier, boolean splash) {
+    ItemStack potion = new ItemStack(!splash ? Material.POTION : Material.SPLASH_POTION, 1);
+    PotionMeta meta = (PotionMeta) potion.getItemMeta();
+    meta.setBasePotionData(new PotionData(type, false, tier >= 2 && !splash));
+    potion.setItemMeta(meta);
+    return potion;
   }
 
 }

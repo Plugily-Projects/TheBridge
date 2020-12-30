@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.handlers;
@@ -23,11 +24,12 @@ import org.bukkit.entity.Player;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 08.08.2018
+ * Created at 31.10.2020
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
@@ -38,22 +40,17 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getIdentifier() {
-    return "thebridge";
-  }
-
-  @Override
-  public String getPlugin() {
-    return null;
+    return "TheBridge";
   }
 
   @Override
   public String getAuthor() {
-    return "Plajer";
+    return "Tigerpanzer_02 & 2Wild4You";
   }
 
   @Override
   public String getVersion() {
-    return "1.0.1";
+    return "1.0.0";
   }
 
   @Override
@@ -68,12 +65,14 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.DEATHS));
       case "games_played":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
-      case "highest_score":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_SCORE));
       case "wins":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
       case "loses":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+      case "points":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORED_POINTS));
+      case "level":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL));
       default:
         return handleArenaPlaceholderRequest(id);
     }
@@ -99,9 +98,16 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return arena.getArenaState().getFormattedName();
       case "mapname":
         return arena.getMapName();
+      case "mode":
+        return arena.getMode().toString();
+      case "basesize":
+        return arena.getBases().get(0).getMaximumSize().toString();
+      case "modevalue":
+        return String.valueOf(arena.getOption(ArenaOption.MODE_VALUE));
+      case "resetblocks":
+        return String.valueOf(arena.getOption(ArenaOption.RESET_BLOCKS));
       default:
         return null;
     }
   }
-
 }

@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.admin.arena;
@@ -30,15 +31,15 @@ import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument
 import plugily.projects.thebridge.utils.Utils;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 18.05.2019
+ * Created at 31.10.2020
  */
 public class StopArgument {
 
   public StopArgument(ArgumentsRegistry registry) {
     registry.mapArgument("thebridgeadmin", new LabeledCommandArgument("stop", "thebridge.admin.stop", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mma stop", "/mma stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7thebridge.admin.stop")) {
+      new LabelData("/tba stop", "/tba stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7thebridge.admin.stop")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!Utils.checkIsInGameInstance((Player) sender)) {
@@ -46,7 +47,7 @@ public class StopArgument {
         }
         if (ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
           ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
-          //todo execute success command message
+          sender.sendMessage(registry.getPlugin().getChatManager().colorRawMessage("&e[TheBridge] &aArena successfully stopped!"));
         }
       }
     });

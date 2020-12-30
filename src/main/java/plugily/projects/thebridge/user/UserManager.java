@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.user;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -29,14 +28,17 @@ import plugily.projects.thebridge.user.data.MysqlManager;
 import plugily.projects.thebridge.user.data.UserDatabase;
 import plugily.projects.thebridge.utils.Debugger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 03.08.2018
+ * Created at 31.10.2020
  */
 public class UserManager {
 
@@ -78,24 +80,11 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
-    //apply before save
-    fixContirbutionStatistics(user);
     database.saveStatistic(user, stat);
   }
 
   public void loadStatistics(User user) {
     database.loadStatistics(user);
-    //apply after load to override
-    fixContirbutionStatistics(user);
-  }
-
-  private void fixContirbutionStatistics(User user) {
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
-      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-    }
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
-      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-    }
   }
 
   public void saveAllStatistic(User user) {
@@ -109,4 +98,5 @@ public class UserManager {
   public UserDatabase getDatabase() {
     return database;
   }
+
 }

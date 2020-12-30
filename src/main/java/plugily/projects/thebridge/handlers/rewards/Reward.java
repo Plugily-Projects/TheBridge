@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.handlers.rewards;
@@ -22,9 +23,9 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 06.04.2019
+ * Created at 31.10.2020
  */
 public class Reward {
 
@@ -86,7 +87,8 @@ public class Reward {
   }
 
   public enum RewardType {
-    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame"), LOSE("lose"), WIN("win"), DEATH("death"), GOLD_PICKUP("gold_pickup");
+    WON("won"), LOSE("lose"), KILL("kill"), POINT("point"), RESET_ROUND("resetround"),
+    END_GAME("endgame"), DEATH("death");
 
     private final String path;
 

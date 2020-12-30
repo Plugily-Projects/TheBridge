@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -29,32 +30,38 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupArrowEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
-import plugily.projects.thebridge.arena.role.Role;
-import plugily.projects.thebridge.arena.special.pray.PrayerRegistry;
+import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.items.SpecialItemManager;
+import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.rewards.Reward;
+import plugily.projects.thebridge.kits.level.ArcherKit;
 import plugily.projects.thebridge.user.User;
-import plugily.projects.thebridge.utils.ItemPosition;
+import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 13.03.2018
+ * Created at 23.11.2020
  */
 public class ArenaEvents implements Listener {
 
@@ -69,7 +76,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onArmorStandEject(EntityDismountEvent e) {
-    if (!(e.getEntity() instanceof ArmorStand) || !"thebridgeArmorStand".equals(e.getEntity().getCustomName())) {
+    if (!(e.getEntity() instanceof ArmorStand) || !"TheBridgeArmorStand".equals(e.getEntity().getCustomName())) {
       return;
     }
     if (!(e.getDismounted() instanceof Player)) {
@@ -82,8 +89,140 @@ public class ArenaEvents implements Listener {
     e.getDismounted().addPassenger(e.getEntity());
   }
 
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onBlockBreakEvent(BlockBreakEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if (!canBuild(arena, player, event.getBlock().getLocation())) {
+      event.setCancelled(true);
+      return;
+    }
+    if (arena.getPlacedBlocks().contains(event.getBlock())) {
+      arena.removePlacedBlock(event.getBlock());
+      event.getBlock().getDrops().clear();
+    } else {
+      event.setCancelled(true);
+    }
+  }
+
   @EventHandler
-  public void onFallDamage(EntityDamageEvent e) {
+  public void onBuild(BlockPlaceEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if (!canBuild(arena, player, event.getBlock().getLocation())) {
+      event.setCancelled(true);
+      return;
+    }
+    arena.addPlacedBlock(event.getBlock());
+  }
+
+  public boolean canBuild(Arena arena, Player player, Location location) {
+    if (!arena.getArenaBorder().isIn(player)) {
+      player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
+      return false;
+    }
+    for (Base base : arena.getBases()) {
+      if (base.getBaseCuboid().isIn(location)) {
+        player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private void rewardLastAttacker(Arena arena, Player victim) {
+    if (arena.getHits().containsKey(victim)) {
+      Player attacker = arena.getHits().get(victim);
+      arena.removeHits(victim);
+      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.KILL);
+      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.KILLS, 1);
+      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
+      attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Killed").replace("%VICTIM%", victim.getName()));
+      plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Death").replace("%PLAYER%", victim.getName()).replace("%ATTACKER%", attacker.getName()));
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onHit(EntityDamageByEntityEvent e) {
+    if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+      Player victim = (Player) e.getEntity();
+      Player attack = (Player) e.getDamager();
+      if (!ArenaUtils.areInSameArena(victim, attack)) {
+        return;
+      }
+      Arena arena = ArenaRegistry.getArena(victim);
+      if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+        return;
+      }
+      if (plugin.getUserManager().getUser(attack).isSpectator()) {
+        e.setCancelled(true);
+        return;
+      }
+      if (arena.isTeammate(attack, victim)) {
+        e.setCancelled(true);
+        return;
+      }
+      arena.addHits(victim, attack);
+    }
+  }
+
+  private final HashMap<Player, Long> cooldownPortal = new HashMap<>();
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onPlayerMove(PlayerMoveEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if (arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setCancelled(true);
+      return;
+    }
+    if (!arena.inBase(player)) {
+      return;
+    }
+    if (cooldownPortal.containsKey(player)) {
+      if (cooldownPortal.get(player) <= System.currentTimeMillis() - 5000) cooldownPortal.remove(player);
+      return;
+    }
+    if (arena.getBase(player).getPortalCuboid().isIn(player)) {
+      cooldownPortal.put(player, System.currentTimeMillis());
+      player.sendMessage(chatManager.colorMessage("In-Game.Messages.Portal.Own", player));
+      return;
+    }
+    for (Base base : arena.getBases()) {
+      if (base.getPortalCuboid().isIn(player)) {
+        if (base.getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
+          cooldownPortal.put(player, System.currentTimeMillis());
+          player.sendMessage(chatManager.colorMessage("In-Game.Messages.Portal.Out", player));
+          return;
+        }
+        cooldownPortal.put(player, System.currentTimeMillis());
+        arena.resetRound();
+        player.teleport(arena.getBase(player).getPlayerSpawnPoint());
+        if (arena.getMode() == Arena.Mode.HEARTS) {
+          base.addPoint();
+        } else if (arena.getMode() == Arena.Mode.POINTS) {
+          arena.getBase(player).addPoint();
+        }
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
+        arena.getScoreboardManager().resetBaseCache();
+        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
+        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
+        return;
+      }
+    }
+  }
+
+  @EventHandler
+  public void onEntityDamage(EntityDamageEvent e) {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
@@ -92,19 +231,31 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
-        if (e.getDamage() >= 20.0) {
-          //kill the player for suicidal death, else do not
-          victim.damage(1000.0);
+    switch (e.getCause()) {
+      case DROWNING:
+        e.setCancelled(true);
+        break;
+      case FALL:
+        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
+          if (e.getDamage() >= victim.getHealth()) {
+            //kill the player for suicidal death, else do not
+            victim.damage(1000.0);
+          }
+        } else {
+          e.setCancelled(true);
         }
-      }
-      e.setCancelled(true);
-    }
-    //kill the player and move to the spawn point
-    if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-      victim.damage(1000.0);
-      victim.teleport(arena.getPlayerSpawnPoints().get(0));
+        break;
+      case VOID:
+        //kill the player and move to the spawn point
+        victim.damage(1000.0);
+        if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+          victim.teleport(arena.getLobbyLocation());
+        }
+        if (arena.getBase(victim) != null)
+          victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
+        break;
+      default:
+        break;
     }
   }
 
@@ -113,15 +264,24 @@ public class ArenaEvents implements Listener {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
-    if (!Role.isRole(Role.ANY_DETECTIVE, (Player) e.getEntity())) {
+    User user = plugin.getUserManager().getUser((Player) e.getEntity());
+    Arena arena = ArenaRegistry.getArena(user.getPlayer());
+    if (arena == null) {
       return;
     }
-    User user = plugin.getUserManager().getUser((Player) e.getEntity());
+    if (arena.isResetRound()) {
+      e.setCancelled(true);
+      return;
+    }
     if (user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
+      int cooldown = 5;
+      if ((user.getKit() instanceof ArcherKit)) {
+        cooldown = 3;
+      }
+      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      e.getBow().setDurability((short) 0);
+      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
+      NMS.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }
@@ -146,205 +306,54 @@ public class ArenaEvents implements Listener {
       return;
     }
     e.setCancelled(true);
-    if (arena.getBowHologram() != null && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
-      if (plugin.getUserManager().getUser(player).isSpectator()) {
-        return;
-      }
-
-      if (Role.isRole(Role.INNOCENT, player)) {
-        player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
-        arena.removeBowHolo();
-        e.getItem().remove();
-
-        for (Player loopPlayer : arena.getPlayersLeft()) {
-          if (Role.isRole(Role.INNOCENT, loopPlayer)) {
-            ItemPosition.setItem(loopPlayer, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
-          }
-        }
-
-        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
-        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
-        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
-      }
-
-      return;
-    }
-
-    if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
-      return;
-    }
 
     User user = plugin.getUserManager().getUser(player);
     if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-
-    if (PrayerRegistry.getBan().contains(player)){
-      e.setCancelled(true);
-      return;
-    }
-
-    e.getItem().remove();
-
-    player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
-    arena.getGoldSpawned().remove(e.getItem());
-
-    ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-    if (PrayerRegistry.getRush().contains(player)) {
-      stack.setAmount(3 * e.getItem().getItemStack().getAmount());
-    }
-
-    ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, stack);
-    user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
-    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
-
-    player.sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", player));
-    plugin.getRewardsHandler().performReward(player, Reward.RewardType.GOLD_PICKUP);
-
-    if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-      ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
-      return;
-    }
-
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= plugin.getConfig().getInt("Gold-For-Bow", 10)) {
-      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      player.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", player),
-        chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", player), 5, 40, 5);
-      ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-      ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Gold-Bow-Arrows", 3)));
-      player.getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
-    }
-  }
-
-  @EventHandler
-  public void onMurdererDamage(EntityDamageByEntityEvent e) {
-    if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) {
-      return;
-    }
-    Player attacker = (Player) e.getDamager();
-    Player victim = (Player) e.getEntity();
-    if (!ArenaUtils.areInSameArena(attacker, victim)) {
-      return;
-    }
-    //we are killing player via damage() method so event can be cancelled safely, will work for detective damage murderer and others
-    e.setCancelled(true);
-
-    //better check this for future even if anyone else cannot use sword
-    if (!Role.isRole(Role.MURDERER, attacker)) {
-      return;
-    }
-
-    //check if victim is murderer
-    if (Role.isRole(Role.MURDERER, victim)) {
-      return;
-    }
-
-    //todo support for skins later
-    //just don't kill user if item isn't murderer sword
-    if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
-      return;
-    }
-
-    //check if sword has cooldown
-    if (attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
-      return;
-    }
-
-    if (Role.isRole(Role.MURDERER, victim)) {
-      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
-    } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
-    }
-
-    victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-    victim.damage(100.0);
-
-    User user = plugin.getUserManager().getUser(attacker);
-
-    user.addStat(StatsStorage.StatisticType.KILLS, 1);
-    user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-
-    Arena arena = ArenaRegistry.getArena(attacker);
-    if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
-      //if already true, no effect is done :)
-      arena.setDetectiveDead(true);
-      if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
-        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
-      }
-      ArenaUtils.dropBowAndAnnounce(arena, victim);
-    }
   }
 
   @EventHandler
   public void onArrowDamage(EntityDamageByEntityEvent e) {
-    if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
+    if (!(e.getDamager() instanceof Arrow)) {
       return;
     }
     if (!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
       return;
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
+    if (!(e.getEntity() instanceof Player)) {
+      return;
+    }
     Player victim = (Player) e.getEntity();
     if (!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
     //we won't allow to suicide
-    if (attacker.equals(victim)) {
-      e.setCancelled(true);
-      return;
-    }
-    //dont kill murderer on bow damage if attacker is murderer
-    if (Role.isRole(Role.MURDERER, attacker) && Role.isRole(Role.MURDERER, victim)) {
+    if (attacker == victim) {
       e.setCancelled(true);
       return;
     }
     Arena arena = ArenaRegistry.getArena(attacker);
-    //we need to set it before the victim die, because of hero character
-    if (Role.isRole(Role.MURDERER, victim)) {
-      arena.setCharacter(Arena.CharacterType.HERO, attacker);
+    if (plugin.getUserManager().getUser(attacker).isSpectator()) {
+      e.setCancelled(true);
+      return;
     }
+    if (arena.isTeammate(attacker, victim)) {
+      e.setCancelled(true);
+      return;
+    }
+    arena.addHits(victim, attacker);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-    victim.damage(100.0);
-
-    User user = plugin.getUserManager().getUser(attacker);
-
-    user.addStat(StatsStorage.StatisticType.KILLS, 1);
-    if (Role.isRole(Role.MURDERER, attacker)) {
-      user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
+    if (victim.getHealth() - e.getDamage() < 0) {
+      return;
     }
-
-    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
-
-    if (Role.isRole(Role.MURDERER, victim)) {
-      ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-    } else if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED) && Role.isRole(Role.INNOCENT, victim)) {
-      if (Role.isRole(Role.MURDERER, attacker)) {
-        victim.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
-      } else {
-        victim.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You", victim), 5, 40, 5);
-      }
-
-      //if else, murderer killed, so don't kill him :)
-      if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
-        attacker.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", attacker),
-          chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent", attacker), 5, 40, 5);
-        attacker.damage(100.0);
-        ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
-        plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
-        if (Role.isRole(Role.ANY_DETECTIVE, attacker) && arena.lastAliveDetective()) {
-          arena.setDetectiveDead(true);
-          if (Role.isRole(Role.FAKE_DETECTIVE, attacker)) {
-            arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
-          }
-          ArenaUtils.dropBowAndAnnounce(arena, victim);
-        }
-      }
-    }
+    DecimalFormat df = new DecimalFormat("##.##");
+    attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Bow-Damage-Format").replace("%victim%", victim.getName()).replace("%hearts%", df.format(victim.getHealth() - e.getDamage())));
   }
 
+
+  //todo fast die -> just teleporting the player instead of death and respawn
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerDie(PlayerDeathEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getEntity());
@@ -354,8 +363,8 @@ public class ArenaEvents implements Listener {
     e.setDeathMessage("");
     e.getDrops().clear();
     e.setDroppedExp(0);
-    plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
-    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+    // plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
+    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 7 * 20, 0));
     Player player = e.getEntity();
     if (arena.getArenaState() == ArenaState.STARTING) {
       return;
@@ -363,37 +372,29 @@ public class ArenaEvents implements Listener {
       player.getInventory().clear();
       player.setFlying(false);
       player.setAllowFlight(false);
-      User user = plugin.getUserManager().getUser(player);
-      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
-    if (Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
-      ArenaUtils.onMurdererDeath(arena);
-    }
-    if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
-      arena.setDetectiveDead(true);
-      if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
-        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
+    //if mode hearts and they are out it should set spec mode for them
+    if (arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
+      User user = plugin.getUserManager().getUser(player);
+      user.setSpectator(true);
+      ArenaUtils.hidePlayer(player, arena);
+      player.getInventory().clear();
+      if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
+        arena.addDeathPlayer(player);
       }
-      ArenaUtils.dropBowAndAnnounce(arena, player);
+      List<Player> players = arena.getBase(player).getPlayers();
+      if (players.stream().allMatch(arena::isDeathPlayer)) {
+        arena.addOut();
+      }
+    } else {
+      player.setGameMode(GameMode.SURVIVAL);
+      ArenaUtils.hidePlayersOutsideTheGame(player, arena);
+      player.getInventory().clear();
     }
-    User user = plugin.getUserManager().getUser(player);
-    user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-    user.setSpectator(true);
-    player.setCollidable(false);
-    player.setGameMode(GameMode.SURVIVAL);
-    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-    ArenaUtils.hidePlayer(player, arena);
-    player.setAllowFlight(true);
-    player.setFlying(true);
-    player.getInventory().clear();
-    chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
-      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
     }, 5);
   }
 
@@ -408,32 +409,57 @@ public class ArenaEvents implements Listener {
       e.setRespawnLocation(arena.getLobbyLocation());
       return;
     } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
-      e.setRespawnLocation(arena.getEndLocation());
+      e.setRespawnLocation(arena.getSpectatorLocation());
       return;
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if (player.getLocation().getWorld().equals(arena.getPlayerSpawnPoints().get(0).getWorld())) {
-        e.setRespawnLocation(player.getLocation());
+      if (arena.inBase(player) && !user.isSpectator()) {
+        if (e.getPlayer().getLastDamageCause() != null && e.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID) {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+        }
+        e.setRespawnLocation(arena.getBase(player).getPlayerRespawnPoint());
+        player.setAllowFlight(false);
+        player.setFlying(false);
+        ArenaUtils.hidePlayersOutsideTheGame(player, arena);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+        if (!arena.getHits().containsKey(player)) {
+          chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
+        }
+        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+        user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
+        rewardLastAttacker(arena, player);
       } else {
-        e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
+        e.setRespawnLocation(arena.getSpectatorLocation());
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        user.setSpectator(true);
+        ArenaUtils.hidePlayer(player, arena);
+        player.setCollidable(false);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        for (SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+          if (item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+            continue;
+          }
+          player.getInventory().setItem(item.getSlot(), item.getItemStack());
+        }
       }
-      player.setAllowFlight(true);
-      player.setFlying(true);
-      user.setSpectator(true);
-      ArenaUtils.hidePlayer(player, arena);
-      player.setCollidable(false);
-      player.setGameMode(GameMode.SURVIVAL);
-      player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
     }
   }
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
-      e.setResult(Event.Result.DENY);
+    if (e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
+      if (ArenaRegistry.getArena(((Player) e.getWhoClicked())).getArenaState() != ArenaState.IN_GAME) {
+        if (e.getClickedInventory() == e.getWhoClicked().getInventory()) {
+          e.setResult(Event.Result.DENY);
+        }
+      }
     }
   }
 
@@ -442,51 +468,14 @@ public class ArenaEvents implements Listener {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
       Player player = e.getPlayer();
       if (e.getMessage().equalsIgnoreCase("/start")) {
-        player.performCommand("mma forcestart");
+        player.performCommand("tba forcestart");
         e.setCancelled(true);
         return;
       }
       if (e.getMessage().equalsIgnoreCase("/leave")) {
-        player.performCommand("mm leave");
+        player.performCommand("tb leave");
         e.setCancelled(true);
       }
     }
   }
-
-  @EventHandler
-  public void locatorDistanceUpdate(PlayerMoveEvent e) {
-    Player player = e.getPlayer();
-    Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
-      return;
-    }
-    //skip spectators
-    if (plugin.getUserManager().getUser(player).isSpectator()) {
-      return;
-    }
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
-      if (Role.isRole(Role.INNOCENT, player)) {
-        if (player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
-          ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
-          ItemMeta bowMeta = bowLocator.getItemMeta();
-          bowMeta.setDisplayName(chatManager.colorMessage("In-Game.Bow-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
-          bowLocator.setItemMeta(bowMeta);
-          ItemPosition.setItem(player, ItemPosition.BOW_LOCATOR, bowLocator);
-          return;
-        }
-      }
-      if (arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player) && arena.isMurderAlive(player)) {
-        ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
-        ItemMeta innocentMeta = innocentLocator.getItemMeta();
-        for (Player p : arena.getPlayersLeft()) {
-          if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
-            innocentMeta.setDisplayName(chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
-            innocentLocator.setItemMeta(innocentMeta);
-            ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
-          }
-        }
-      }
-    }
-  }
-
 }

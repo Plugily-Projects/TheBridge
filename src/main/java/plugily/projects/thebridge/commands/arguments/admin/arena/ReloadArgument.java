@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.admin.arena;
@@ -39,7 +40,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
  * Created at 18.05.2019
  */
@@ -49,7 +50,7 @@ public class ReloadArgument {
 
   public ReloadArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("thebridgeadmin", new LabeledCommandArgument("reload", "thebridge.admin.reload", CommandArgument.ExecutorType.BOTH,
-      new LabelData("/mma reload", "/mma reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7thebridge.admin.reload")) {
+      new LabelData("/tba reload", "/tba reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7thebridge.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!confirmations.contains(sender)) {

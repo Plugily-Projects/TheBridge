@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,80 +14,54 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.handlers.items;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.handlers.ChatManager;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer, 2Wild4You
- * <p>
- * Created at 03.08.2018
+ * Created by Tom on 5/02/2016.
  */
 public class SpecialItem {
 
-  private ItemStack itemStack;
-  private int slot;
+  public static final SpecialItem INVALID_ITEM = new SpecialItem("INVALID", new ItemStack(Material.BEDROCK), -1, DisplayStage.LOBBY);
   private final String name;
-  private final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final ItemStack itemStack;
+  private int slot;
+  private final DisplayStage displayStage;
 
-  public SpecialItem(String name) {
+  public SpecialItem(String name, ItemStack itemStack, int slot, DisplayStage displayStage) {
     this.name = name;
+    this.itemStack = itemStack;
+    this.slot = slot;
+    this.displayStage = displayStage;
   }
 
-  public static void loadAll() {
-    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
-      ChatColor.GRAY + "Click to teleport to hub"
-    }, XMaterial.WHITE_BED.parseMaterial(), 8);
+  public String getName() {
+    return name;
   }
 
-  public void load(String displayName, String[] lore, Material material, int slot) {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
-    ChatManager chatManager = plugin.getChatManager();
-
-    if (!config.contains(name)) {
-      config.set(name + ".data", 0);
-      config.set(name + ".displayname", displayName);
-      config.set(name + ".lore", Arrays.asList(lore));
-      config.set(name + ".material-name", material.toString());
-      config.set(name + ".slot", slot);
-    }
-    ConfigUtils.saveConfig(plugin, config, "lobbyitems");
-    ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
-        .orElse(XMaterial.STONE).parseItem();
-    ItemMeta meta = stack.getItemMeta();
-    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
-
-    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
-      .collect(Collectors.toList());
-    meta.setLore(colorizedLore);
-    stack.setItemMeta(meta);
-
-    SpecialItem item = new SpecialItem(name);
-    item.itemStack = stack;
-    item.slot = config.getInt(name + ".slot");
-    SpecialItemManager.addItem(name, item);
+  public ItemStack getItemStack() {
+    return itemStack;
   }
 
   public int getSlot() {
     return slot;
   }
 
-  public ItemStack getItemStack() {
-    return itemStack;
+  public void setSlot(int slot) {
+    this.slot = slot;
   }
+
+  public DisplayStage getDisplayStage() {
+    return displayStage;
+  }
+
+  public enum DisplayStage {
+    LOBBY, SPECTATOR
+  }
+
 }

@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.api;
@@ -38,10 +39,9 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer, 2Wild4You
- * @since 0.0.1-alpha
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Class for accessing users statistics.
+ * Created at 31.10.2020
  */
 public class StatsStorage {
 
@@ -108,15 +108,25 @@ public class StatsStorage {
   }
 
   /**
+   * Set user statistic based on StatisticType
+   *
+   * @param player        Online player to get data from
+   * @param statisticType Statistic type to get (kills, deaths etc.)
+   * @param value        int of statistic
+   * @see StatisticType
+   */
+  public static void setUserStat(Player player, StatisticType statisticType, int value){
+    plugin.getUserManager().getUser(player).setStat(statisticType, value);
+  }
+
+  /**
    * Available statistics to get.
    */
   public enum StatisticType {
-    @Deprecated //subject to remove and merge with randomized game points
-    CONTRIBUTION_DETECTIVE("contribdetective", true),
-    @Deprecated //subject to remove and merge with randomized game points
-    CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
-    KILLS("kills", true), LOSES("loses", true), WINS("wins", true), LOCAL_CURRENT_PRAY("local_pray", false), LOCAL_GOLD("gold", false), LOCAL_KILLS("local_kills", false),
-    LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false);
+    DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), KILLS("kills", true),
+    LOSES("loses", true), WINS("wins", true), LOCAL_DEATHS("local_deaths",false),
+    LOCAL_KILLS("local_kills", false), LEVEL("level", true), SCORED_POINTS("points", true),
+    LOCAL_SCORED_POINTS("local_points", false);
 
     private final String name;
     private final boolean persistent;

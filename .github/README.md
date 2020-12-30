@@ -1,10 +1,7 @@
-![](https://plugily.xyz/images/banner/display.php?id=thebridge)
+TheBridge - Defend your base and try to wipe out the others
 
-# thebridge [![](https://img.shields.io/badge/javadocs-latest-red.svg)](https://jd.plugily.xyz/apidocs/minecraft/thebridge/) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plajer.xyz/minecraft/thebridge/index.php) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plajer-Lair_thebridge&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plajer-Lair_thebridge) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
-thebridge is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
-
-Be the murderer and kill everyone in the game! Beware of the detective and armored innocents! As a detective you must kill the murderer and protect as much innocents as you can!
-As an innocent you must just survive till the end!
+TheBridge is a Minecraft minigame designed for small and big servers. This minigame is unique 
+and very configurable, 100% free and open source!
 
 Have fun using it! Leave a good rating if you really like it.
 
@@ -29,4 +26,3 @@ Thanks to Code Whale for Open Source license for POEditor project.
 This section will be updated soon
 
 <img align="right" src="https://i.imgur.com/BAHeLR2.png">
-

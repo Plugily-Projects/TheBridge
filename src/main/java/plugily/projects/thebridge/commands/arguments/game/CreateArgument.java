@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +28,6 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.special.SpecialBlock;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
@@ -37,12 +36,11 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 18.05.2019
+ * Created at 31.10.2020
  */
 public class CreateArgument {
 
@@ -51,7 +49,7 @@ public class CreateArgument {
   public CreateArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.registry = registry;
     registry.mapArgument("thebridge", new LabeledCommandArgument("create", "thebridge.admin.create", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mm create &6<arena>", "/mm create <arena>", "&7Create new arena\n&6Permission: &7thebridge.admin.create")) {
+      new LabelData("/tb create &6<arena>", "/tb create <arena>", "&7Create new arena\n&6Permission: &7thebridge.admin.create")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
@@ -62,18 +60,18 @@ public class CreateArgument {
         for (Arena arena : ArenaRegistry.getArenas()) {
           if (arena.getId().equalsIgnoreCase(args[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
-            player.sendMessage(ChatColor.DARK_RED + "Usage: /mm create <ID>");
+            player.sendMessage(ChatColor.DARK_RED + "Usage: /tb create <ID>");
             return;
           }
         }
         if (ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
           player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
-          createInstanceInConfig(args[1], player.getWorld().getName());
+          createInstanceInConfig(args[1]);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------");
           player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
           player.sendMessage("");
-          player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/mm " + args[1] + " edit" + ChatColor.GREEN + "!");
+          player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/tb " + args[1] + " edit" + ChatColor.GREEN + "!");
           player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
           player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
@@ -82,54 +80,25 @@ public class CreateArgument {
     });
   }
 
-  private void createInstanceInConfig(String id, String worldName) {
+  private void createInstanceInConfig(String id) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    config.set(path + "playerspawnpoints", new ArrayList<>());
-    config.set(path + "goldspawnpoints", new ArrayList<>());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "spectatorlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", 2);
-    config.set(path + "maximumplayers", 10);
-    config.set(path + "playerpermurderer", 5);
-    config.set(path + "playerperdetective", 7);
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
-    config.set(path + "world", worldName);
-    config.set(path + "mystery-cauldrons", new ArrayList<>());
-    config.set(path + "confessionals", new ArrayList<>());
     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
     Arena arena = new Arena(id);
 
-    List<Location> playerSpawnPoints = new ArrayList<>();
-    for (String loc : config.getStringList(path + "playerspawnpoints")) {
-      playerSpawnPoints.add(LocationSerializer.getLocation(loc));
-    }
-    arena.setPlayerSpawnPoints(playerSpawnPoints);
-    List<Location> goldSpawnPoints = new ArrayList<>();
-    for (String loc : config.getStringList(path + "goldspawnpoints")) {
-      goldSpawnPoints.add(LocationSerializer.getLocation(loc));
-    }
-    arena.setGoldSpawnPoints(goldSpawnPoints);
-
-    List<SpecialBlock> specialBlocks = new ArrayList<>();
-    if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
-      for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
-        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-      }
-    }
-    specialBlocks.forEach(arena::loadSpecialBlock);
-
     arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
-    arena.setDetectives(config.getInt(path + "playerperdetective"));
-    arena.setMurderers(config.getInt(path + "playerpermurderer"));
     arena.setMapName(config.getString(path + "mapname"));
     arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
-    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));
+    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "endlocation")));
     arena.setReady(false);
 
     ArenaRegistry.registerArena(arena);

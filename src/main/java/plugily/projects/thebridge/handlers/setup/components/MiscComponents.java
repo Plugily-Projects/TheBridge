@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.handlers.setup.components;
@@ -32,26 +33,22 @@ import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.ArenaSign;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 25.05.2019
+ * Created at 08.06.2019
  */
 public class MiscComponents implements SetupComponent {
 
@@ -64,25 +61,27 @@ public class MiscComponents implements SetupComponent {
 
   @Override
   public void injectComponents(StaticPane pane) {
+    Arena arena = setupInventory.getArena();
+    if (arena == null) {
+      return;
+    }
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
-    Arena arena = setupInventory.getArena();
     Main plugin = setupInventory.getPlugin();
-    ChatManager chatManager = plugin.getChatManager();
     ItemStack bungeeItem;
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
-        .name(chatManager.colorRawMessage("&e&lAdd Game Sign"))
-        .lore(ChatColor.GRAY + "Target a sign and click this.")
-        .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
-        .build();
+          .name(plugin.getChatManager().colorRawMessage("&e&lAdd Game Sign"))
+          .lore(ChatColor.GRAY + "Target a sign and click this.")
+          .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
+          .build();
     } else {
       bungeeItem = new ItemBuilder(Material.BARRIER)
-        .name(chatManager.colorRawMessage("&c&lAdd Game Sign"))
-        .lore(ChatColor.GRAY + "Option disabled in bungee cord mode.")
-        .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
-        .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
-        .build();
+          .name(plugin.getChatManager().colorRawMessage("&c&lAdd Game Sign"))
+          .lore(ChatColor.GRAY + "Option disabled with Bungee Cord module.")
+          .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
+          .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
+          .build();
     }
     pane.addItem(new GuiItem(bungeeItem, e -> {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -91,41 +90,42 @@ public class MiscComponents implements SetupComponent {
       e.getWhoClicked().closeInventory();
       Location location = player.getTargetBlock(null, 10).getLocation();
       if (!(location.getBlock().getState() instanceof Sign)) {
-        player.sendMessage(chatManager.colorMessage("Commands.Look-Sign"));
+        player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cPlease look at sign to add as a game sign!"));
         return;
       }
       if (location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
-        && e.getClick() != ClickType.SHIFT_LEFT) {
-        e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Server spawn protection is set to &6" + Bukkit.getServer().getSpawnRadius()
-          + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
-        e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&cYou can ignore this warning and add sign with Shift + Left Click, but for now &c&loperation is cancelled"));
+          && e.getClick() != ClickType.SHIFT_LEFT) {
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Server spawn protection is set to &6" + Bukkit.getServer().getSpawnRadius()
+            + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
+        e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&cYou can ignore this warning and add sign with Shift + Left Click, but for now &c&loperation is cancelled"));
         return;
       }
       plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
-      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Sign-Created"));
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Signs.Sign-Created"));
       String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
       List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
       locs.add(signLoc);
       config.set("instances." + arena.getId() + ".signs", locs);
+      plugin.getSignManager().updateSigns();
       ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 5, 0);
+    }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
-      .name(chatManager.colorRawMessage("&e&lSet Map Name"))
-      .lore(ChatColor.GRAY + "Click to set arena map name")
-      .lore("", chatManager.colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Map Name"))
+        .lore(ChatColor.GRAY + "Click to set arena map name")
+        .lore("", plugin.getChatManager().colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
-        public String getPromptText(@NotNull ConversationContext context) {
-          return chatManager.colorRawMessage(chatManager.getPrefix() + "&ePlease type in chat arena name! You can use color codes.");
+        public String getPromptText(ConversationContext context) {
+          return plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&ePlease type in chat arena name! You can use color codes.");
         }
 
         @Override
-        public Prompt acceptInput(@NotNull ConversationContext context, String input) {
-          String name = chatManager.colorRawMessage(input);
-          player.sendRawMessage(chatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + name));
+        public Prompt acceptInput(ConversationContext context, String input) {
+          String name = plugin.getChatManager().colorRawMessage(input);
+          player.sendRawMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + name));
           arena.setMapName(name);
           config.set("instances." + arena.getId() + ".mapname", arena.getMapName());
           ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -134,73 +134,48 @@ public class MiscComponents implements SetupComponent {
           return Prompt.END_OF_CONVERSATION;
         }
       }).buildFor(player);
-    }), 6, 0);
+    }), 8, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-      .name(chatManager.colorRawMessage("&e&lAdd Gold Spawn"))
-      .lore(ChatColor.GRAY + "Add new gold spawn")
-      .lore(ChatColor.GRAY + "on the place you're standing at.")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneList("instances." + arena.getId() + ".goldspawnpoints", 4))
-      .lore("", chatManager.colorRawMessage("&8Shift + Right Click to remove all spawns"))
-      .build(), e -> {
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_INGOT.parseItem())
+        .name(plugin.getChatManager().colorRawMessage("&6&l► Enhancements Addon ◄ &8(AD)"))
+        .lore(ChatColor.GRAY + "Enhance The Bridge gameplay with paid addon!")
+        .lore(ChatColor.GOLD + "Features of this addon:")
+        .lore(ChatColor.GOLD + "Custom Kits, Achievements, Replay Ability")
+        .lore(ChatColor.GRAY + "Click to get link for patron program!")
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (e.getClick() == ClickType.SHIFT_RIGHT) {
-        config.set("instances." + arena.getId() + ".goldspawnpoints", new ArrayList<>());
-        arena.setGoldSpawnPoints(new ArrayList<>());
-        player.sendMessage(chatManager.colorRawMessage("&eDone | &aGold spawn points deleted, you can add them again now!"));
-        arena.setReady(false);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        return;
-      }
-      List<String> goldSpawns = config.getStringList("instances." + arena.getId() + ".goldspawnpoints");
-      goldSpawns.add(LocationSerializer.locationToString(player.getLocation()));
-      config.set("instances." + arena.getId() + ".goldspawnpoints", goldSpawns);
-      String goldProgress = goldSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
-      player.sendMessage(chatManager.colorRawMessage(goldProgress + "&aGold spawn added! &8(&7" + goldSpawns.size() + "/4&8)"));
-      if (goldSpawns.size() == 4) {
-        player.sendMessage(chatManager.colorRawMessage("&eInfo | &aYou can add more than 4 gold spawns! Four is just a minimum!"));
-      }
-      List<Location> spawns = new ArrayList<>(arena.getGoldSpawnPoints());
-      spawns.add(player.getLocation());
-      arena.setGoldSpawnPoints(spawns);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 7, 0);
-
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_NUGGET.parseItem())
-      .amount(config.getInt("instances." + arena.getId() + "." + "spawngoldtime", 3))
-      .name(chatManager.colorRawMessage("&e&lSet gold spawn time in seconds"))
-      .lore(ChatColor.GRAY + "LEFT click to decrease")
-      .lore(ChatColor.GRAY + "RIGHT click to increase")
-      .lore(ChatColor.DARK_GRAY + "How much gold should be spawned? ")
-      .lore(ChatColor.DARK_GRAY + "That means 1 gold spawned every ... seconds")
-      .lore(ChatColor.DARK_GRAY + "Default: 5")
-      .lore(ChatColor.DARK_GRAY + "Every 5 seconds it will spawn 1 gold")
-      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".spawngoldtime"))
-      .build(), e -> {
-      if (e.getClick().isRightClick()) {
-        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
-      }
-      if (e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
-        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
-      }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
-        e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed without gold!"));
-        e.getInventory().getItem(e.getSlot()).setAmount(1);
-      }
-      config.set("instances." + arena.getId() + ".spawngoldtime", e.getCurrentItem().getAmount());
-      arena.setSpawnGoldTime(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
-      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check patron program here: https://patreon.plugily.xyz/"));
     }), 7, 1);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
-      .name(chatManager.colorRawMessage("&e&lView Setup Video"))
-      .lore(ChatColor.GRAY + "Having problems with setup or wanna")
-      .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+        .name(plugin.getChatManager().colorRawMessage("&e&lView Setup Video"))
+        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+        .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+    }), 8, 1);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.CHEST.parseItem())
+      .name(plugin.getChatManager().colorRawMessage("&e&lEdit Base"))
+      .lore(ChatColor.GRAY + "Here you can add/edit a base")
+      .lore(ChatColor.GRAY + "Make sure to register the base before continuing!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      player.sendMessage(chatManager.getPrefix() + chatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
-    }), 8, 1);
+      new SetupInventory(arena, player).openBases();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+    }), 0, 1);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.LEVER.parseItem())
+      .name(plugin.getChatManager().colorRawMessage("&e&lEdit the mode"))
+      .lore(ChatColor.GRAY + "Here you can edit the mode and there")
+      .lore(ChatColor.GRAY + "values!")
+      .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      new SetupInventory(arena, player).openModes();
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+    }), 2, 1);
+
   }
 
 }

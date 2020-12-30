@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.events.spectator;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,24 +31,27 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.handlers.ChatManager;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 06.04.2019
+ * Created at 23.11.2020
  */
-@Deprecated //api subject to merge
 public class SpectatorSettingsMenu implements Listener {
 
   private final String inventoryName;
   private final String speedOptionName;
   private Inventory inv;
+  private final Main plugin;
 
-  public SpectatorSettingsMenu(JavaPlugin plugin, String inventoryName, String speedOptionName) {
+  public SpectatorSettingsMenu(Main plugin, String inventoryName, String speedOptionName) {
     this.inventoryName = inventoryName;
     this.speedOptionName = speedOptionName;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    initInventory();
+    this.inv = initInventory();
+    this.plugin = plugin;
   }
 
   public void openSpectatorSettingsMenu(Player player) {
@@ -57,7 +60,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(color(inventoryName))) {
+    if (!e.getView().getTitle().equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -92,26 +95,25 @@ public class SpectatorSettingsMenu implements Listener {
         p.setFlySpeed(0.35f);
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 4, false, false));
         break;
+      default:
+        break;
     }
   }
 
-  private void initInventory() {
+  private Inventory initInventory() {
     Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
+    ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-      .name(color(speedOptionName + " I")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-      .name(color(speedOptionName + " II")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-      .name(color(speedOptionName + " III")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-      .name(color(speedOptionName + " IV")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-      .name(color(speedOptionName + " V")).build());
-    this.inv = inv;
-  }
-
-  private String color(String message) {
-    return ChatColor.translateAlternateColorCodes('&', message);
+      .name(chatManager.colorRawMessage(speedOptionName + " V")).build());
+    return inv;
   }
 
 }

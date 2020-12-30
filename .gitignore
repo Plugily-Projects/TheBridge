@@ -1,7 +1,5 @@
-/.idea/
-/out/
-/generated/
-/lib/
+/.idea
 *.iml
-/minecraft/
-/target/
+/.gradle
+/build
+/lib

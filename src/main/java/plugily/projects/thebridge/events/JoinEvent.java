@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.events;
@@ -30,12 +31,13 @@ import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.PermissionsManager;
+import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.UpdateChecker;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 03.08.2018
+ * Created at 23.11.2020
  */
 public class JoinEvent implements Listener {
 
@@ -70,8 +72,8 @@ public class JoinEvent implements Listener {
       if (ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      player.hidePlayer(event.getPlayer());
-      event.getPlayer().hidePlayer(player);
+      NMS.hidePlayer(player, event.getPlayer());
+      NMS.hidePlayer(event.getPlayer(), player);
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
@@ -92,12 +94,12 @@ public class JoinEvent implements Listener {
       }
       if (result.getNewestVersion().contains("b")) {
         event.getPlayer().sendMessage("");
-        event.getPlayer().sendMessage(ChatColor.BOLD + "thebridge UPDATE NOTIFY");
+        event.getPlayer().sendMessage(ChatColor.BOLD + "THE BRIDGE UPDATE NOTIFY");
         event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
         event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
       } else {
         event.getPlayer().sendMessage("");
-        event.getPlayer().sendMessage(ChatColor.BOLD + "thebridge UPDATE NOTIFY");
+        event.getPlayer().sendMessage(ChatColor.BOLD + "THE BRIDGE UPDATE NOTIFY");
         event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
         event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
       }

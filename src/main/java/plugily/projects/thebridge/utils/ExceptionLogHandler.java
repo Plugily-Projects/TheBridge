@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.utils;
 
-import org.bukkit.Bukkit;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.services.exception.ReportedException;
+
+import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +30,9 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 24.03.2019
+ * Created at 31.10.2020
  */
 public class ExceptionLogHandler extends Handler {
 
@@ -59,11 +61,11 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     /*if (throwable.getStackTrace().length == 0
-        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.thebridge")
-        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.thebridge")) {
+        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.TheBridge")
+        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.TheBridge")) {
       return;
     }*/
-    if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null && throwable.getCause().getStackTrace().length <= 0 &&
+    if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null &&
       !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.thebridge"))) {
       return;
     }

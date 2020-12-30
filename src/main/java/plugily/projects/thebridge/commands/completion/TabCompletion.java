@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.completion;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.util.StringUtil;
 
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,9 +35,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 05.08.2018
+ * Created at 31.10.2020
  */
 public class TabCompletion implements TabCompleter {
 
@@ -53,33 +54,34 @@ public class TabCompletion implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-    List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
+    List<String> completionList = new ArrayList<>();
+    List<String> commands = new ArrayList<>();
     String partOfCommand = null;
 
     if (cmd.getName().equalsIgnoreCase("thebridgeadmin")) {
       if (args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
-            .collect(Collectors.toList()));
+        commands.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+          .collect(Collectors.toList()));
         partOfCommand = args[0];
       } else if (args.length == 2 && args[0].equalsIgnoreCase("delete")) {
-        cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
+        commands.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
         partOfCommand = args[1];
       }
     }
 
     if (cmd.getName().equalsIgnoreCase("thebridge")) {
       if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-        cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
+        commands.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
         partOfCommand = args[1];
       } else if (args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
-            .collect(Collectors.toList()));
+        commands.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+          .collect(Collectors.toList()));
         partOfCommand = args[0];
       }
     }
 
     // Completes the player names
-    if (cmds.isEmpty() || partOfCommand == null) {
+    if (commands.isEmpty() || partOfCommand == null) {
       for (CompletableArgument completion : registeredCompletions) {
         if (!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
           continue;
@@ -90,7 +92,7 @@ public class TabCompletion implements TabCompleter {
       return null;
     }
 
-    StringUtil.copyPartialMatches(partOfCommand, cmds, completionList);
+    StringUtil.copyPartialMatches(partOfCommand, commands, completionList);
     Collections.sort(completionList);
     return completionList;
   }

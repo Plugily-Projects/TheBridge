@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,33 +14,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.special.SpecialBlock;
-import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.options.ArenaOption;
+import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.utils.Debugger;
+import plugily.projects.thebridge.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Tom on 27/07/2014.
+ * @author Tigerpanzer_02 & 2Wild4You
+ * <p>
+ * Created at 31.10.2020
  */
 public class ArenaRegistry {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static final ChatManager chatManager = plugin.getChatManager();
   private static final List<Arena> arenas = new ArrayList<>();
   private static int bungeeArena = -999;
 
@@ -117,12 +120,11 @@ public class ArenaRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
     if (!config.isConfigurationSection("instances")) {
-      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.No-Instances-Created"));
+      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
       return;
     }
 
-    ConfigurationSection section = config.getConfigurationSection("instances");
-    for (String id : section.getKeys(false)) {
+    for (String id : config.getConfigurationSection("instances").getKeys(false)) {
       Arena arena;
       String s = "instances." + id + ".";
       if (s.contains("default")) {
@@ -130,49 +132,72 @@ public class ArenaRegistry {
       }
       arena = new Arena(id);
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
-      arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
-      arena.setSpawnGoldTime(config.getInt(s + "spawngoldtime", 5));
-      arena.setHideChances(config.getBoolean(s + "hidechances", false));
-      arena.setMurderers(config.getInt(s + "playerpermurderer", 5));
-      arena.setDetectives(config.getInt(s + "playerperdetective", 7));
-      List<Location> playerSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "playerspawnpoints")) {
-        playerSpawnPoints.add(LocationSerializer.getLocation(loc));
-      }
-      arena.setPlayerSpawnPoints(playerSpawnPoints);
-      List<Location> goldSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "goldspawnpoints")) {
-        goldSpawnPoints.add(LocationSerializer.getLocation(loc));
-      }
-      arena.setGoldSpawnPoints(goldSpawnPoints);
 
-      List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if (config.isSet(s + ".mystery-cauldrons")) {
-        for (String loc : config.getStringList(s + ".mystery-cauldrons")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-        }
-      }
-      if (config.isSet(s + ".confessionals")) {
-        for (String loc : config.getStringList(s + ".confessionals")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-        }
-      }
-
-      specialBlocks.forEach(arena::loadSpecialBlock);
 
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-
+      arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setMidLocation(LocationSerializer.getLocation(config.getString(s + "midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setSpectatorLocation(LocationSerializer.getLocation(config.getString(s + "spectatorlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setArenaBorder(new Cuboid(LocationSerializer.getLocation(config.getString(s + "arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(config.getString(s + "arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
+      int bases = 0;
+      if (config.contains(s + "bases")) {
+        if (config.isConfigurationSection(s + "bases")) {
+          for (String baseID : config.getConfigurationSection(s + "bases").getKeys(false)) {
+            if (config.isSet(s + "bases." + baseID + ".isdone")) {
+              Base base = new Base(
+                config.getString("instances." + arena.getId() + ".bases." + baseID + ".color"),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation1")),
+                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation2")),
+                config.getInt("instances." + arena.getId() + ".maximumsize")
+              );
+              arena.addBase(base);
+              ArmorStandHologram portal = new ArmorStandHologram(Utils.getBlockCenter(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portalhologram"))));
+              for (String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
+                portal.appendLine(str.replace("%base%", base.getFormattedColor()));
+              }
+              base.setArmorStandHologram(portal);
+              bases++;
+            } else {
+              System.out.println("Non configured bases instances found for arena " + id);
+              arena.setReady(false);
+            }
+          }
+        } else {
+          System.out.println("Non configured bases in arena " + id);
+          arena.setReady(false);
+        }
+      } else {
+        System.out.print("Instance " + id + " doesn't contains bases!");
+        arena.setReady(false);
+      }
+      if (bases < 2) {
+        System.out.print("Instance " + id + " doesn't contains 2 bases that are done!");
+        arena.setReady(false);
+      }
+      arena.setOptionValue(ArenaOption.SIZE, config.getInt("instances." + arena.getId() + ".maximumsize", 3));
+      arena.setMaximumPlayers(bases * arena.getOption(ArenaOption.SIZE));
+      if (config.contains(s + "mode")) {
+        arena.setMode(Arena.Mode.valueOf(config.getString(s + "mode").toUpperCase()));
+      } else {
+        arena.setMode(Arena.Mode.POINTS);
+      }
+      arena.setOptionValue(ArenaOption.MODE_VALUE, config.getInt(s + "modevalue", 5));
+      arena.setOptionValue(ArenaOption.RESET_BLOCKS, config.getInt(s + "resetblocks", 0));
+      arena.setOptionValue(ArenaOption.RESET_TIME, config.getInt(s + "resettime", 5));
       if (!config.getBoolean(s + "isdone", false)) {
-        Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+        Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
         continue;
       }
       ArenaRegistry.registerArena(arena);
       arena.start();
-      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
+      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
     Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }

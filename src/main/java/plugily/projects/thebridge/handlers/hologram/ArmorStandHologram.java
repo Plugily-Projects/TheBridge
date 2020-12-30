@@ -1,3 +1,22 @@
+/*
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package plugily.projects.thebridge.handlers.hologram;
 
 import java.util.ArrayList;
@@ -12,6 +31,11 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Tigerpanzer_02 & 2Wild4You
+ * <p>
+ * Created at 31.10.2020
+ */
 public class ArmorStandHologram {
 
   private Item entityItem;
@@ -142,11 +166,18 @@ public class ArmorStandHologram {
    */
   private ArmorStand getEntityArmorStand(Location loc, double y) {
     loc.setY(y);
-
+    location.getWorld().getNearbyEntities(location, 0.2, 0.2, 0.2).forEach(entity -> {
+      if (entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
+        entity.remove();
+        entity.setCustomNameVisible(false);
+        HologramManager.getArmorStands().remove(entity);
+      }
+    });
     ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setGravity(false);
     stand.setCustomNameVisible(true);
     return stand;
   }
+
 }

@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.utils;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 
 import java.util.HashSet;
@@ -27,9 +30,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 06.04.2019
+ * Created at 31.10.2020
  */
 public class Debugger {
 
@@ -74,7 +77,7 @@ public class Debugger {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
-    logger.log(level, "[MMDBG] " + msg);
+    logger.log(level, "[TBDBG] " + msg);
   }
 
   public static void debug(String msg, Object... params) {
@@ -93,7 +96,7 @@ public class Debugger {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
-    logger.log(level, "[MMDBG] " + msg, params);
+    logger.log(level, "[TBDBG] " + msg, params);
   }
 
   /**
@@ -105,7 +108,7 @@ public class Debugger {
     if (!deep || !listenedPerformance.contains(monitorName)) {
       return;
     }
-    logger.log(Level.INFO, "[MMDBG] " + msg, params);
+    logger.log(Level.INFO, "[TBDBG] " + msg, params);
   }
 
 }

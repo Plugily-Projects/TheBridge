@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.admin.arena;
@@ -31,15 +32,15 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.utils.Utils;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 18.05.2019
+ * Created at 31.10.2020
  */
 public class ForceStartArgument {
 
   public ForceStartArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("thebridgeadmin", new LabeledCommandArgument("forcestart", "thebridge.admin.forcestart", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7thebridge.admin.forcestart")) {
+      new LabelData("/tba forcestart", "/tba forcestart", "&7Force starts arena you're in\n&6Permission: &7thebridge.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!Utils.checkIsInGameInstance((Player) sender)) {

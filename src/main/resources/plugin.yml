@@ -1,33 +1,14 @@
-name: thebridge
+name: ${project.name}
 main: plugily.projects.thebridge.Main
-authors: [2Wild4You, Tigerpanzer, Plajer, montlikadani]
+authors: [ Tigerpanzer, 2Wild4You ]
 version: ${project.version}
 api-version: 1.13
-softdepend: [CorpseReborn, PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends]
+softdepend: [ PlaceholderAPI ]
 
 commands:
   thebridge:
     description: thebridge commands
-    usage: "\u00A76Correct usage: /mm [stats/leave/join]"
-    aliases: [mm, murder]
+    aliases: [ tb, bridge ]
   thebridgeAdmin:
     description: thebridge admin commands
-    usage: "\u00A76Correct usage: /mma [option]"
-    aliases: [mma, murderadmin]
-
-permissions:
-  thebridge.admin.*:
-    default: op
-    children:
-      thebridge.updatenotify: true
-      thebridge.command.override: true
-      thebridge.admin: true
-      thebridge.admin.setup: true
-      thebridge.admin.create: true
-      thebridge.admin.delete: true
-      thebridge.admin.list: true
-      thebridge.admin.stopgame: true
-      thebridge.admin.forcestart: true
-      thebridge.admin.addsign: true
-      thebridge.admin.sign.create: true
-      thebridge.admin.sign.break: true
+    aliases: [ tba, bridgeadmin ]

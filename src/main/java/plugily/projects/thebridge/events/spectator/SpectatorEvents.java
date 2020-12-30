@@ -1,6 +1,7 @@
+
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.events.spectator;
@@ -27,13 +29,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.user.User;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 05.08.2018
+ * Created at 23.11.2020
  */
 public class SpectatorEvents implements Listener {
 
@@ -122,6 +124,7 @@ public class SpectatorEvents implements Listener {
     }
     Player player = (Player) event.getEntity();
     if (plugin.getUserManager().getUser(player).isSpectator()) {
+      event.setFoodLevel(20);
       event.setCancelled(true);
     }
   }
@@ -132,11 +135,15 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator() || ArenaRegistry.getArena(player) == null) {
+    User user = plugin.getUserManager().getUser(player);
+    if (!user.isSpectator()) {
+      return;
+    }
+    if (user.getArena() == null){
       return;
     }
     if (player.getLocation().getY() < 1) {
-      player.teleport(ArenaRegistry.getArena(player).getPlayerSpawnPoints().get(0));
+      player.teleport(user.getArena().getSpectatorLocation());
     }
     event.setCancelled(true);
   }
@@ -165,17 +172,14 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPickup(EntityPickupItemEvent event) {
-    if (!(event.getEntity() instanceof Player)) return;
-
-    if (plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
+    if (event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onRightClick(PlayerInteractEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena != null && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+    if (ArenaRegistry.isInArena(event.getPlayer()) && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       event.setCancelled(true);
     }
   }

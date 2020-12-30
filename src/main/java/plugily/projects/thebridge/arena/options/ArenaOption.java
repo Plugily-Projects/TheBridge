@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +14,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.arena.options;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 24.03.2019
+ * Created at 07.11.2020
  */
 public enum ArenaOption {
   /**
@@ -29,13 +30,33 @@ public enum ArenaOption {
    */
   TIMER(0),
   /**
+   * How many bases are on that arena?
+   */
+  BASES(2),
+  /**
+   * How many players per base?
+   */
+  SIZE(4),
+  /**
+   * How many points does an base need to win?
+   */
+  MODE_VALUE(5),
+  /**
+   * Reset blocks after round x
+   */
+  RESET_BLOCKS(0),
+  /**
+   * Reset blocks after round x
+   */
+  RESET_TIME(5),
+  /**
    * Minimum players in arena needed to start.
    */
   MINIMUM_PLAYERS(2),
   /**
    * Maximum players arena can hold, users with full games permission can bypass this!
    */
-  MAXIMUM_PLAYERS(10);
+  MAXIMUM_PLAYERS(8);
 
   private final int defaultValue;
 

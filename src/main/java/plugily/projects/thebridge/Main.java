@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge;
@@ -33,22 +34,26 @@ import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaEvents;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
-import plugily.projects.thebridge.arena.special.SpecialBlockEvents;
-import plugily.projects.thebridge.arena.special.mysterypotion.MysteryPotionRegistry;
-import plugily.projects.thebridge.arena.special.pray.PrayerRegistry;
+import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.*;
 import plugily.projects.thebridge.events.spectator.SpectatorEvents;
 import plugily.projects.thebridge.events.spectator.SpectatorItemEvents;
-import plugily.projects.thebridge.handlers.*;
+import plugily.projects.thebridge.handlers.BungeeManager;
+import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.PermissionsManager;
+import plugily.projects.thebridge.handlers.PlaceholderManager;
 import plugily.projects.thebridge.handlers.hologram.HologramManager;
-import plugily.projects.thebridge.handlers.items.SpecialItem;
+import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.handlers.party.PartyHandler;
 import plugily.projects.thebridge.handlers.party.PartySupportInitializer;
 import plugily.projects.thebridge.handlers.rewards.RewardsFactory;
+import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.handlers.sign.SignManager;
+import plugily.projects.thebridge.kits.KitMenuHandler;
+import plugily.projects.thebridge.kits.KitRegistry;
+import plugily.projects.thebridge.kits.basekits.Kit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.user.UserManager;
 import plugily.projects.thebridge.user.data.MysqlManager;
@@ -61,11 +66,12 @@ import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 03.08.2018
+ * Created at 31.10.2020
  */
 public class Main extends JavaPlugin {
+
 
   private ExceptionLogHandler exceptionLogHandler;
   private boolean forceDisable = false;
@@ -73,13 +79,15 @@ public class Main extends JavaPlugin {
   private RewardsFactory rewardsHandler;
   private MysqlDatabase database;
   private SignManager signManager;
-  private CorpseHandler corpseHandler;
   private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
+  private KitMenuHandler kitMenuHandler;
+  private BaseMenuHandler baseMenuHandler;
   private ArgumentsRegistry argumentsRegistry;
-  private HookManager hookManager;
   private UserManager userManager;
   private ChatManager chatManager;
+  private SpecialItemManager specialItemManager;
+  private CuboidSelector cuboidSelector;
 
   @Override
   public void onEnable() {
@@ -88,16 +96,16 @@ public class Main extends JavaPlugin {
     }
 
     long start = System.currentTimeMillis();
-
+    setupFiles();
+    saveDefaultConfig();
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
-    saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
-    if (getConfig().getBoolean("Developer-Mode", false)) {
+    if (getConfig().getBoolean("Developer-Mode")) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
       for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
@@ -106,24 +114,17 @@ public class Main extends JavaPlugin {
     }
 
     configPreferences = new ConfigPreferences(this);
-    setupFiles();
     initializeClasses();
     checkUpdate();
     Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
     Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
-    //start hook manager later in order to allow soft-dependencies to fully load
-    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
-    if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
-      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
-        Bukkit.getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
-    }
   }
 
   private boolean validateIfPluginShouldStart() {
     if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_12_R1)) {
       MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server version is not supported by thebridge!");
+      Debugger.sendConsoleMsg("&cYour server version is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
@@ -133,7 +134,7 @@ public class Main extends JavaPlugin {
       Class.forName("org.spigotmc.SpigotConfig");
     } catch (Exception e) {
       MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server software is not supported by thebridge!");
+      Debugger.sendConsoleMsg("&cYour server software is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
@@ -155,7 +156,7 @@ public class Main extends JavaPlugin {
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
-    for (ArmorStand armorStand : HologramManager.getArmorStands()){
+    for (ArmorStand armorStand : HologramManager.getArmorStands()) {
       armorStand.remove();
       armorStand.setCustomNameVisible(false);
     }
@@ -184,7 +185,7 @@ public class Main extends JavaPlugin {
   private void initializeClasses() {
     chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated", false)) {
+    if (getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -194,7 +195,6 @@ public class Main extends JavaPlugin {
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
-    SpecialItem.loadAll();
     PermissionsManager.init();
     new ArenaEvents(this);
     new SpectatorEvents(this);
@@ -203,18 +203,23 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     registerSoftDependenciesAndServices();
     User.cooldownHandlerTask();
+    signManager = new SignManager(this);
     ArenaRegistry.registerArenas();
+    signManager.loadSigns();
+    signManager.updateSigns();
     new Events(this);
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
-    signManager = new SignManager(this);
-    corpseHandler = new CorpseHandler(this);
+    specialItemManager = new SpecialItemManager(this);
+    specialItemManager.registerItems();
+    Kit.init(this);
+    KitRegistry.init(this);
+    SetupInventory.init(this);
+    baseMenuHandler = new BaseMenuHandler(this);
+    kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
-    new BowTrailsHandler(this);
-    MysteryPotionRegistry.init(this);
-    PrayerRegistry.init(this);
-    new SpecialBlockEvents(this);
+    cuboidSelector = new CuboidSelector(this);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -249,27 +254,28 @@ public class Main extends JavaPlugin {
     if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
+    //todo update checker
     UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }
       if (result.getNewestVersion().contains("b")) {
         if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[thebridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[thebridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[TheBridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[TheBridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
             result.getNewestVersion()));
         }
         return;
       }
       MessageUtils.updateIsHere();
-      Debugger.sendConsoleMsg("&aYour thebridge plugin is outdated! Download it to keep with latest changes and fixes.");
+      Debugger.sendConsoleMsg("&aYour TheBridge plugin is outdated! Download it to keep with latest changes and fixes.");
       Debugger.sendConsoleMsg("&aDisable this option in config.yml if you wish.");
       Debugger.sendConsoleMsg("&eCurrent version: &c" + getDescription().getVersion() + "&e Latest version: &a" + result.getNewestVersion());
     });
   }
 
   private void setupFiles() {
-    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
+    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "kits")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if (!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -305,20 +311,28 @@ public class Main extends JavaPlugin {
     return signManager;
   }
 
-  public CorpseHandler getCorpseHandler() {
-    return corpseHandler;
+  public SpecialItemManager getSpecialItemManager() {
+    return specialItemManager;
   }
 
   public ArgumentsRegistry getArgumentsRegistry() {
     return argumentsRegistry;
   }
 
-  public HookManager getHookManager() {
-    return hookManager;
-  }
-
   public UserManager getUserManager() {
     return userManager;
+  }
+
+  public KitMenuHandler getKitMenuHandler() {
+    return kitMenuHandler;
+  }
+
+  public BaseMenuHandler getBaseMenuHandler() {
+    return baseMenuHandler;
+  }
+
+  public CuboidSelector getCuboidSelector() {
+    return cuboidSelector;
   }
 
   private void saveAllUserStatistics() {
@@ -329,9 +343,9 @@ public class Main extends JavaPlugin {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) continue;
           if (update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append("=").append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
-          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
         }
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
@@ -344,6 +358,4 @@ public class Main extends JavaPlugin {
       }
     }
   }
-
-
 }

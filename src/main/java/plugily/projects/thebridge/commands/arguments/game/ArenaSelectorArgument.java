@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.game;
@@ -44,9 +45,9 @@ import plugily.projects.thebridge.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * @author 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 09.08.2020
+ * Created at 23.11.2020
  */
 public class ArenaSelectorArgument implements Listener {
 
@@ -56,7 +57,7 @@ public class ArenaSelectorArgument implements Listener {
     this.chatManager = chatManager;
     registry.getPlugin().getServer().getPluginManager().registerEvents(this, registry.getPlugin());
     registry.mapArgument("thebridge", new LabeledCommandArgument("arenas", "thebridge.arenas", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mm arenas", "/mm arenas", "&7Select an arena\n&6Permission: &7thebridge.arenas")) {
+      new LabelData("/tb arenas", "/tb arenas", "&7Select an arena\n&6Permission: &7thebridge.arenas")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;

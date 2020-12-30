@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.commands.arguments.game;
@@ -29,12 +30,11 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.user.User;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 18.05.2019
+ * Created at 31.10.2020
  */
 public class StatsArgument {
-
   public StatsArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("thebridge", new CommandArgument("stats", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
@@ -55,10 +55,8 @@ public class StatsArgument {
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Wins", player) + user.getStat(StatsStorage.StatisticType.WINS));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Loses", player) + user.getStat(StatsStorage.StatisticType.LOSES));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Games-Played", player) + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
-        sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Highest-Score", player) + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Footer", player));
       }
     });
   }
-
 }

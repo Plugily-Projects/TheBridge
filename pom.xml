@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ thebridge - Jump into the portal of your opponent and collect points to win!
-  ~ Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+  ~ TheBridge - Defend your base and try to wipe out the others
+  ~ Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -24,8 +25,8 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>thebridge</artifactId>
-    <version>1.6.5</version>
-    <name>thebridge</name>
+    <version>1.0.0-SnapShot</version>
+    <name>TheBridge</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -39,22 +40,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Tigerpanzer</name>
-            <url>https://www.spigotmc.org/members/414545/</url>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>2Wild4You</name>
-            <url>https://www.spigotmc.org/members/992084/</url>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
 
     <repositories>
         <repository>
@@ -99,31 +84,31 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.16.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.1.6</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.1.6</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.1.6</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -156,13 +141,6 @@
             <artifactId>annotations</artifactId>
             <version>13.0</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.golde</groupId>
-            <artifactId>corpsereborn</artifactId>
-            <version>2.14.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
@@ -208,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <goals>
                     <goal>compile</goal>
                 </goals>
@@ -220,25 +198,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.0</version>
                 <configuration>
-                    <windowtitle>thebridge API docs for v${project.version}</windowtitle>
+                    <windowtitle>The Bridge API docs for v${project.version}</windowtitle>
                     <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking thebridge with your plugin.
+                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking The Bridge with your plugin.
                     </description>
                     <destDir>minecraft/thebridge</destDir>
                     <isOffline>false</isOffline>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>jar</goal>
-                            <goal>javadoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -248,7 +216,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -298,7 +266,7 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
+                <artifactId>wagon-ftp</artifactId>
                 <version>3.4.1</version>
             </extension>
         </extensions>
@@ -307,12 +275,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>sftp://167.86.90.57/home/maven-repo-mc/maven</url>
+            <url>ftp://plugily.xyz</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
             <name>thebridge</name>
-            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd/</url>
+            <url>ftp://plugily.xyz</url>
         </site>
     </distributionManagement>
 

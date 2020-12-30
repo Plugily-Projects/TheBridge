@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,90 +14,75 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.thebridge.ConfigPreferences;
-import plugily.projects.thebridge.HookManager;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.game.TBGameStartEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStateChangeEvent;
-import plugily.projects.thebridge.arena.corpse.Corpse;
-import plugily.projects.thebridge.arena.corpse.Stand;
+import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.arena.options.ArenaOption;
-import plugily.projects.thebridge.arena.role.Role;
-import plugily.projects.thebridge.arena.special.SpecialBlock;
-import plugily.projects.thebridge.arena.special.pray.PrayerRegistry;
 import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.ItemPosition;
-import plugily.projects.thebridge.utils.Utils;
+import plugily.projects.thebridge.utils.NMS;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+/**
+ * @author Tigerpanzer_02 & 2Wild4You
+ * <p>
+ * Created at 31.10.2020
+ */
 public class Arena extends BukkitRunnable {
 
-  private static final Random random = new Random();
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private final ChatManager chatManager = plugin.getChatManager();
   private final String id;
-
+  private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
+  private BossBar gameBar;
+  private String mapName = "";
+  private final ChatManager chatManager = plugin.getChatManager();
+  private final ScoreboardManager scoreboardManager;
   private final Set<Player> players = new HashSet<>();
-  private final List<Item> goldSpawned = new ArrayList<>();
-  private final List<Corpse> corpses = new ArrayList<>();
-  private final List<Stand> stands = new ArrayList<>();
-  private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
-
-  //contains murderer, detective, fake detective and hero
-  private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
+  private final List<Player> spectators = new ArrayList<>(), deaths = new ArrayList<>();
   //all arena values that are integers, contains constant and floating values
   private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   //instead of 3 location fields we use map with GameLocation enum
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
-
-  private final ScoreboardManager scoreboardManager;
-  private ArmorStandHologram holohandler = new ArmorStandHologram();
-
-  private List<Location> goldSpawnPoints = new ArrayList<>(), playerSpawnPoints = new ArrayList<>();
-
-  private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
-
-  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false;
-  private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
-  private BossBar gameBar;
-  private String mapName = "";
+  private boolean ready = true, forceStart = false;
+  private List<Base> bases = new ArrayList<>();
+  private Mode mode;
+  private final ArrayList<Block> placedBlocks = new ArrayList<>();
+  private final HashMap<Player, Player> hits = new HashMap<>();
+  private int resetRound = 0;
+  private int out = 0;
+  private Cuboid arenaBorder;
+  private Base winner;
 
   public Arena(String id) {
     this.id = id;
@@ -116,17 +101,6 @@ public class Arena extends BukkitRunnable {
 
   public void setReady(boolean ready) {
     this.ready = ready;
-  }
-
-  public void addCorpse(Corpse corpse) {
-    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      return;
-    }
-    corpses.add(corpse);
-  }
-
-  public void addHead(Stand stand) {
-    stands.add(stand);
   }
 
   @Override
@@ -191,23 +165,6 @@ public class Arena extends BukkitRunnable {
           }
           break;
         }
-        int totalMurderer = 0;
-        int totalDetective = 0;
-        for (Player p : getPlayers()) {
-          User user = plugin.getUserManager().getUser(p);
-          totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
-          totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
-        }
-        if (!hideChances) {
-          for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p);
-            try {
-              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-            } catch (NumberFormatException ignored) {
-              //fail silently
-            }
-          }
-        }
         if (getTimer() == 0 || forceStart) {
           TBGameStartEvent gameStartEvent = new TBGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
@@ -222,86 +179,41 @@ public class Arena extends BukkitRunnable {
           teleportAllToStartLocation();
           for (Player player : getPlayers()) {
             //reset local variables to be 100% sure
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_DEATHS, 0);
             plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_PRAISES, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 0);
             //
-            ArenaUtils.updateNameTagsVisibility(player);
             player.getInventory().clear();
-            player.setGameMode(GameMode.ADVENTURE);
+            player.setGameMode(GameMode.SURVIVAL);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-            setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
+            setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+            // get base with min players
+            Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
+            // add player to min base if he got no base
+            if (!inBase(player)) {
+              minPlayers.addPlayer(player);
+            }
+            // fallback
+            if (!inBase(player)) {
+              getBases().get(0).addPlayer(player);
+            }
+            plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+            player.updateInventory();
           }
-
-          Map<User, Double> murdererChances = new HashMap<>();
-          Map<User, Double> detectiveChances = new HashMap<>();
-          for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p);
-            murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
-            detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
-          }
-          Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-          Set<Player> playersToSet = new HashSet<>(getPlayers());
-          int maxmurderer = 1;
-          int maxdetectives = 1;
-          Debugger.debug("Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          if (murderers > 1 && getPlayers().size() > murderers) {
-            maxmurderer = (getPlayers().size() / murderers);
-          }
-          if (detectives > 1 && getPlayers().size() > detectives) {
-            maxdetectives = (getPlayers().size() / detectives);
-          }
-          if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", this);
-            //Make sure to have one innocent!
-            if (maxdetectives > 1) {
-              maxdetectives--;
-            } else if (maxmurderer > 1) {
-              maxmurderer--;
+          //check if not only one base got players
+          Base maxPlayers = getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
+          Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
+          if (maxPlayers.getPlayersSize() == getPlayers().size()) {
+            for (int i = 0; i < maxPlayers.getPlayersSize() / 2; i++) {
+              Player move = maxPlayers.getPlayers().get(i);
+              minPlayers.addPlayer(move);
+              maxPlayers.removePlayer(move);
             }
           }
-          Debugger.debug("After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          for (int i = 0; i < maxmurderer; i++) {
-            Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
-            setCharacter(CharacterType.MURDERER, murderer);
-            allMurderer.add(murderer);
-            plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-            playersToSet.remove(murderer);
-            murderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-              chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-            detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
-          }
-
-          Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-          for (int i = 0; i < maxdetectives; i++) {
-            Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
-            setCharacter(CharacterType.DETECTIVE, detective);
-            allDetectives.add(detective);
-            plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-            detective.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-              chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
-            playersToSet.remove(detective);
-            detective.getInventory().setHeldItemSlot(0);
-            ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-            ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-          }
-          Debugger.debug("Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
-            getId(), maxdetectives, maxmurderer, getPlayers().size(), allDetectives, allMurderer);
-
-          for (Player p : playersToSet) {
-            p.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
-              chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-          }
+          teleportAllToBaseLocation();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
@@ -316,37 +228,16 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
         if (getTimer() <= 0) {
+          Base highestValue = bases.get(0);
+          for (Base base : bases) {
+            if (highestValue.getPoints() < base.getPoints()) {
+              highestValue = base;
+            }
+          }
+          winner = highestValue;
           ArenaManager.stopGame(false, this);
         }
-        if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
-          && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
-          for (Player p : getPlayers()) {
-            p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-              .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
-            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-          }
-          if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-            if (allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
-            for (Player p : allMurderer) {
-              User murderer = plugin.getUserManager().getUser(p);
-              if (murderer.isSpectator()) continue;
-              if (!p.isOnline() || murderer.getArena() != this) continue;
-              p.getInventory().setHeldItemSlot(0);
-              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-            }
-          }
-        }
-
-        //every 30 secs survive reward
-        if (getTimer() % 30 == 0) {
-          for (Player p : getPlayersLeft()) {
-            if (Role.isRole(Role.INNOCENT, p)) {
-              ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
-            }
-          }
-        }
-
-        if (getTimer() == 30 || getTimer() == 60) {
+        if (getTimer() == 30 || getTimer() == 60 || getTimer() == 120) {
           String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
           String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
           for (Player p : getPlayers()) {
@@ -354,46 +245,52 @@ public class Arena extends BukkitRunnable {
           }
         }
 
-        if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INNOCENT_LOCATOR)) {
-            ArenaUtils.updateInnocentLocator(this);
+        if (resetRound > 0) {
+          String title = chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound));
+          String subtitle = chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle").replace("%seconds%", String.valueOf(resetRound));
+          for (Player p : getPlayers()) {
+            p.sendTitle(title, subtitle, 5, 40, 5);
+            if (resetRound == 1) {
+              p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
+            }
           }
+          resetRound--;
         }
+
         //no players - stop game
         if (getPlayersLeft().size() == 0) {
           ArenaManager.stopGame(false, this);
-        } else
+        } else {
           //winner check
-          if (getPlayersLeft().size() == aliveMurderer()) {
-            for (Player p : getPlayers()) {
-              p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
-              if (allMurderer.contains(p)) {
-                p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
-              }
-            }
-            ArenaManager.stopGame(false, this);
-          } else
-            //murderer speed add
-            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
-              if (getPlayersLeft().size() == aliveMurderer() + 1) {
-                for (Player p : allMurderer) {
-                  if (isMurderAlive(p)) {
-                    //no potion because it adds particles which can be identified
-                    int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
-                    if (multiplier > 1 && multiplier <= 10) {
-                      p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
-                    }
+          for (Base base : getBases()) {
+            if (base.getPoints() >= getOption(ArenaOption.MODE_VALUE)) {
+              winner = base;
+              if (mode == Mode.POINTS) {
+                for (Player p : getPlayers()) {
+                  p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getFormattedColor()), 5, 40, 5);
+                  if (base.getPlayers().contains(p)) {
+                    p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
                   }
                 }
+                ArenaManager.stopGame(false, this);
+                break;
               }
             }
-        //don't spawn it every time
-        if (spawnGoldTimer == spawnGoldTime) {
-          spawnSomeGold();
-          spawnGoldTimer = 0;
-        } else {
-          spawnGoldTimer++;
+          }
+          if (mode == Mode.HEARTS) {
+            if (out >= bases.size() - 1) {
+              for (Player player : getPlayers()) {
+                if (!isDeathPlayer(player)) {
+                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                  winner = getBase(player);
+                } else {
+                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
+                }
+              }
+              ArenaManager.stopGame(false, this);
+            }
+          }
         }
         setTimer(getTimer() - 1);
         break;
@@ -412,9 +309,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
-              player.showPlayer(players);
-              if (ArenaRegistry.getArena(players) == null) {
-                players.showPlayer(player);
+              NMS.showPlayer(player, players);
+              if (!ArenaRegistry.isInArena(players)) {
+                NMS.showPlayer(players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -427,8 +324,6 @@ public class Arena extends BukkitRunnable {
             doBarAction(BarAction.REMOVE, player);
             player.setFireTicks(0);
             player.setFoodLevel(20);
-            PrayerRegistry.getRush().remove(player);
-            PrayerRegistry.getBan().remove(player);
           }
           teleportAllToEndLocation();
 
@@ -438,15 +333,17 @@ public class Arena extends BukkitRunnable {
             }
           }
 
-          chatManager.broadcast(this, chatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
             user.getPlayer().setCollidable(true);
+            user.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", user.getPlayer()));
             plugin.getUserManager().saveAllStatistic(user);
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
+
+          deaths.clear();
+          spectators.clear();
 
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
@@ -459,6 +356,9 @@ public class Arena extends BukkitRunnable {
         break;
       case RESTARTING:
         getPlayers().clear();
+        for (Base base : getBases()) {
+          base.reset();
+        }
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           ArenaRegistry.shuffleBungeeArena();
@@ -471,99 +371,10 @@ public class Arena extends BukkitRunnable {
         }
         break;
       default:
-        break; //o.o?
-    }
-    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms",
-
-      getId(), System.
-
-        currentTimeMillis() - start);
-  }
-
-  private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
-    String message = chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
-    message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
-    message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
-    return message;
-  }
-
-  private void spawnSomeGold() {
-    //may users want to disable it and want much gold on there map xD
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_GOLD_LIMITER)) {
-      //do not exceed amount of gold per spawn
-      if (goldSpawned.size() >= goldSpawnPoints.size()) {
-        return;
-      }
-    }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
-      for (Location location : goldSpawnPoints) {
-        Item item = location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1));
-        goldSpawned.add(item);
-      }
-    } else {
-      Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
-      Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
-      goldSpawned.add(item);
+        break;
     }
   }
 
-  public void setMurderers(int murderers) {
-    this.murderers = murderers;
-  }
-
-  public void setSpawnGoldTime(int spawnGoldTime) {
-    this.spawnGoldTime = spawnGoldTime;
-  }
-
-  public void setHideChances(boolean hideChances) {
-    this.hideChances = hideChances;
-  }
-
-  public boolean isDetectiveDead() {
-    return detectiveDead;
-  }
-
-  public void setDetectiveDead(boolean detectiveDead) {
-    this.detectiveDead = detectiveDead;
-  }
-
-  public void setDetectives(int detectives) {
-    this.detectives = detectives;
-  }
-
-  public boolean isMurdererLocatorReceived() {
-    return murdererLocatorReceived;
-  }
-
-  public void setMurdererLocatorReceived(boolean murdererLocatorReceived) {
-    this.murdererLocatorReceived = murdererLocatorReceived;
-  }
-
-  public void setForceStart(boolean forceStart) {
-    this.forceStart = forceStart;
-  }
-
-  public ScoreboardManager getScoreboardManager() {
-    return scoreboardManager;
-  }
-
-  public ArmorStandHologram getHoloHandler() {
-    return holohandler;
-  }
-
-  @NotNull
-  public List<Item> getGoldSpawned() {
-    return goldSpawned;
-  }
-
-  @NotNull
-  public List<Location> getGoldSpawnPoints() {
-    return goldSpawnPoints;
-  }
-
-  public void setGoldSpawnPoints(@NotNull List<Location> goldSpawnPoints) {
-    this.goldSpawnPoints = goldSpawnPoints;
-  }
 
   /**
    * Get arena identifier used to get arenas by string.
@@ -654,6 +465,73 @@ public class Arena extends BukkitRunnable {
     setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
   }
 
+  public int getOut() {
+    return out;
+  }
+
+  public void setOut(int out) {
+    this.out = out;
+  }
+
+  public void addOut() {
+    this.out++;
+  }
+
+  public List<Base> getBases() {
+    return bases;
+  }
+
+  public boolean inBase(Player player) {
+    return getBases().stream().anyMatch(base -> base.getPlayers().contains(player));
+  }
+
+  public List<Player> getTeammates(Player player) {
+    List<Player> mates = new ArrayList<>(getBase(player).getPlayers());
+    mates.remove(player);
+    return mates;
+  }
+
+  public boolean isTeammate(Player player, Player check) {
+    return getTeammates(player).contains(check);
+  }
+
+  /**
+   * Returns base where the player is
+   *
+   * @param p target player
+   * @return Base or null if not inside an base
+   * @see #inBase(Player) to check if player is playing
+   */
+  public Base getBase(Player p) {
+    if (p == null || !p.isOnline()) {
+      return null;
+    }
+    for (Base base : bases) {
+      for (Player player : base.getPlayers()) {
+        if (player == p) {
+          return base;
+        }
+      }
+    }
+    return null;
+  }
+
+  public Base getWinner() {
+    return winner;
+  }
+
+  public void setBases(List<Base> bases) {
+    this.bases = bases;
+  }
+
+  public void addBase(Base base) {
+    this.bases.add(base);
+  }
+
+  public void removeBase(Base base) {
+    this.bases.remove(base);
+  }
+
   /**
    * Return game state of arena.
    *
@@ -676,6 +554,8 @@ public class Arena extends BukkitRunnable {
 
     TBGameStateChangeEvent gameStateChangeEvent = new TBGameStateChangeEvent(this, getArenaState());
     Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+
+    plugin.getSignManager().updateSigns();
   }
 
   /**
@@ -696,10 +576,38 @@ public class Arena extends BukkitRunnable {
     player.setWalkSpeed(0.2f);
     Location location = getLobbyLocation();
     if (location == null) {
-      System.out.print("LobbyLocation isn't intialized for arena " + getId());
+      System.out.print("LobbyLocation isn't initialized for arena " + getId());
       return;
     }
     player.teleport(location);
+  }
+
+  public ScoreboardManager getScoreboardManager() {
+    return scoreboardManager;
+  }
+
+  public void addDeathPlayer(Player player) {
+    deaths.add(player);
+  }
+
+  public void removeDeathPlayer(Player player) {
+    deaths.remove(player);
+  }
+
+  public boolean isDeathPlayer(Player player) {
+    return deaths.contains(player);
+  }
+
+  public void addSpectatorPlayer(Player player) {
+    spectators.add(player);
+  }
+
+  public void removeSpectatorPlayer(Player player) {
+    spectators.remove(player);
+  }
+
+  public boolean isSpectatorPlayer(Player player) {
+    return spectators.contains(player);
   }
 
   /**
@@ -724,6 +632,80 @@ public class Arena extends BukkitRunnable {
     }
   }
 
+  public void cleanUpArena() {
+    getBases().forEach(Base::reset);
+    resetPlacedBlocks();
+    resetHits();
+    round = 0;
+    resetRound = 0;
+    winner = null;
+  }
+
+  int round = 0;
+
+  public void resetRound() {
+    resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
+    round++;
+    if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && getOption(ArenaOption.RESET_BLOCKS) - getRound() == 0) {
+      resetPlacedBlocks();
+      round = 0;
+    }
+    resetHits();
+    for (Player player : getPlayersLeft()) {
+      player.teleport(getBase(player).getPlayerSpawnPoint());
+      player.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Reset"));
+      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+      player.getInventory().clear();
+      plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+      player.updateInventory();
+    }
+    plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
+  }
+
+  public int getRound() {
+    return round;
+  }
+
+  public boolean isResetRound() {
+    return resetRound > 0;
+  }
+
+  public HashMap<Player, Player> getHits() {
+    return hits;
+  }
+
+  public void addHits(Player victim, Player attacker) {
+    this.hits.remove(victim);
+    this.hits.put(victim, attacker);
+  }
+
+  public void removeHits(Player victim) {
+    this.hits.remove(victim);
+  }
+
+  public void resetHits() {
+    hits.clear();
+  }
+
+  public ArrayList<Block> getPlacedBlocks() {
+    return placedBlocks;
+  }
+
+  public void addPlacedBlock(Block placedBlock) {
+    this.placedBlocks.add(placedBlock);
+  }
+
+  public void removePlacedBlock(Block removedblock) {
+    this.placedBlocks.remove(removedblock);
+  }
+
+  public void resetPlacedBlocks() {
+    for (Block block : placedBlocks) {
+      block.setType(Material.AIR);
+    }
+    placedBlocks.clear();
+  }
+
   /**
    * Get lobby location of arena.
    *
@@ -744,14 +726,29 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToStartLocation(Player player) {
-    player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
+    player.teleport(getMidLocation());
+  }
+
+  public void teleportToBaseLocation(Player player) {
+    player.teleport(getBase(player).getPlayerSpawnPoint());
   }
 
   private void teleportAllToStartLocation() {
-    for (Player player : getPlayers()) {
-      player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
+    for (Player player : players) {
+      player.teleport(getMidLocation());
     }
   }
+
+  private void teleportAllToBaseLocation() {
+    for (Player player : players) {
+      player.teleport(getBase(player).getPlayerSpawnPoint());
+    }
+  }
+
+  public void setForceStart(boolean forceStart) {
+    this.forceStart = forceStart;
+  }
+
 
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
@@ -791,57 +788,6 @@ public class Arena extends BukkitRunnable {
     }
   }
 
-  public List<Location> getPlayerSpawnPoints() {
-    return playerSpawnPoints;
-  }
-
-  public void setPlayerSpawnPoints(@NotNull List<Location> playerSpawnPoints) {
-    this.playerSpawnPoints = playerSpawnPoints;
-  }
-
-  /**
-   * Get end location of arena.
-   *
-   * @return end location of arena
-   */
-  @Nullable
-  public Location getEndLocation() {
-    return gameLocations.get(GameLocation.END);
-  }
-
-  /**
-   * Set end location of arena.
-   *
-   * @param endLoc new end location of arena
-   */
-  public void setEndLocation(Location endLoc) {
-    gameLocations.put(GameLocation.END, endLoc);
-  }
-
-  public void loadSpecialBlock(SpecialBlock block) {
-    specialBlocks.add(block);
-    switch (block.getSpecialBlockType()) {
-      case MYSTERY_CAULDRON:
-        new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
-        break;
-      case PRAISE_DEVELOPER:
-        ArmorStandHologram holo = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
-        for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-          holo.appendLine(str);
-        }
-        break;
-      case HORSE_PURCHASE:
-      case RAPID_TELEPORTATION:
-        //not yet implemented
-      default:
-        break;
-    }
-  }
-
-  public List<SpecialBlock> getSpecialBlocks() {
-    return specialBlocks;
-  }
-
   public void start() {
     Debugger.debug("[{0}] Game instance started", getId());
     this.runTaskTimer(plugin, 20L, 20L);
@@ -865,132 +811,85 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for (Player player : getPlayers()) {
       for (Player p : getPlayers()) {
-        player.showPlayer(p);
-        p.showPlayer(player);
+        NMS.showPlayer(player, p);
+        NMS.showPlayer(p, player);
       }
     }
   }
 
-  public void cleanUpArena() {
-    removeBowHolo();
-
-    murdererLocatorReceived = false;
-    gameCharacters.clear();
-    allMurderer.clear();
-    allDetectives.clear();
-    setDetectiveDead(false);
-    clearCorpses();
-    clearGold();
-  }
-
-  public void clearGold() {
-    goldSpawned.stream().filter(Objects::nonNull).forEach(Item::remove);
-    goldSpawned.clear();
-  }
-
-  public void clearCorpses() {
-    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for (Stand stand : stands) {
-        if (!stand.getHologram().isDeleted()) {
-          stand.getHologram().delete();
-        }
-        if (stand.getStand() != null) {
-          stand.getStand().remove();
-        }
-      }
-      stands.clear();
-      return;
-    }
-    for (Corpse corpse : corpses) {
-      if (!corpse.getHologram().isDeleted()) {
-        corpse.getHologram().delete();
-      }
-      if (corpse.getCorpseData() != null) {
-        corpse.getCorpseData().destroyCorpseFromEveryone();
-        CorpseAPI.removeCorpse(corpse.getCorpseData());
-      }
-    }
-    corpses.clear();
-  }
-
-  public boolean isCharacterSet(CharacterType type) {
-    return gameCharacters.containsKey(type);
-  }
-
-  public void setCharacter(CharacterType type, Player player) {
-    gameCharacters.put(type, player);
-  }
-
+  /**
+   * Get end location of arena.
+   *
+   * @return end location of arena
+   */
   @Nullable
-  public Player getCharacter(CharacterType type) {
-    return gameCharacters.get(type);
+  public Location getEndLocation() {
+    return gameLocations.get(GameLocation.END);
   }
 
-  public void addToDetectiveList(Player player) {
-    allDetectives.add(player);
+  /**
+   * Set end location of arena.
+   *
+   * @param endLoc new end location of arena
+   */
+  public void setEndLocation(Location endLoc) {
+    gameLocations.put(GameLocation.END, endLoc);
   }
 
-  public boolean lastAliveDetective() {
-    return aliveDetective() <= 1;
+  /**
+   * Get mid location of arena.
+   *
+   * @return mid location of arena
+   */
+  @Nullable
+  public Location getMidLocation() {
+    return gameLocations.get(GameLocation.MID);
   }
 
-  public int aliveDetective() {
-    int alive = 0;
-    for (Player p : getPlayersLeft()) {
-      if (Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
-        alive++;
-      }
-    }
-    return alive;
+  /**
+   * Set mid location of arena.
+   *
+   * @param midLoc new end location of arena
+   */
+  public void setMidLocation(Location midLoc) {
+    gameLocations.put(GameLocation.MID, midLoc);
   }
 
-  public boolean isDetectiveAlive(Player player) {
-    for (Player p : getPlayersLeft()) {
-      if (p == player && allDetectives.contains(p)) {
-        return true;
-      }
-    }
-    return false;
+  /**
+   * Get spectator location of arena.
+   *
+   * @return end location of arena
+   */
+  @Nullable
+  public Location getSpectatorLocation() {
+    return gameLocations.get(GameLocation.SPECTATOR);
   }
 
-  public List<Player> getDetectiveList() {
-    return allDetectives;
-  }
-
-  public void addToMurdererList(Player player) {
-    allMurderer.add(player);
-  }
-
-  public void removeFromMurdererList(Player player) {
-    allMurderer.remove(player);
+  /**
+   * Set spectator location of arena.
+   *
+   * @param spectatorLoc new end location of arena
+   */
+  public void setSpectatorLocation(Location spectatorLoc) {
+    gameLocations.put(GameLocation.SPECTATOR, spectatorLoc);
   }
 
 
-  public boolean lastAliveMurderer() {
-    return aliveMurderer() == 1;
+
+  public Mode getMode() {
+    return mode;
   }
 
-  public int aliveMurderer() {
-    int alive = 0;
-    for (Player p : getPlayersLeft()) {
-      if (allMurderer.contains(p) && isMurderAlive(p)) {
-        alive++;
-      }
-    }
-    return alive;
+  public void setMode(Mode mode) {
+    this.mode = mode;
   }
 
-  public boolean isMurderAlive(Player player) {
-    for (Player p : getPlayersLeft()) {
-      if (p == player && allMurderer.contains(p)) {
-        return true;
-      }
-    }
-    return false;
+  public void setArenaBorder(Cuboid arenaBorder) {
+    this.arenaBorder = arenaBorder;
   }
 
-  public List<Player> getMurdererList() {
-    return allMurderer;
+  public Cuboid getArenaBorder() {
+    return arenaBorder;
   }
 
   public int getOption(@NotNull ArenaOption option) {
@@ -1010,35 +909,10 @@ public class Arena extends BukkitRunnable {
   }
 
   public enum GameLocation {
-    LOBBY, END
+    LOBBY, END, SPECTATOR, MID
   }
 
-  public enum CharacterType {
-    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+  public enum Mode {
+    HEARTS, POINTS
   }
-
-
-  private ArmorStandHologram bowHologram;
-
-  public void removeBowHolo() {
-    if (bowHologram != null && !bowHologram.isDeleted()) {
-      bowHologram.delete();
-    }
-
-    bowHologram = null;
-  }
-
-  public void setBowHologram(ArmorStandHologram bowHologram) {
-    if (bowHologram == null) {
-      this.bowHologram = null;
-      return;
-    }
-
-    this.bowHologram = bowHologram;
-  }
-
-  public ArmorStandHologram getBowHologram() {
-    return bowHologram;
-  }
-
 }

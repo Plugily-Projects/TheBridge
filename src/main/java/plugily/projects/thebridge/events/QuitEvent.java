@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,22 +14,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.user.User;
+
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
- * Created at 05.08.2018
+ * Created at 23.11.2020
  */
 public class QuitEvent implements Listener {
 
@@ -42,11 +45,19 @@ public class QuitEvent implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    if (ArenaRegistry.getArena(event.getPlayer()) != null) {
-      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
+    onQuit(event.getPlayer());
+  }
+
+  @EventHandler
+  public void onKick(PlayerKickEvent event) {
+    onQuit(event.getPlayer());
+  }
+
+  private void onQuit(Player player) {
+  if (ArenaRegistry.isInArena(player)) {
+      ArenaManager.leaveAttempt(player, ArenaRegistry.getArena(player));
     }
-    final User user = plugin.getUserManager().getUser(event.getPlayer());
-    plugin.getUserManager().removeUser(user);
+    plugin.getUserManager().removeUser(plugin.getUserManager().getUser(player));
   }
 
 }

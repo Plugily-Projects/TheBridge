@@ -1,6 +1,6 @@
 /*
- * thebridge - Jump into the portal of your opponent and collect points to win!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +14,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.thebridge.user.data;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
@@ -34,9 +36,9 @@ import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer, 2Wild4You
+ * @author Tigerpanzer_02 & 2Wild4You
  * <p>
- * Created at 03.10.2018
+ * Created at 31.10.2020
  */
 public class MysqlManager implements UserDatabase {
 
@@ -54,12 +56,11 @@ public class MysqlManager implements UserDatabase {
           + "  `name` varchar(32) NOT NULL,\n"
           + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
           + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
-          + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
+          + "  `level` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `points` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `loses` int(11) NOT NULL DEFAULT '0'\n"
           + ");");
       } catch (SQLException e) {
         e.printStackTrace();
@@ -84,9 +85,9 @@ public class MysqlManager implements UserDatabase {
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if (!stat.isPersistent()) continue;
       if (update.toString().equalsIgnoreCase(" SET ")) {
-        update.append(stat.getName()).append('=').append(user.getStat(stat));
+        update.append(stat.getName()).append("=").append(user.getStat(stat));
       }
-      update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
+      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
     }
     String finalUpdate = update.toString();
 
@@ -115,11 +116,7 @@ public class MysqlManager implements UserDatabase {
           statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if (!stat.isPersistent()) continue;
-            if (stat == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || stat == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
-              user.setStat(stat, 1);
-            } else {
-              user.setStat(stat, 0);
-            }
+            user.setStat(stat, 0);
           }
         }
       } catch (SQLException e) {
@@ -129,10 +126,12 @@ public class MysqlManager implements UserDatabase {
   }
 
   public String getTableName() {
-    return ConfigUtils.getConfig(plugin, "mysql").getString("table", "playerstats");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
+    return config.getString("table", "playerstats");
   }
 
   public MysqlDatabase getDatabase() {
     return database;
   }
+
 }
