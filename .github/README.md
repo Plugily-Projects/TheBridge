@@ -1,4 +1,7 @@
-TheBridge
+TheBridge - Defend your base and try to wipe out the others
+
+TheBridge is a Minecraft minigame designed for small and big servers. This minigame is unique 
+and very configurable, 100% free and open source!
 
 Have fun using it! Leave a good rating if you really like it.
 
