@@ -871,8 +871,10 @@ public class Arena extends BukkitRunnable {
    * @param spectatorLoc new end location of arena
    */
   public void setSpectatorLocation(Location spectatorLoc) {
-    gameLocations.put(GameLocation.END, spectatorLoc);
+    gameLocations.put(GameLocation.SPECTATOR, spectatorLoc);
   }
+
+
 
   public Mode getMode() {
     return mode;
