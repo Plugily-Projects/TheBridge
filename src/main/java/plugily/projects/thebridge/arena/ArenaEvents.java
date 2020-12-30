@@ -123,6 +123,10 @@ public class ArenaEvents implements Listener {
   }
 
   public boolean canBuild(Arena arena, Player player, Location location) {
+    if (!arena.getArenaBorder().isIn(player)) {
+      player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
+      return false;
+    }
     for (Base base : arena.getBases()) {
       if (base.getBaseCuboid().isIn(location)) {
         player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
@@ -203,8 +207,12 @@ public class ArenaEvents implements Listener {
         cooldownPortal.put(player, System.currentTimeMillis());
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
-        arena.getBase(player).addPoint();
-        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getColor()));
+        if (arena.getMode() == Arena.Mode.HEARTS) {
+          base.addPoint();
+        } else if (arena.getMode() == Arena.Mode.POINTS) {
+          arena.getBase(player).addPoint();
+        }
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);

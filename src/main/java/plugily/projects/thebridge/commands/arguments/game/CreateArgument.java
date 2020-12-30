@@ -84,8 +84,8 @@ public class CreateArgument {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
     LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "spectatorlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "minimumplayers", 2);
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
@@ -98,7 +98,7 @@ public class CreateArgument {
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
     arena.setMapName(config.getString(path + "mapname"));
     arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
-    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));
+    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "endlocation")));
     arena.setReady(false);
 
     ArenaRegistry.registerArena(arena);

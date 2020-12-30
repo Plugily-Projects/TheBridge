@@ -30,6 +30,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.user.User;
 
 /**
  * @author Tigerpanzer_02
@@ -134,11 +135,15 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator()) {
+    User user = plugin.getUserManager().getUser(player);
+    if (!user.isSpectator()) {
+      return;
+    }
+    if (user.getArena() == null){
       return;
     }
     if (player.getLocation().getY() < 1) {
-      player.teleport(ArenaRegistry.getArena(player).getSpectatorLocation());
+      player.teleport(user.getArena().getSpectatorLocation());
     }
     event.setCancelled(true);
   }

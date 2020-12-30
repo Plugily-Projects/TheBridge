@@ -5,7 +5,7 @@
 # nodes as they are hardcoded in code!
 
 Kit-Menu:
-  displayname: "&b&lKit Menu &7(Right Click)"
+  displayname: "&a&lKit Menu &7(Right Click)"
   lore:
     - "&7Right-click to select in-game kit"
   material-name: NETHER_STAR

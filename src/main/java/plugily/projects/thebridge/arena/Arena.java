@@ -641,11 +641,11 @@ public class Arena extends BukkitRunnable {
     winner = null;
   }
 
-  int round;
+  int round = 0;
 
   public void resetRound() {
     resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
-    if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && round == arenaOptions.get(ArenaOption.RESET_BLOCKS)) {
+    if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && getOption(ArenaOption.RESET_BLOCKS) - getRound() == 0) {
       resetPlacedBlocks();
       round = 0;
     }
