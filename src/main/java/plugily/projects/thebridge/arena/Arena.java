@@ -254,6 +254,11 @@ public class Arena extends BukkitRunnable {
               p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
             }
           }
+          if (resetRound == 1) {
+            for (Base base : bases) {
+              base.removeCageBlocks();
+            }
+          }
           resetRound--;
         }
 
@@ -644,6 +649,9 @@ public class Arena extends BukkitRunnable {
   int round = 0;
 
   public void resetRound() {
+    for (Base base : bases) {
+      base.addCageBlocks();
+    }
     resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
     round++;
     if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && getOption(ArenaOption.RESET_BLOCKS) - getRound() == 0) {
@@ -873,7 +881,6 @@ public class Arena extends BukkitRunnable {
   public void setSpectatorLocation(Location spectatorLoc) {
     gameLocations.put(GameLocation.SPECTATOR, spectatorLoc);
   }
-
 
 
   public Mode getMode() {

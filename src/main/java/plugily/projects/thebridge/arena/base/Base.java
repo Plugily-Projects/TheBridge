@@ -22,6 +22,7 @@ package plugily.projects.thebridge.arena.base;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
@@ -51,6 +52,8 @@ public class Base {
 
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
+  private Cuboid cageCuboid;
+  private Material cageBlock;
 
   private ArmorStandHologram armorStandHologram;
 
@@ -143,7 +146,7 @@ public class Base {
     this.points = points;
   }
 
-  public void addPoint(){
+  public void addPoint() {
     this.points++;
   }
 
@@ -155,9 +158,52 @@ public class Base {
     this.armorStandHologram = armorStandHologram;
   }
 
+  public Cuboid getCageCuboid() {
+    return cageCuboid;
+  }
+
+  public Material getCageBlock() {
+    return cageBlock;
+  }
+
+  public void setCageBlock(Material cageBlock) {
+    this.cageBlock = cageBlock;
+  }
+
+  public void setCageCuboid(Cuboid cageCuboid) {
+    this.cageCuboid = cageCuboid;
+    setCageBlock(cageCuboid.getCenter().getBlock().getType());
+  }
+
+  public void removeCageBlocks() {
+    if (cageCuboid == null) {
+      return;
+    }
+    if (cageBlock == null) {
+      return;
+    }
+    if (cageBlock.isAir()) {
+      return;
+    }
+    cageCuboid.fill(Material.AIR);
+  }
+
+  public void addCageBlocks() {
+    if (cageCuboid == null) {
+      return;
+    }
+    if (cageBlock == null) {
+      return;
+    }
+    if (cageBlock.isAir()) {
+      return;
+    }
+    cageCuboid.fill(cageBlock);
+  }
+
   public void reset() {
     this.points = 0;
     resetPlayers();
-
+    cageCuboid.fill(cageBlock);
   }
 }
