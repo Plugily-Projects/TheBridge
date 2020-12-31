@@ -149,7 +149,7 @@ public class BaseComponent implements SetupComponent {
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1", selection.getFirstPos());
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2", selection.getSecondPos());
 
-      player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortal location for arena " + arena.getId() + " set with your selection!"));
+      player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aCage location for arena " + arena.getId() + " set with your selection!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 3, 0);
 
