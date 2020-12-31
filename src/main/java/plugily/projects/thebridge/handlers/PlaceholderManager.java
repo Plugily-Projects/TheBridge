@@ -27,7 +27,7 @@ import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
@@ -45,7 +45,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getAuthor() {
-    return "Tigerpanzer_02 & 2Wild4You";
+    return "Tigerpanzer_02, 2Wild4You";
   }
 
   @Override

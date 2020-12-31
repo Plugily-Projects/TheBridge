@@ -38,7 +38,7 @@ import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import java.util.ArrayList;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

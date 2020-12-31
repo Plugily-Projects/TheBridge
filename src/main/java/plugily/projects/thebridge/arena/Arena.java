@@ -55,7 +55,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

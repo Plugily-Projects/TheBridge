@@ -275,12 +275,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
             <name>thebridge</name>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </site>
     </distributionManagement>
 
