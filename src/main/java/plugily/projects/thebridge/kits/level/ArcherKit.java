@@ -60,13 +60,16 @@ public class ArcherKit extends LevelKit {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
     player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+
     player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial(), 64));
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
 
   }
 
@@ -77,6 +80,10 @@ public class ArcherKit extends LevelKit {
 
   @Override
   public void reStock(Player player) {
-    player.getInventory().addItem(new ItemStack(Material.ARROW, 15));
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 }

@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
@@ -78,16 +79,16 @@ public class NakedKit extends PremiumKit implements Listener {
   public void giveKitItems(Player player) {
     ItemStack itemStack = new ItemStack(getMaterial());
     itemStack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 6);
-    itemStack.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 2);
+    itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
     player.getInventory().addItem(itemStack);
-    player.getInventory().addItem(new ItemStack(Material.SADDLE));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 4}));
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial(), 64));
-
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 
   @Override
@@ -98,6 +99,11 @@ public class NakedKit extends PremiumKit implements Listener {
   @Override
   public void reStock(Player player) {
     player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 1, true));
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 
   @EventHandler
@@ -121,7 +127,7 @@ public class NakedKit extends PremiumKit implements Listener {
           continue;
         }
         //we cannot cancel event using scheduler, we must remove all armor contents from inventory manually
-        event.getWhoClicked().sendMessage(getPlugin().getChatManager().colorMessage("Messages.KITS_WILD_NAKED_CANNOT_WEAR_ARMOR"));
+        event.getWhoClicked().sendMessage(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Cannot-Wear-Armor"));
         event.getWhoClicked().getInventory().setHelmet(new ItemStack(Material.AIR, 1));
         event.getWhoClicked().getInventory().setChestplate(new ItemStack(Material.AIR, 1));
         event.getWhoClicked().getInventory().setLeggings(new ItemStack(Material.AIR, 1));
@@ -142,7 +148,7 @@ public class NakedKit extends PremiumKit implements Listener {
     }
     if (armorTypes.contains(event.getItem().getType())) {
       event.setCancelled(true);
-      event.getPlayer().sendMessage(getPlugin().getChatManager().colorMessage("Messages Armoru"));
+      event.getPlayer().sendMessage(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Cannot-Wear-Armor"));
     }
   }
 }

@@ -32,10 +32,12 @@ public class ConfigPreferences {
 
   private final Main plugin;
   private final Map<Option, Boolean> options = new HashMap<>();
+  private String coloredBlockMaterial;
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
     loadOptions();
+    loadColoredBlockMaterial();
   }
 
   /**
@@ -48,10 +50,18 @@ public class ConfigPreferences {
     return options.get(option);
   }
 
+  public String getColoredBlockMaterial() {
+    return coloredBlockMaterial;
+  }
+
   private void loadOptions() {
     for (Option option : Option.values()) {
       options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
     }
+  }
+
+  private void loadColoredBlockMaterial() {
+    coloredBlockMaterial = plugin.getConfig().getString("Colored-Block-Material", "_TERRACOTTA");
   }
 
   public enum Option {
