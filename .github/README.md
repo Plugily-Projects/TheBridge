@@ -1,3 +1,4 @@
+![](https://images.plugily.xyz/banner/display.php?id=TheBridge)
 TheBridge - Defend your base and try to wipe out the others
 
 TheBridge is a Minecraft minigame designed for small and big servers. This minigame is unique 
