@@ -99,7 +99,7 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.fromString("REDSTONE_TORCH").parseMaterial())
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_TORCH.parseMaterial())
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks"))
       .name(plugin.getChatManager().colorRawMessage("&e&lSet reset blocks round"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")
