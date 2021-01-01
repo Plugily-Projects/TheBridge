@@ -194,7 +194,7 @@ Kits:
 
 In-Game:
   Plugin-Prefix: "&e[TheBridge] "
-  Already-Playing: "&cYou are already queued for a game! You can leave a game with /vd leave."
+  Already-Playing: "&cYou are already queued for a game! You can leave a game with /tb leave."
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
@@ -205,7 +205,7 @@ In-Game:
   Bow-Damage-Format: "%victim%  &c♥ %hearts%"
   You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
   You-Leveled-Up: "&7You leveled up! You're now level %NUMBER%!"
-  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /vd leave!"
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /tb leave!"
   # Join cancelled via external plugin that uses TheBridge API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
