@@ -26,7 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
@@ -99,12 +99,7 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
-    Material torch = Material.getMaterial("AIR");
-    if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
-        torch = Materia.REDSTONE_TORCH;
-    } else {
-        torch = Material.getMaterial("REDSTONE_TORCH_OFF");
-    }
+    Material torch = XMaterial.fromString("REDSTONE_TORCH").parseMaterial();
 
     pane.addItem(new GuiItem(new ItemBuilder(torch)
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks"))
