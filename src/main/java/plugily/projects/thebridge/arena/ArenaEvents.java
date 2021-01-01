@@ -425,6 +425,8 @@ public class ArenaEvents implements Listener {
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
+        //Restock or give KitItems makes no difference? if using restock we need to save inventory as items are lost on dead
+        //todo Maybe change it after fast dead is implemented (teleporting instead of dying)
         plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
         if (!arena.getHits().containsKey(player)) {
           chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);

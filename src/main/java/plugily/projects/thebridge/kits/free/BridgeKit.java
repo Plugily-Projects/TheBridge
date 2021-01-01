@@ -58,8 +58,8 @@ public class BridgeKit extends FreeKit {
     player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
     player.getInventory().addItem(XMaterial.ARROW.parseItem());
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 3}));
-    player.getInventory().addItem(new ItemStack(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial(), 1));
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+    player.getInventory().addItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 1));
     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
     player.setHealth(20.0);
     Arena arena = ArenaRegistry.getArena(player);
@@ -67,7 +67,7 @@ public class BridgeKit extends FreeKit {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial(), 64));
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 
   @Override
@@ -77,6 +77,10 @@ public class BridgeKit extends FreeKit {
 
   @Override
   public void reStock(Player player) {
-    //no restock items for this kit
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 }

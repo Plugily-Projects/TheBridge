@@ -55,7 +55,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
@@ -252,6 +252,11 @@ public class Arena extends BukkitRunnable {
             p.sendTitle(title, subtitle, 5, 40, 5);
             if (resetRound == 1) {
               p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
+            }
+          }
+          if (resetRound == 1) {
+            for (Base base : bases) {
+              base.removeCageBlocks();
             }
           }
           resetRound--;
@@ -644,6 +649,9 @@ public class Arena extends BukkitRunnable {
   int round = 0;
 
   public void resetRound() {
+    for (Base base : bases) {
+      base.addCageBlocks();
+    }
     resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
     round++;
     if (arenaOptions.get(ArenaOption.RESET_BLOCKS) != 0 && getOption(ArenaOption.RESET_BLOCKS) - getRound() == 0) {
@@ -873,7 +881,6 @@ public class Arena extends BukkitRunnable {
   public void setSpectatorLocation(Location spectatorLoc) {
     gameLocations.put(GameLocation.SPECTATOR, spectatorLoc);
   }
-
 
 
   public Mode getMode() {

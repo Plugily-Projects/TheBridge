@@ -56,14 +56,15 @@ public class PremiumHardcoreKit extends PremiumKit {
   @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
-      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{11}));
+      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{5}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 5}));
     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(6);
-    player.getInventory().addItem(new ItemStack(Material.SADDLE));
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial(), 64));
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
 
   }
 
@@ -74,7 +75,11 @@ public class PremiumHardcoreKit extends PremiumKit {
 
   @Override
   public void reStock(Player player) {
-    //no restock items for this kit
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
   }
 
 

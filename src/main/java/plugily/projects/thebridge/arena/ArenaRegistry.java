@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
@@ -156,6 +156,8 @@ public class ArenaRegistry {
                 config.getInt("instances." + arena.getId() + ".maximumsize")
               );
               arena.addBase(base);
+              if (config.getString("instances." + arena.getId() + ".bases." + baseID + ".cagelocation1") != null)
+                base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".cagelocation1")), LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".cagelocation2"))));
               ArmorStandHologram portal = new ArmorStandHologram(Utils.getBlockCenter(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portalhologram"))));
               for (String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
                 portal.appendLine(str.replace("%base%", base.getFormattedColor()));

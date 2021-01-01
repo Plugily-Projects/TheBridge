@@ -30,7 +30,7 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.user.User;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

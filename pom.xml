@@ -25,7 +25,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>thebridge</artifactId>
-    <version>1.0.0-SnapShot</version>
+    <version>1.0.1</version>
     <name>TheBridge</name>
 
     <properties>
@@ -201,8 +201,8 @@
                 <version>3.2.0</version>
                 <configuration>
                     <windowtitle>The Bridge API docs for v${project.version}</windowtitle>
-                    <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking The Bridge with your plugin.
+                    <description>Minecraft competitive minigame.
+                        TheBridge - Defend your base and try to wipe out the others! API documentation for hooking The Bridge with your plugin.
                     </description>
                     <destDir>minecraft/thebridge</destDir>
                     <isOffline>false</isOffline>
@@ -275,12 +275,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
             <name>thebridge</name>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </site>
     </distributionManagement>
 

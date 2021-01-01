@@ -32,7 +32,7 @@ import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

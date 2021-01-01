@@ -31,7 +31,7 @@ import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument
 import plugily.projects.thebridge.utils.Utils;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

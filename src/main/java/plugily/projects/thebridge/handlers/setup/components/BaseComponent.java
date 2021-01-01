@@ -126,12 +126,32 @@ public class BaseComponent implements SetupComponent {
       }
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1", selection.getFirstPos());
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2", selection.getSecondPos());
-      LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2,0));
+      LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
 
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortal location for arena " + arena.getId() + " set with your selection!"));
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed &cautomatically &e| &aPortalHologram location for base " + getId(player) + " set at the mid of your selection! Feel free to change it if you want!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 0);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Cage Location"))
+      .lore(ChatColor.GRAY + "Click to set the cage location")
+      .lore(ChatColor.GRAY + "after you selected it with the location wand")
+      .lore(ChatColor.DARK_GRAY + "(Please just select the blocks that should be removed/set)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1"))
+      .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+      if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+        player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an base location!"));
+        return;
+      }
+      LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1", selection.getFirstPos());
+      LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2", selection.getSecondPos());
+
+      player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aCage location for arena " + arena.getId() + " set with your selection!"));
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+    }), 3, 0);
 
     String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
       + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
@@ -147,7 +167,7 @@ public class BaseComponent implements SetupComponent {
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aSpawnPoint location for base " + getId(player) + " set at your location!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 3, 0);
+    }), 4, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.LAPIS_BLOCK.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet ReSpawnPoint Location"))
@@ -161,7 +181,7 @@ public class BaseComponent implements SetupComponent {
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aReSpawnPoint location for base " + getId(player) + " set at your location!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 4, 0);
+    }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Hologram Location"))
@@ -176,7 +196,7 @@ public class BaseComponent implements SetupComponent {
       }
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortalHologram location for base " + getId(player) + " set at your location!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
-    }), 5, 0);
+    }), 6, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
       .name(plugin.getChatManager().colorRawMessage("&e&lFinish Base"))
@@ -219,6 +239,8 @@ public class BaseComponent implements SetupComponent {
         LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2")),
         config.getInt("instances." + arena.getId() + ".maximumsize")
       );
+      if (config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1") != null)
+        base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1")), LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2"))));
       arena.addBase(base);
       ArmorStandHologram portal = new ArmorStandHologram(Utils.getBlockCenter(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram"))));
       for (String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
@@ -227,7 +249,7 @@ public class BaseComponent implements SetupComponent {
       base.setArmorStandHologram(portal);
       ConfigUtils.saveConfig(plugin, config, "arenas");
       BaseUtilities.getBaseId().remove(player);
-    }), 6, 0);
+    }), 7, 0);
   }
 
   public int getId(Player player) {

@@ -114,11 +114,11 @@ public class ModeComponent implements SetupComponent {
       if (e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if (e.getClick().isLeftClick() && !e.getClick().isShiftClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
       if (e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
-        e.getCurrentItem().setAmount(1);
+        itemStack.setAmount(1);
       }
       if (itemStack.getAmount() < 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));

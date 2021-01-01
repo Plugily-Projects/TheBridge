@@ -66,7 +66,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
@@ -254,8 +254,7 @@ public class Main extends JavaPlugin {
     if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
-    //todo update checker
-    UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
+    UpdateChecker.init(this, 87320).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }

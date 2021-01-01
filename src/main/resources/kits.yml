@@ -23,13 +23,3 @@ Enabled-Game-Kits:
   Naked: true
   PremiumHardcore: true
   Terminator: true
-
-### Default Kit
-default:
-  sword: IRON_SWORD
-  bow: BOW
-  pickaxe: DIAMOND_PICKAXE
-  blocks: 128
-  apple: GOLDEN_APPLE
-  arrow: 1
-  refill_arrows: true

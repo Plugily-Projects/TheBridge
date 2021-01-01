@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */
@@ -32,10 +32,12 @@ public class ConfigPreferences {
 
   private final Main plugin;
   private final Map<Option, Boolean> options = new HashMap<>();
+  private String coloredBlockMaterial;
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
     loadOptions();
+    loadColoredBlockMaterial();
   }
 
   /**
@@ -48,10 +50,18 @@ public class ConfigPreferences {
     return options.get(option);
   }
 
+  public String getColoredBlockMaterial() {
+    return coloredBlockMaterial;
+  }
+
   private void loadOptions() {
     for (Option option : Option.values()) {
       options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
     }
+  }
+
+  private void loadColoredBlockMaterial() {
+    coloredBlockMaterial = plugin.getConfig().getString("Colored-Block-Material", "_TERRACOTTA");
   }
 
   public enum Option {

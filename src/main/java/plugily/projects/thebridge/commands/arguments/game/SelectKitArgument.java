@@ -33,7 +33,7 @@ import plugily.projects.thebridge.utils.Utils;
 public class SelectKitArgument {
 
   public SelectKitArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("villagedefense", new CommandArgument("selectkit", "villagedefense.command.selectkit", CommandArgument.ExecutorType.PLAYER) {
+    registry.mapArgument("thebridge", new CommandArgument("selectkit", "thebridge.command.selectkit", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!Utils.checkIsInGameInstance((Player) sender)) {

@@ -150,7 +150,7 @@ public class Events implements Listener {
     if (arena == null) {
       return;
     }
-    if (event.getEntity().getInventory().getItemInMainHand().getType() == XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial()) {
+    if (event.getEntity().getInventory().getItemInMainHand().getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
       event.setFoodLevel(20);
     }
     if (arena.getArenaState() != ArenaState.IN_GAME) {

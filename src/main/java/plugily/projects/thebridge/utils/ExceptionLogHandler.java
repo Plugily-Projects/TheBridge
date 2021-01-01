@@ -30,7 +30,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
- * @author Tigerpanzer_02 & 2Wild4You
+ * @author Tigerpanzer_02, 2Wild4You
  * <p>
  * Created at 31.10.2020
  */

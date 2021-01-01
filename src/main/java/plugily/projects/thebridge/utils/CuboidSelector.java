@@ -48,7 +48,12 @@ public class CuboidSelector implements Listener {
   }
 
   public void giveSelectorWand(Player p) {
-    ItemStack stack = new ItemBuilder(Material.BLAZE_ROD).name(plugin.getChatManager().colorRawMessage("&6&lLocation wand")).build();
+    ItemStack stack = new ItemBuilder(Material.BLAZE_ROD)
+      .name(plugin.getChatManager().colorRawMessage("&6&lLocation wand"))
+      .lore(plugin.getChatManager().colorRawMessage("Use this tool to set up location cuboids"))
+      .lore(plugin.getChatManager().colorRawMessage("Set the first corner with left click"))
+      .lore(plugin.getChatManager().colorRawMessage("and the second with right click"))
+      .build();
     p.getInventory().addItem(stack);
 
     p.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&eYou received Location wand!"));
