@@ -254,8 +254,7 @@ public class Main extends JavaPlugin {
     if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
-    //todo update checker
-    UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
+    UpdateChecker.init(this, 87320).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }
