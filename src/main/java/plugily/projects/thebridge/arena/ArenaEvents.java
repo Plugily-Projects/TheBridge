@@ -189,6 +189,11 @@ public class ArenaEvents implements Listener {
     if (!arena.inBase(player)) {
       return;
     }
+    // Player dies 5 blocks out of arena instead of void
+    if (!arena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
+      player.damage(100);
+      return;
+    }
     if (cooldownPortal.containsKey(player)) {
       if (cooldownPortal.get(player) <= System.currentTimeMillis() - 5000) cooldownPortal.remove(player);
       return;
