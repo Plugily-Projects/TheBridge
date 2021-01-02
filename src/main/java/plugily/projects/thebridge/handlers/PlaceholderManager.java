@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORED_POINTS));
       case "level":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL));
+      case "exp":
+        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.XP));
+      case "exp_to_next_level":
+        return String.valueOf(Math.ceil(Math.pow(50 * StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL), 1.5)));
       default:
         return handleArenaPlaceholderRequest(id);
     }

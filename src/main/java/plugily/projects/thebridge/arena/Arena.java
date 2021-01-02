@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -187,7 +187,7 @@ public class Arena extends BukkitRunnable {
             player.setGameMode(GameMode.SURVIVAL);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
-            plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+            plugin.getUserManager().addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
             setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             // get base with min players
@@ -202,6 +202,7 @@ public class Arena extends BukkitRunnable {
             }
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
+            plugin.getUserManager().addExperience(player, 10);
           }
           //check if not only one base got players
           Base maxPlayers = getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
@@ -666,6 +667,7 @@ public class Arena extends BukkitRunnable {
       player.getInventory().clear();
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       player.updateInventory();
+      plugin.getUserManager().addExperience(player, 2);
     }
     plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
   }

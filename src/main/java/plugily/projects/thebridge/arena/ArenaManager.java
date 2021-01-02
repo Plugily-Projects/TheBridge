@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -325,19 +325,21 @@ public class ArenaManager {
         switch (arena.getMode()) {
           case HEARTS:
             if (arena.isDeathPlayer(player)) {
-              user.addStat(StatsStorage.StatisticType.LOSES, 1);
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
             } else {
-              user.addStat(StatsStorage.StatisticType.WINS, 1);
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.WINS);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
+              plugin.getUserManager().addExperience(player, 5);
             }
             break;
           case POINTS:
             if (arena.getWinner().getPlayers().contains(player)) {
-              user.addStat(StatsStorage.StatisticType.LOSES, 1);
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
             } else {
-              user.addStat(StatsStorage.StatisticType.WINS, 1);
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.WINS);
+              plugin.getUserManager().addExperience(player, 5);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
             }
             break;

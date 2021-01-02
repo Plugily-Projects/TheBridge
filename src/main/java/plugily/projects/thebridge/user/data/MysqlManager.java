@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ public class MysqlManager implements UserDatabase {
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
           + "  `level` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `xp` int(11) NOT NULL DEFAULT '0',\n"
           + "  `points` int(11) NOT NULL DEFAULT '0',\n"
           + "  `loses` int(11) NOT NULL DEFAULT '0'\n"
           + ");");

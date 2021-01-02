@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -141,7 +141,8 @@ public class ArenaEvents implements Listener {
       Player attacker = arena.getHits().get(victim);
       arena.removeHits(victim);
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.KILL);
-      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.KILLS, 1);
+      plugin.getUserManager().addStat(attacker, StatsStorage.StatisticType.KILLS);
+      plugin.getUserManager().addExperience(attacker, 2);
       plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Killed").replace("%VICTIM%", victim.getName()));
       plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Death").replace("%PLAYER%", victim.getName()).replace("%ATTACKER%", attacker.getName()));
@@ -188,6 +189,11 @@ public class ArenaEvents implements Listener {
     if (!arena.inBase(player)) {
       return;
     }
+    // Player dies 5 blocks out of arena instead of void
+    if (!arena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
+      player.damage(100);
+      return;
+    }
     if (cooldownPortal.containsKey(player)) {
       if (cooldownPortal.get(player) <= System.currentTimeMillis() - 5000) cooldownPortal.remove(player);
       return;
@@ -214,7 +220,8 @@ public class ArenaEvents implements Listener {
         }
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
-        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
+        plugin.getUserManager().addStat(player, StatsStorage.StatisticType.SCORED_POINTS);
+        plugin.getUserManager().addExperience(player, 10);
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
         return;
       }
@@ -431,7 +438,7 @@ public class ArenaEvents implements Listener {
         if (!arena.getHits().containsKey(player)) {
           chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
         }
-        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+        plugin.getUserManager().addStat(player, StatsStorage.StatisticType.DEATHS);
         user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         rewardLastAttacker(arena, player);
       } else {

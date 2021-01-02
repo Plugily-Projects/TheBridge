@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@ import plugily.projects.thebridge.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ReloadArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.StopArgument;
+import plugily.projects.thebridge.commands.arguments.admin.level.AddLevelArgument;
+import plugily.projects.thebridge.commands.arguments.admin.level.SetLevelArgument;
 import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
@@ -95,6 +97,8 @@ public class ArgumentsRegistry  implements CommandExecutor {
     new StopArgument(this);
     new SpectateArgument(this);
     new LocationWandArgument(this);
+    new AddLevelArgument(this);
+    new SetLevelArgument(this);
   }
 
   @Override

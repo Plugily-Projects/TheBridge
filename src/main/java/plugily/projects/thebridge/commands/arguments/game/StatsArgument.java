@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +55,10 @@ public class StatsArgument {
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Wins", player) + user.getStat(StatsStorage.StatisticType.WINS));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Loses", player) + user.getStat(StatsStorage.StatisticType.LOSES));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Games-Played", player) + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+        sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Level") + user.getStat(StatsStorage.StatisticType.LEVEL));
+        sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Exp") + user.getStat(StatsStorage.StatisticType.XP));
+        sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Next-Level-Exp")
+          + Math.ceil(Math.pow(50.0 * user.getStat(StatsStorage.StatisticType.LEVEL), 1.5)));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Footer", player));
       }
     });

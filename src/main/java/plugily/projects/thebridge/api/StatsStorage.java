@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ public class StatsStorage {
   public enum StatisticType {
     DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), KILLS("kills", true),
     LOSES("loses", true), WINS("wins", true), LOCAL_DEATHS("local_deaths",false),
-    LOCAL_KILLS("local_kills", false), LEVEL("level", true), SCORED_POINTS("points", true),
+    LOCAL_KILLS("local_kills", false), LEVEL("level", true), XP("xp", true), SCORED_POINTS("points", true),
     LOCAL_SCORED_POINTS("local_points", false);
 
     private final String name;
