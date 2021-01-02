@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
@@ -98,7 +99,7 @@ public class ModeComponent implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openModes();
     }), 1, 0);
 
-    pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_TORCH)
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_TORCH.parseMaterial())
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks"))
       .name(plugin.getChatManager().colorRawMessage("&e&lSet reset blocks round"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")

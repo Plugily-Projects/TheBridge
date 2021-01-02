@@ -187,7 +187,7 @@ public class ArgumentsRegistry  implements CommandExecutor {
   }
 
   private void sendAdminHelpCommand(CommandSender sender) {
-    sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Murder Mystery " + ChatColor.GRAY + plugin.getDescription().getVersion());
+    sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "The Bridge " + ChatColor.GRAY + plugin.getDescription().getVersion());
     sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
     if (sender instanceof Player) {
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");

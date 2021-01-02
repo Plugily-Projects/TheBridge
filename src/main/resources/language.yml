@@ -105,7 +105,7 @@ Scoreboard:
       Got: "&c♥"
       Missing: "&7♥"
   Content:
-    # Contents of scoreboard while wave is running
+    # Contents of scoreboard while game is running
     Playing:
       - "&fTime Left: &e%FORMATTED_TIME%"
       - "&fTeams:"
@@ -139,7 +139,7 @@ Bossbar:
   Main-Title: "&e&lTheBridge &6- www.plugily.xyz"
   Starting-In: "&f&lStarting in: &e&l%time%"
   Waiting-For-Players: "&4&lWaiting for more players..."
-  In-Game-Wave: "&f&lCurrent wave: &e&l%wave%"
+  In-Game-Wave: "&f&lCurrent base points %base_points%"
   In-Game-Info: "&e&lPlaying &f&lTHEBRIDGE &e&lon &b&lPLUGILY.XYZ"
   Game-Ended: "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
 
@@ -180,21 +180,21 @@ Kits:
     Description: "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
   Terminator:
     Name: "&6Terminator"
-    Description: "&7Easily kill those zombies with your strength powers!"
+    Description: "&7Easily kill other players with your strength powers!"
   Heavy-Tank:
     Name: "&bHeavy Tank"
     Description: "&7Start off with iron armor and a double amount of hearts! Yup, that's right, you'll be the last man standing!"
   Wild-Naked:
     Name: "&bWild Naked"
-    Description: "&7You are the ultimate master! You start off with a iron Sharpness VI and Smite II sword!"
+    Description: "&7You are the ultimate master! You start off with a better iron sword!"
     Cannot-Wear-Armor: "&cYou can't wear armor with the Wild Naked kit!"
   Premium-Hardcore:
     Name: "&bPremium Hardcore Master"
-    Description: "&7One hit most zombies with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
+    Description: "&7One hit most players with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
 
 In-Game:
   Plugin-Prefix: "&e[TheBridge] "
-  Already-Playing: "&cYou are already queued for a game! You can leave a game with /vd leave."
+  Already-Playing: "&cYou are already queued for a game! You can leave a game with /tb leave."
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
@@ -205,7 +205,7 @@ In-Game:
   Bow-Damage-Format: "%victim%  &c♥ %hearts%"
   You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
   You-Leveled-Up: "&7You leveled up! You're now level %NUMBER%!"
-  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /vd leave!"
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /tb leave!"
   # Join cancelled via external plugin that uses TheBridge API.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
