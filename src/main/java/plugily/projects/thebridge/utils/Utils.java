@@ -1,6 +1,6 @@
 /*
  * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -211,6 +211,19 @@ public class Utils {
     meta.setBasePotionData(new PotionData(type, false, tier >= 2 && !splash));
     potion.setItemMeta(meta);
     return potion;
+  }
+
+  /**
+   * @param s string to check whether is integer number
+   * @return true if it is, false otherwise, like 12a, 12.03 33333333333333 etc.
+   */
+  public static boolean isInteger(String s) {
+    try {
+      Integer.parseInt(s);
+      return true;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
   }
 
 }
