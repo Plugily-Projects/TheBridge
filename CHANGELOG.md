@@ -1,3 +1,6 @@
+### 1.0.3 Release (02.01.2021)
+* Added working leveling system [MySQL needs manual removal!]
+
 ### 1.0.2 Release (01.01.2021)
 * Fixed Setup on 1.11 & 1.12
 

@@ -23,6 +23,8 @@ import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.user.data.FileStats;
 import plugily.projects.thebridge.user.data.MysqlManager;
 import plugily.projects.thebridge.user.data.UserDatabase;
@@ -44,6 +46,7 @@ public class UserManager {
 
   private final List<User> users = new ArrayList<>();
   private final UserDatabase database;
+  private final Main plugin;
 
   public UserManager(Main plugin) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -53,6 +56,7 @@ public class UserManager {
       database = new FileStats(plugin);
       Debugger.debug("File Stats enabled");
     }
+    this.plugin = plugin;
     loadStatsForPlayersOnline();
   }
 
@@ -81,6 +85,31 @@ public class UserManager {
       return;
     }
     database.saveStatistic(user, stat);
+  }
+
+  public void addExperience(Player player, int i) {
+    User user = plugin.getUserManager().getUser(player);
+    user.addStat(StatsStorage.StatisticType.XP, i);
+    if (player.hasPermission(PermissionsManager.getAllKitsPerm())) {
+      user.addStat(StatsStorage.StatisticType.XP, (int) Math.ceil(i / 2.0));
+    }
+    updateLevelStat(player, ArenaRegistry.getArena(player));
+  }
+
+  public void addStat(Player player, StatsStorage.StatisticType stat) {
+    User user = plugin.getUserManager().getUser(player);
+    user.addStat(stat, 1);
+    updateLevelStat(player, ArenaRegistry.getArena(player));
+  }
+
+  public void updateLevelStat(Player player, Arena arena) {
+    User user = plugin.getUserManager().getUser(player);
+    if (Math.pow(50.0 * user.getStat(StatsStorage.StatisticType.LEVEL), 1.5) < user.getStat(StatsStorage.StatisticType.XP)) {
+      user.addStat(StatsStorage.StatisticType.LEVEL, 1);
+      //Arena can be null when player has left the arena before this message the arena is retrieved.
+      if(arena != null)
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("In-Game.You-Leveled-Up"), user.getStat(StatsStorage.StatisticType.LEVEL)));
+    }
   }
 
   public void loadStatistics(User user) {

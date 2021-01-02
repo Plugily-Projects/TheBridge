@@ -141,7 +141,8 @@ public class ArenaEvents implements Listener {
       Player attacker = arena.getHits().get(victim);
       arena.removeHits(victim);
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.KILL);
-      plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.KILLS, 1);
+      plugin.getUserManager().addStat(attacker, StatsStorage.StatisticType.KILLS);
+      plugin.getUserManager().addExperience(attacker, 2);
       plugin.getUserManager().getUser(attacker).addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       attacker.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Killed").replace("%VICTIM%", victim.getName()));
       plugin.getChatManager().broadcast(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Death").replace("%PLAYER%", victim.getName()).replace("%ATTACKER%", attacker.getName()));
@@ -214,7 +215,8 @@ public class ArenaEvents implements Listener {
         }
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
-        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORED_POINTS, 1);
+        plugin.getUserManager().addStat(player, StatsStorage.StatisticType.SCORED_POINTS);
+        plugin.getUserManager().addExperience(player, 10);
         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 1);
         return;
       }
@@ -431,7 +433,7 @@ public class ArenaEvents implements Listener {
         if (!arena.getHits().containsKey(player)) {
           chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
         }
-        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+        plugin.getUserManager().addStat(player, StatsStorage.StatisticType.DEATHS);
         user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         rewardLastAttacker(arena, player);
       } else {
