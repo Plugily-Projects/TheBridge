@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
@@ -95,6 +96,7 @@ public class ChatEvents implements Listener {
 
   private String formatChatPlaceholders(String message, User user, String saidMessage) {
     String formatted = message;
+    formatted = StringUtils.replace(formatted, "%level%", String.valueOf(user.getStat(StatsStorage.StatisticType.LEVEL)));
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
     if (user.getArena().getBase(user.getPlayer()) == null) {
