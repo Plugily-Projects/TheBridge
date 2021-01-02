@@ -59,6 +59,7 @@ public class MysqlManager implements UserDatabase {
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
           + "  `level` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `xp` int(11) NOT NULL DEFAULT '0',\n"
           + "  `points` int(11) NOT NULL DEFAULT '0',\n"
           + "  `loses` int(11) NOT NULL DEFAULT '0'\n"
           + ");");
