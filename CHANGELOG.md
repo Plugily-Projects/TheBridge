@@ -1,3 +1,6 @@
+### 1.0.4 Release (04.01.2021)
+* Fixed NPE on disable
+
 ### 1.0.3 Release (02.01.2021)
 * Added working leveling system [MySQL needs manual removal!]
 * Changed player death to 5 blocks out of arena instead of void

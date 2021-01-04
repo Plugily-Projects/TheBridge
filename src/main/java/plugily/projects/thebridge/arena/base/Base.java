@@ -204,6 +204,6 @@ public class Base {
   public void reset() {
     this.points = 0;
     resetPlayers();
-    cageCuboid.fill(cageBlock);
+    addCageBlocks();
   }
 }
