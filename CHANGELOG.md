@@ -1,3 +1,6 @@
+### 1.0.5 Release (05.01.2021)
+* Fixed Teleportation to the end is now no longer possible
+
 ### 1.0.4 Release (04.01.2021)
 * Fixed NPE on disable
 
