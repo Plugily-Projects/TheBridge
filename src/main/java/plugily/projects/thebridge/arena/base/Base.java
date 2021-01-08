@@ -182,7 +182,7 @@ public class Base {
     if (cageBlock == null) {
       return;
     }
-    if (cageBlock.isAir()) {
+    if (cageBlock == Material.AIR) {
       return;
     }
     cageCuboid.fill(Material.AIR);
@@ -195,7 +195,7 @@ public class Base {
     if (cageBlock == null) {
       return;
     }
-    if (cageBlock.isAir()) {
+    if (cageBlock == Material.AIR) {
       return;
     }
     cageCuboid.fill(cageBlock);
