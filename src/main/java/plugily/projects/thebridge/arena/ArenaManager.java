@@ -286,7 +286,7 @@ public class ArenaManager {
       }
       NMS.showPlayer(player, players);
     }
-    arena.teleportToLobby(player);
+    arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
