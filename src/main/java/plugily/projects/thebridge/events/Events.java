@@ -194,23 +194,23 @@ public class Events implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onArmorStandDestroy(EntityDamageByEntityEvent e) {
-    if (!(e.getEntity() instanceof LivingEntity)) {
+  public void onArmorStandDestroy(EntityDamageByEntityEvent event) {
+    if (!(event.getEntity() instanceof LivingEntity)) {
       return;
     }
-    LivingEntity livingEntity = (LivingEntity) e.getEntity();
+    LivingEntity livingEntity = (LivingEntity) event.getEntity();
     if (livingEntity.getType() != EntityType.ARMOR_STAND) {
       return;
     }
-    if (e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager())) {
-      e.setCancelled(true);
-    } else if (e.getDamager() instanceof Arrow) {
-      Arrow arrow = (Arrow) e.getDamager();
+    if (event.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) event.getDamager())) {
+      event.setCancelled(true);
+    } else if (event.getDamager() instanceof Arrow) {
+      Arrow arrow = (Arrow) event.getDamager();
       if (arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
-        e.setCancelled(true);
+        event.setCancelled(true);
         return;
       }
-      e.setCancelled(true);
+      event.setCancelled(true);
     }
   }
 
@@ -231,4 +231,13 @@ public class Events implements Listener {
     }
   }
 
+  @EventHandler
+  public void onPlayerTeleport(PlayerTeleportEvent event) {
+    if (!ArenaRegistry.isInArena(event.getPlayer())){
+      return;
+    }
+    if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
+      event.setCancelled(true);
+    }
+  }
 }
