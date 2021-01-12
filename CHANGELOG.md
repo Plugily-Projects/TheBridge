@@ -1,5 +1,7 @@
-### 1.0.5 Release (05.01.2021)
+### 1.0.5 Release (05.01.2021 - 12.01.2021)
 * Fixed Teleportation to the end is now no longer possible
+* Fixed NoSuchMethod isAir check
+* Added default language.yml for locales integration later
 
 ### 1.0.4 Release (04.01.2021)
 * Fixed NPE on disable
