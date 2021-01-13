@@ -1,3 +1,6 @@
+### 1.0.6 Release (13.01.2021)
+* ArenaRegistry will set isDone to false if arena cuboid is not big enough
+
 ### 1.0.5 Release (05.01.2021 - 12.01.2021)
 * Fixed Teleportation to the end is now no longer possible
 * Fixed NoSuchMethod isAir check
