@@ -40,6 +40,7 @@ import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;
+import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
 
@@ -134,8 +135,8 @@ public class BaseComponent implements SetupComponent {
     }), 2, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Cage Location"))
-      .lore(ChatColor.GRAY + "Click to set the cage location")
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Cage Location (Only floor)"))
+      .lore(ChatColor.GRAY + "Click to set the cage location (only floor needed)")
       .lore(ChatColor.GRAY + "after you selected it with the location wand")
       .lore(ChatColor.DARK_GRAY + "(Please just select the blocks that should be removed/set)")
       .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1"))
@@ -144,6 +145,10 @@ public class BaseComponent implements SetupComponent {
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
       if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an base location!"));
+        return;
+      }
+      if (new Cuboid(selection.getFirstPos(), selection.getSecondPos()).contains(XMaterial.AIR.parseMaterial())) {
+        player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select only the floor of the cage! Make sure that it is not air!"));
         return;
       }
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1", selection.getFirstPos());
