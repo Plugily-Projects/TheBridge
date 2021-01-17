@@ -1,6 +1,7 @@
 ### 1.0.6 Release (13.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough
 * Fixed joining through a sign while hotbar slot for leave-item is active
+* Fixed Cage doesn't disappear on first round
 
 ### 1.0.5 Release (05.01.2021 - 12.01.2021)
 * Fixed Teleportation to the end is now no longer possible

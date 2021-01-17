@@ -215,6 +215,9 @@ public class Arena extends BukkitRunnable {
             }
           }
           teleportAllToBaseLocation();
+          for (Base base : bases) {
+            base.removeCageBlocks();
+          }
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
