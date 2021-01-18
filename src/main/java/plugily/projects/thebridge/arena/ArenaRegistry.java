@@ -192,7 +192,7 @@ public class ArenaRegistry {
       arena.setOptionValue(ArenaOption.RESET_BLOCKS, config.getInt(s + "resetblocks", 0));
       arena.setOptionValue(ArenaOption.RESET_TIME, config.getInt(s + "resettime", 5));
       for (Base base : arena.getBases()) {
-        if (arena.getArenaBorder().isIn(base.getBaseCuboid().getCenter())) {
+        if (!arena.getArenaBorder().isIn(base.getBaseCuboid().getCenter())) {
           Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "YOUR BASE CUBOIDS ARE NOT INSIDE ARENA CUBOID"));
           arena.setReady(false);
           ArenaRegistry.registerArena(arena);

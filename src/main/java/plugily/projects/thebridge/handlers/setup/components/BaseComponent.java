@@ -86,6 +86,7 @@ public class BaseComponent implements SetupComponent {
           player.sendRawMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aColor of base " + getId(player) + " set to " + color));
           config.set("instances." + arena.getId() + ".bases." + getId(player) + ".color", color);
           ConfigUtils.saveConfig(plugin, config, "arenas");
+          BaseUtilities.addEditing(player);
           new SetupInventory(arena, player).openBases();
           return Prompt.END_OF_CONVERSATION;
         }
@@ -109,6 +110,7 @@ public class BaseComponent implements SetupComponent {
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2", selection.getSecondPos());
       arena.setEndLocation(player.getLocation());
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aBase location for arena " + arena.getId() + " set with your selection!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 0);
 
@@ -131,6 +133,7 @@ public class BaseComponent implements SetupComponent {
 
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortal location for arena " + arena.getId() + " set with your selection!"));
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed &cautomatically &e| &aPortalHologram location for base " + getId(player) + " set at the mid of your selection! Feel free to change it if you want!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 0);
 
@@ -155,6 +158,7 @@ public class BaseComponent implements SetupComponent {
       LocationSerializer.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2", selection.getSecondPos());
 
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aCage location for arena " + arena.getId() + " set with your selection!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 3, 0);
 
@@ -171,6 +175,7 @@ public class BaseComponent implements SetupComponent {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aSpawnPoint location for base " + getId(player) + " set at your location!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 4, 0);
 
@@ -185,6 +190,7 @@ public class BaseComponent implements SetupComponent {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aReSpawnPoint location for base " + getId(player) + " set at your location!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 5, 0);
 
@@ -200,6 +206,7 @@ public class BaseComponent implements SetupComponent {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&cLocation changes take affect after restart!"));
       }
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortalHologram location for base " + getId(player) + " set at your location!"));
+      BaseUtilities.addEditing(player);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 6, 0);
 
@@ -254,6 +261,7 @@ public class BaseComponent implements SetupComponent {
       base.setArmorStandHologram(portal);
       ConfigUtils.saveConfig(plugin, config, "arenas");
       BaseUtilities.getBaseId().remove(player);
+      BaseUtilities.removeEditing(player);
     }), 7, 0);
   }
 

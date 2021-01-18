@@ -136,7 +136,8 @@ public class SetupInventory {
   }
 
   public void openInventory() {
-    if (BaseUtilities.check(arena, player)) {
+    //check does not work because of prepared guis
+    if (BaseUtilities.isEditing(player)) {
       openBases();
       return;
     }
