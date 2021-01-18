@@ -22,7 +22,9 @@ package plugily.projects.thebridge.handlers.setup;
 import org.bukkit.entity.Player;
 import plugily.projects.thebridge.arena.Arena;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BaseUtilities {
 
@@ -32,10 +34,25 @@ public class BaseUtilities {
     return baseId;
   }
 
+  private static List<Player> editing = new ArrayList<>();
+
   public static boolean check(Arena arena, Player player) {
-    if (!BaseUtilities.getBaseId().containsKey(player)) {
+    if (!baseId.containsKey(player)) {
       return false;
     }
-    return BaseUtilities.getBaseId().get(player).containsKey(arena.getId());
+    return baseId.get(player).containsKey(arena.getId());
+  }
+
+  public static boolean isEditing(Player player) {
+    return editing.contains(player);
+  }
+
+  public static void addEditing(Player player) {
+    editing.remove(player);
+    editing.add(player);
+  }
+
+  public static void removeEditing(Player player) {
+    editing.remove(player);
   }
 }

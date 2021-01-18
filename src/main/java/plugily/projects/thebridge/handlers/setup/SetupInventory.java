@@ -136,6 +136,11 @@ public class SetupInventory {
   }
 
   public void openInventory() {
+    //check does not work because of prepared guis
+    if (BaseUtilities.isEditing(player)) {
+      openBases();
+      return;
+    }
     sendProTip(player);
     gui.show(player);
   }
