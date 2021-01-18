@@ -43,6 +43,8 @@ import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Tigerpanzer_02
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 public class ArenaSelectorArgument implements Listener {
 
   private final ChatManager chatManager;
+  private final Map<Integer, Arena> arenas = new HashMap<>();
 
   public ArenaSelectorArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.chatManager = chatManager;
@@ -66,7 +69,12 @@ public class ArenaSelectorArgument implements Listener {
           return;
         }
         Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
+
+        int slot = 0;
+        arenas.clear();
+
         for (Arena arena : ArenaRegistry.getArenas()) {
+          arenas.put(slot, arena);
           ItemStack itemStack;
           switch (arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
@@ -80,7 +88,7 @@ public class ArenaSelectorArgument implements Listener {
               break;
           }
           ItemMeta itemMeta = itemStack.getItemMeta();
-          itemMeta.setDisplayName(arena.getId());
+          itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
           for (String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
@@ -90,6 +98,7 @@ public class ArenaSelectorArgument implements Listener {
           itemMeta.setLore(lore);
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
+          slot++;
         }
         player.openInventory(inventory);
       }
@@ -122,7 +131,7 @@ public class ArenaSelectorArgument implements Listener {
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 
-    Arena arena = ArenaRegistry.getArena(e.getCurrentItem().getItemMeta().getDisplayName());
+    Arena arena = arenas.get(e.getRawSlot());
     if (arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {

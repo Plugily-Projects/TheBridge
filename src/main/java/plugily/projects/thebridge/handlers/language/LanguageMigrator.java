@@ -37,7 +37,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 1;
-  public static final int LANGUAGE_FILE_VERSION = 1;
+  public static final int LANGUAGE_FILE_VERSION = 2;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -93,6 +93,7 @@ public class LanguageMigrator {
     for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
       switch (version) {
         case 1:
+          MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
           break;
         default:
           break;
