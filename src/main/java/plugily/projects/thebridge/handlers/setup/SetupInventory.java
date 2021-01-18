@@ -136,6 +136,10 @@ public class SetupInventory {
   }
 
   public void openInventory() {
+    if (BaseUtilities.check(arena, player)) {
+      openBases();
+      return;
+    }
     sendProTip(player);
     gui.show(player);
   }
