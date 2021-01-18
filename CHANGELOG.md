@@ -7,6 +7,7 @@
 * Added preconfigured locales for Czech, Dutch, French, Hungarian, Italian,
   Polish, Portuguese, Russian, Spanish [Thanks to PoEditor contributors]
 * Changed SetupInventory to open base menu while editing base
+* Fix wrong teleport location on arena leave
 
 ### 1.0.5 Release (05.01.2021 - 12.01.2021)
 * Fixed Teleportation to the end is now no longer possible
