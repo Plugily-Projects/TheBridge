@@ -1,9 +1,25 @@
-#     thebridge configuration file
+#     The Bridge configuration file
 #
 #    You can edit here the basic things of MM
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
+
+# Select locale of The Bridge, default it's English.
+# Available locales:
+#    default - English language. Uses 'language.yml'.
+#    de - Deutsche sprache          pl - Język polski
+#    es - Idioma español
+#    fr - Langue française
+#    hu - Magyar nyelv
+#    cs - Český jazyk
+#    pt_br - Português Brasileiro
+#    it - Lingua italiana           ru - Русский язык
+#    nl - Dutch
+locale: default
+
+# Enable bossbar support?
+Bossbar-Enabled: true
 
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
@@ -27,6 +43,7 @@ Basic-Permissions:
   # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.AC02'
   # use 'thebridge.join.*' to enable access to all arenas
   Join-Permission: "thebridge.join.<arena>"
+  Kits-Permission: "thebridge.kits"
 
 Time-Manager:
   Start-On-Full-Lobby: 15
@@ -55,6 +72,18 @@ Rewards-Enabled: false
 # Should we block every not thebridge associated commands in game?
 Block-Commands-In-Game: true
 
+# Enable in game (eg. '[KIT][BASE][LEVEL] Plugily: hey') special formatting?
+# Formatting is configurable in language.yml
+# You can use PlaceholderAPI placeholders in chat format!
+ChatFormat-Enabled: true
+
+# Should we disable all chat related stuff?
+# It will disable the separated chat, for example
+Disable-Separate-Chat: false
+
+#Disable Party features of external party plugins (such as PAF, Parties ...)
+Disable-Parties: true
+
 # Should we fire some cool fireworks at location of every player after the game ends?
 Firework-When-Game-Ends: true
 
@@ -79,6 +108,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 1
+Version: 2
 
 # No way! You've reached the end! But... where's the dragon!?

@@ -36,7 +36,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 1;
+  public static final int CONFIG_FILE_VERSION = 2;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private final Main plugin;
 
@@ -61,6 +61,34 @@ public class LanguageMigrator {
     for (int i = version; i < CONFIG_FILE_VERSION; i++) {
       switch (i) {
         case 1:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+            "Disable-Parties: true\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Should we disable all chat related stuff?\r\n" +
+            "# It will disable the separated chat, for example\r\n" +
+            "Disable-Separate-Chat: false\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Enable in game (eg. '[KIT][BASE][LEVEL] Plugily: hey') special formatting?\r\n" +
+            "# Formatting is configurable in language.yml\r\n" +
+            "# You can use PlaceholderAPI placeholders in chat format!\r\n" +
+            "ChatFormat-Enabled: true\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Enable bossbar support?\r\n" +
+            "Bossbar-Enabled: true\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Select locale of The Bridge, default it's English.\r\n" +
+            "# Available locales:\r\n" +
+            "#    default - English language. Uses 'language.yml'.\r\n" +
+            "#    de - Deutsche sprache          pl - Język polski\r\n" +
+            "#    es - Idioma español\r\n" +
+            "#    fr - Langue française\r\n" +
+            "#    hu - Magyar nyelv\r\n" +
+            "#    cs - Český jazyk\r\n" +
+            "#    pt_br - Português Brasileiro\r\n" +
+            "#    it - Lingua italiana           ru - Русский язык\r\n" +
+            "#    nl - Dutch\r\n" +
+            "locale: default\r\n");
           break;
         default:
           break;
