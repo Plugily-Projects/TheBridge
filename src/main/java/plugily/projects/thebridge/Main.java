@@ -22,6 +22,7 @@ package plugily.projects.thebridge;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -167,13 +168,13 @@ public class Main extends JavaPlugin {
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         player.setFlySpeed(0.1f);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
+        player.setWalkSpeed(0.2f);
+        player.setGameMode(GameMode.SURVIVAL);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
           InventorySerializer.loadInventory(this, player);
-        } else {
-          player.getInventory().clear();
-          player.getInventory().setArmorContents(null);
-          player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
-          player.setWalkSpeed(0.2f);
         }
       }
       arena.teleportAllToEndLocation();
