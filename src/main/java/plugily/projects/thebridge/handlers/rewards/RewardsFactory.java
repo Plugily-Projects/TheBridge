@@ -19,18 +19,16 @@
 
 package plugily.projects.thebridge.handlers.rewards;
 
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.utils.Debugger;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.utils.Debugger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,26 +55,26 @@ public class RewardsFactory {
   }
 
   public void performReward(Arena arena, Reward.RewardType type) {
-    if (enabled) {
+    if(enabled) {
       arena.getPlayers().forEach(p -> performReward(p, type));
     }
   }
 
   public void performReward(Player player, Reward.RewardType type) {
-    if (!enabled) {
+    if(!enabled) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(player);
-    for (Reward reward : rewards) {
-      if (reward.getType() == type) {
+    for(Reward reward : rewards) {
+      if(reward.getType() == type) {
         //cannot execute if chance wasn't met
-        if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
+        if(reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
           continue;
         }
         String command = reward.getExecutableCode();
         command = StringUtils.replace(command, "%PLAYER%", player.getName());
         command = formatCommandPlaceholders(command, arena);
-        switch (reward.getExecutor()) {
+        switch(reward.getExecutor()) {
           case CONSOLE:
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             break;
@@ -106,22 +104,22 @@ public class RewardsFactory {
   }
 
   private void registerRewards() {
-    if (!enabled) {
+    if(!enabled) {
       return;
     }
     Debugger.debug(Level.INFO, "[RewardsFactory] Starting rewards registration");
     long start = System.currentTimeMillis();
 
     Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
-    for (Reward.RewardType rewardType : Reward.RewardType.values()) {
+    for(Reward.RewardType rewardType : Reward.RewardType.values()) {
       try {
-        for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
+        for(String reward : config.getStringList("rewards." + rewardType.getPath())) {
           rewards.add(new Reward(rewardType, reward));
           registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
         }
-      } catch (Exception ignored) {/*ignored*/}
+      } catch(Exception ignored) {/*ignored*/}
     }
-    for (Reward.RewardType rewardType : registeredRewards.keySet()) {
+    for(Reward.RewardType rewardType : registeredRewards.keySet()) {
       Debugger.debug(Level.INFO, "[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
     }
     Debugger.debug(Level.INFO, "[RewardsFactory] Registered all rewards took {0}ms", System.currentTimeMillis() - start);

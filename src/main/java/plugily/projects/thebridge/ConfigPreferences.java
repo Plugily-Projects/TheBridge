@@ -55,7 +55,7 @@ public class ConfigPreferences {
   }
 
   private void loadOptions() {
-    for (Option option : Option.values()) {
+    for(Option option : Option.values()) {
       options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
     }
   }

@@ -28,16 +28,16 @@ import java.util.List;
 
 public class BaseUtilities {
 
-  private static HashMap<Player, HashMap<String, Integer>> baseId = new HashMap<>();
+  private static final HashMap<Player, HashMap<String, Integer>> baseId = new HashMap<>();
 
   public static HashMap<Player, HashMap<String, Integer>> getBaseId() {
     return baseId;
   }
 
-  private static List<Player> editing = new ArrayList<>();
+  private static final List<Player> editing = new ArrayList<>();
 
   public static boolean check(Arena arena, Player player) {
-    if (!baseId.containsKey(player)) {
+    if(!baseId.containsKey(player)) {
       return false;
     }
     return baseId.get(player).containsKey(arena.getId());

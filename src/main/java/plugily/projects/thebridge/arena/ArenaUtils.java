@@ -45,19 +45,19 @@ public class ArenaUtils {
   }
 
   public static void hidePlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       NMS.hidePlayer(player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       NMS.showPlayer(player, p);
     }
   }
 
   public static void resetPlayerAfterGame(Player player) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
       NMS.showPlayer(players, player);
       NMS.showPlayer(player, players);
     }
@@ -72,14 +72,14 @@ public class ArenaUtils {
     player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
     player.setFireTicks(0);
     player.setFoodLevel(20);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
   }
 
   public static void hidePlayersOutsideTheGame(Player player, Arena arena) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (arena.getPlayers().contains(players)) {
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
+      if(arena.getPlayers().contains(players)) {
         continue;
       }
       NMS.hidePlayer(player, players);

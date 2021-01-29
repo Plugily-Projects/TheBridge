@@ -20,10 +20,9 @@
 package plugily.projects.thebridge.handlers;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
 
@@ -67,7 +66,7 @@ public class PermissionsManager {
     return allKits;
   }
 
-  public static boolean gotKitsPerm(Player player){
+  public static boolean gotKitsPerm(Player player) {
     return player.hasPermission(allKits);
   }
 

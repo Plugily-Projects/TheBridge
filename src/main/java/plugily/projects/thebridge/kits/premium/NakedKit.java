@@ -82,10 +82,10 @@ public class NakedKit extends PremiumKit implements Listener {
     itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
     player.getInventory().addItem(itemStack);
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 4}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}));
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
@@ -100,7 +100,7 @@ public class NakedKit extends PremiumKit implements Listener {
   public void reStock(Player player) {
     player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 1, true));
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
@@ -108,22 +108,22 @@ public class NakedKit extends PremiumKit implements Listener {
 
   @EventHandler
   public void onArmor(InventoryClickEvent event) {
-    if (!(event.getWhoClicked() instanceof Player)) {
+    if(!(event.getWhoClicked() instanceof Player)) {
       return;
     }
     User user = getPlugin().getUserManager().getUser((Player) event.getWhoClicked());
-    if (!ArenaRegistry.isInArena((Player) event.getWhoClicked())) {
+    if(!ArenaRegistry.isInArena((Player) event.getWhoClicked())) {
       return;
     }
-    if (!(user.getKit() instanceof NakedKit)) {
+    if(!(user.getKit() instanceof NakedKit)) {
       return;
     }
-    if (!(event.getInventory().getType().equals(InventoryType.PLAYER) || event.getInventory().getType().equals(InventoryType.CRAFTING))) {
+    if(!(event.getInventory().getType().equals(InventoryType.PLAYER) || event.getInventory().getType().equals(InventoryType.CRAFTING))) {
       return;
     }
     Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-      for (ItemStack stack : event.getWhoClicked().getInventory().getArmorContents()) {
-        if (stack == null || !armorTypes.contains(stack.getType())) {
+      for(ItemStack stack : event.getWhoClicked().getInventory().getArmorContents()) {
+        if(stack == null || !armorTypes.contains(stack.getType())) {
           continue;
         }
         //we cannot cancel event using scheduler, we must remove all armor contents from inventory manually
@@ -139,14 +139,14 @@ public class NakedKit extends PremiumKit implements Listener {
 
   @EventHandler
   public void onArmorClick(PlayerInteractEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
+    if(!ArenaRegistry.isInArena(event.getPlayer())) {
       return;
     }
     User user = getPlugin().getUserManager().getUser(event.getPlayer());
-    if (!(user.getKit() instanceof NakedKit) || !event.hasItem()) {
+    if(!(user.getKit() instanceof NakedKit) || !event.hasItem()) {
       return;
     }
-    if (armorTypes.contains(event.getItem().getType())) {
+    if(armorTypes.contains(event.getItem().getType())) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Cannot-Wear-Armor"));
     }

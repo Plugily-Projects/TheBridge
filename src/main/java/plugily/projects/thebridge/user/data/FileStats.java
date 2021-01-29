@@ -19,13 +19,11 @@
 
 package plugily.projects.thebridge.user.data;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.user.User;
-
-import org.bukkit.configuration.file.FileConfiguration;
-
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Tigerpanzer_02, 2Wild4You
@@ -50,8 +48,8 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void saveAllStatistic(User user) {
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if (!stat.isPersistent()) continue;
+    for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if(!stat.isPersistent()) continue;
       config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     }
     ConfigUtils.saveConfig(plugin, config, "stats");
@@ -59,7 +57,7 @@ public class FileStats implements UserDatabase {
 
   @Override
   public void loadStatistics(User user) {
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+    for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
     }
   }

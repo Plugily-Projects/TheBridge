@@ -19,10 +19,6 @@
 
 package plugily.projects.thebridge.handlers.hologram;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -30,6 +26,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Tigerpanzer_02, 2Wild4You
@@ -117,19 +117,19 @@ public class ArmorStandHologram {
   }
 
   public void delete() {
-    for (ArmorStand armor : armorStands) {
+    for(ArmorStand armor : armorStands) {
       armor.setCustomNameVisible(false);
       armor.remove();
       HologramManager.getArmorStands().remove(armor);
     }
-    if (entityItem != null) {
+    if(entityItem != null) {
       entityItem.remove();
     }
     armorStands.clear();
   }
 
   public boolean isDeleted() {
-    if (entityItem != null) {
+    if(entityItem != null) {
       return false;
     }
     return armorStands.isEmpty();
@@ -140,7 +140,7 @@ public class ArmorStandHologram {
     double distanceAbove = -0.27,
       y = location.getY();
 
-    for (int i = 0; i <= lines.size() - 1; i++) {
+    for(int i = 0; i <= lines.size() - 1; i++) {
       y += distanceAbove;
       ArmorStand eas = getEntityArmorStand(location, y);
       eas.setCustomName(lines.get(i));
@@ -148,10 +148,10 @@ public class ArmorStandHologram {
       HologramManager.getArmorStands().add(eas);
     }
 
-    if (item != null && item.getType() != org.bukkit.Material.AIR) {
+    if(item != null && item.getType() != org.bukkit.Material.AIR) {
       Location l = location.clone();
       entityItem = location.getWorld().dropItem(l, item);
-      if (Bukkit.getServer().getVersion().contains("Paper"))
+      if(Bukkit.getServer().getVersion().contains("Paper"))
         entityItem.setCanMobPickup(false);
       entityItem.setCustomNameVisible(false);
       entityItem.setGravity(true);
@@ -167,7 +167,7 @@ public class ArmorStandHologram {
   private ArmorStand getEntityArmorStand(Location loc, double y) {
     loc.setY(y);
     location.getWorld().getNearbyEntities(location, 0.2, 0.2, 0.2).forEach(entity -> {
-      if (entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
+      if(entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
         entity.remove();
         entity.setCustomNameVisible(false);
         HologramManager.getArmorStands().remove(entity);

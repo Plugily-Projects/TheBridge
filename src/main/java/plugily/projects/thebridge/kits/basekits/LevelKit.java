@@ -40,10 +40,10 @@ public abstract class LevelKit extends Kit {
   @Override
   public ItemStack getItemStack() {
     return new ItemBuilder(getMaterial())
-        .name(getName())
-        .lore(getDescription())
-        .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-At-Level")
-            .replace("%NUMBER%", Integer.toString(getLevel())))
-        .build();
+      .name(getName())
+      .lore(getDescription())
+      .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-At-Level")
+        .replace("%NUMBER%", Integer.toString(getLevel())))
+      .build();
   }
 }

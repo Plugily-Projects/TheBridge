@@ -98,9 +98,9 @@ public abstract class Kit {
 
   public ItemStack getItemStack() {
     return new ItemBuilder(getMaterial())
-        .name(getName())
-        .lore(getDescription())
-        .build();
+      .name(getName())
+      .lore(getDescription())
+      .build();
   }
 
   public abstract void reStock(Player player);

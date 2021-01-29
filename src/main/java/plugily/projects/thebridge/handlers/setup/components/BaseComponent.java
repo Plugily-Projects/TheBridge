@@ -40,7 +40,6 @@ import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;
-import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 import plugily.projects.thebridge.utils.conversation.SimpleConversationBuilder;
 
@@ -58,7 +57,7 @@ public class BaseComponent implements SetupComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     Arena arena = setupInventory.getArena();
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     Player player = setupInventory.getPlayer();
@@ -79,7 +78,7 @@ public class BaseComponent implements SetupComponent {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-          if (!ChatColor.valueOf(input).isColor()) {
+          if(!ChatColor.valueOf(input).isColor()) {
             player.sendRawMessage(plugin.getChatManager().colorRawMessage("&cTry again. This is not an color!"));
           }
           String color = ChatColor.valueOf(input).name();
@@ -102,7 +101,7 @@ public class BaseComponent implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-      if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an base location!"));
         return;
       }
@@ -123,7 +122,7 @@ public class BaseComponent implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-      if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an base location!"));
         return;
       }
@@ -146,11 +145,11 @@ public class BaseComponent implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-      if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an base location!"));
         return;
       }
-      if (new Cuboid(selection.getFirstPos(), selection.getSecondPos()).contains(XMaterial.AIR.parseMaterial())) {
+      if(new Cuboid(selection.getFirstPos(), selection.getSecondPos()).contains(XMaterial.AIR.parseMaterial())) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select only the floor of the cage! Make sure that it is not air!"));
         return;
       }
@@ -202,7 +201,7 @@ public class BaseComponent implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram", serializedLocation);
-      if (config.getBoolean("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", false)) {
+      if(config.getBoolean("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", false)) {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&cLocation changes take affect after restart!"));
       }
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPortalHologram location for base " + getId(player) + " set at your location!"));
@@ -215,27 +214,27 @@ public class BaseComponent implements SetupComponent {
       .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure base location properly!"));
         return;
       }
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure portal location properly!"));
         return;
       }
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure spawnpoint properly!"));
         return;
       }
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure respawnpoint properly!"));
         return;
       }
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".color") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".color") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure color properly!"));
         return;
       }
-      if (config.get("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram") == null) {
+      if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure portalhologram properly!"));
         return;
       }
@@ -251,11 +250,11 @@ public class BaseComponent implements SetupComponent {
         LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2")),
         config.getInt("instances." + arena.getId() + ".maximumsize")
       );
-      if (config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1") != null)
+      if(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1") != null)
         base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1")), LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2"))));
       arena.addBase(base);
       ArmorStandHologram portal = new ArmorStandHologram(Utils.getBlockCenter(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram"))));
-      for (String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
+      for(String str : plugin.getChatManager().colorMessage("In-Game.Messages.Portal.Hologram").split(";")) {
         portal.appendLine(str.replace("%base%", base.getFormattedColor()));
       }
       base.setArmorStandHologram(portal);
@@ -266,9 +265,9 @@ public class BaseComponent implements SetupComponent {
   }
 
   public int getId(Player player) {
-    if (!BaseUtilities.check(setupInventory.getArena(), player)) {
+    if(!BaseUtilities.check(setupInventory.getArena(), player)) {
       int id = 0;
-      if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases") != null) {
+      if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases") != null) {
         id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases").getKeys(false).size();
       }
       HashMap<String, Integer> secondMap = new HashMap<>();

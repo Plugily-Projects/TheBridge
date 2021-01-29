@@ -46,7 +46,7 @@ public class ModeComponent implements SetupComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     Arena arena = setupInventory.getArena();
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     Player player = setupInventory.getPlayer();
@@ -62,16 +62,16 @@ public class ModeComponent implements SetupComponent {
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".modevalue"))
       .build(), e -> {
       ItemStack itemStack = e.getInventory().getItem(e.getSlot());
-      if (itemStack == null || e.getCurrentItem() == null) {
+      if(itemStack == null || e.getCurrentItem() == null) {
         return;
       }
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if(e.getClick().isLeftClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (itemStack.getAmount() < 1) {
+      if(itemStack.getAmount() < 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
         itemStack.setAmount(1);
       }
@@ -90,7 +90,7 @@ public class ModeComponent implements SetupComponent {
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".mode"))
       .build(), e -> {
       Arena.Mode mode = Arena.Mode.POINTS;
-      if (e.isLeftClick()) {
+      if(e.isLeftClick()) {
         mode = Arena.Mode.HEARTS;
       }
       config.set("instances." + arena.getId() + ".mode", mode.toString());
@@ -109,23 +109,23 @@ public class ModeComponent implements SetupComponent {
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".resetblocks"))
       .build(), e -> {
       ItemStack itemStack = e.getInventory().getItem(e.getSlot());
-      if (itemStack == null || e.getCurrentItem() == null) {
+      if(itemStack == null || e.getCurrentItem() == null) {
         return;
       }
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick() && !e.getClick().isShiftClick()) {
+      if(e.getClick().isLeftClick() && !e.getClick().isShiftClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
+      if(e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
         itemStack.setAmount(1);
       }
-      if (itemStack.getAmount() < 1) {
+      if(itemStack.getAmount() < 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
         itemStack.setAmount(1);
       }
-      if (e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
+      if(e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
         config.set("instances." + arena.getId() + ".resetblocks", 0);
         arena.setOptionValue(ArenaOption.RESET_BLOCKS, 0);
       } else {

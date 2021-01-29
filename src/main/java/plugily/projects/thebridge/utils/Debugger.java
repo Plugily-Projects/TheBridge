@@ -20,9 +20,7 @@
 package plugily.projects.thebridge.utils;
 
 import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 
 import java.util.HashSet;
@@ -54,7 +52,7 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    if (msg.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+    if(msg.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       msg = Utils.matchColorRegex(msg);
     }
 
@@ -74,7 +72,7 @@ public class Debugger {
    * @param msg   debugged message
    */
   public static void debug(Level level, String msg) {
-    if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
+    if(!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
     logger.log(level, "[TBDBG] " + msg);
@@ -93,7 +91,7 @@ public class Debugger {
    * @param msg   debugged message
    */
   public static void debug(Level level, String msg, Object... params) {
-    if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
+    if(!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
     logger.log(level, "[TBDBG] " + msg, params);
@@ -105,7 +103,7 @@ public class Debugger {
    * @param msg debugged message
    */
   public static void performance(String monitorName, String msg, Object... params) {
-    if (!deep || !listenedPerformance.contains(monitorName)) {
+    if(!deep || !listenedPerformance.contains(monitorName)) {
       return;
     }
     logger.log(Level.INFO, "[TBDBG] " + msg, params);

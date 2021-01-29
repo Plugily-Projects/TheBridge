@@ -19,9 +19,8 @@
 
 package plugily.projects.thebridge.utils.services.exception;
 
-import plugily.projects.thebridge.utils.Debugger;
-
 import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.thebridge.utils.Debugger;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class ReporterService {
 
       plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
       Debugger.debug(Level.INFO, "[Reporter service] Code: {0} ({1})", conn.getResponseCode(), conn.getResponseMessage());
-    } catch (IOException ignored) {/*cannot connect or there is a problem*/
+    } catch(IOException ignored) {/*cannot connect or there is a problem*/
     }
   }
 

@@ -30,9 +30,9 @@ public abstract class PremiumKit extends Kit {
   @Override
   public ItemStack getItemStack() {
     return new ItemBuilder(new ItemStack(getMaterial()))
-        .name(getName())
-        .lore(getDescription())
-        .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-In-Store"))
-        .build();
+      .name(getName())
+      .lore(getDescription())
+      .lore(getPlugin().getChatManager().colorMessage("Kits.Kit-Menu.Lores.Unlock-In-Store"))
+      .build();
   }
 }

@@ -66,22 +66,22 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorItemClick(PlayerInteractEvent e) {
-    if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
-      if (ArenaRegistry.getArena(e.getPlayer()) == null) {
+    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
+      if(ArenaRegistry.getArena(e.getPlayer()) == null) {
         return;
       }
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
       String key = plugin.getSpecialItemManager().getRelatedSpecialItem(stack).getName();
-      if (key == null) {
+      if(key == null) {
         return;
       }
-      if (key.equals(SpecialItemManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
+      if(key.equals(SpecialItemManager.SpecialItems.SPECTATOR_OPTIONS.getName())) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-      } else if (key.equals(SpecialItemManager.SpecialItems.PLAYERS_LIST.getName())) {
+      } else if(key.equals(SpecialItemManager.SpecialItems.PLAYERS_LIST.getName())) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
       }
@@ -93,8 +93,8 @@ public class SpectatorItemEvents implements Listener {
       chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
 
-    for (Player player : world.getPlayers()) {
-      if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
+    for(Player player : world.getPlayers()) {
+      if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = Utils.setPlayerHead(player, meta);
@@ -112,17 +112,17 @@ public class SpectatorItemEvents implements Listener {
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
     Arena arena = ArenaRegistry.getArena(p);
-    if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+    if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if(!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
     e.setCancelled(true);
     ItemMeta meta = e.getCurrentItem().getItemMeta();
-    for (Player player : arena.getPlayers()) {
-      if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+    for(Player player : arena.getPlayers()) {
+      if(player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
         p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
         p.teleport(player);
         p.closeInventory();

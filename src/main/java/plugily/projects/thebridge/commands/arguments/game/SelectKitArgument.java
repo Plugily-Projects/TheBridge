@@ -36,7 +36,7 @@ public class SelectKitArgument {
     registry.mapArgument("thebridge", new CommandArgument("selectkit", "thebridge.command.selectkit", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!Utils.checkIsInGameInstance((Player) sender)) {
+        if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
         registry.getPlugin().getKitMenuHandler().createMenu((Player) sender);

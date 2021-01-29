@@ -68,43 +68,43 @@ public class BaseMenuHandler implements Listener {
     gui.addPane(pane);
     int x = 0;
     int y = 0;
-    for (Base base : arena.getBases()) {
+    for(Base base : arena.getBases()) {
       ItemStack itemStack = new ItemStack(XMaterial.matchXMaterial(base.getColor().toUpperCase() + "_WOOL").get().parseMaterial(), base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
-      if (base.getPlayers().size() >= base.getMaximumSize()) {
+      if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
       } else {
         itemStack = new ItemBuilder(itemStack).lore(emptyTeam).build();
       }
-      if (base.getPlayers().size() > 0) {
+      if(base.getPlayers().size() > 0) {
         List<String> players = new ArrayList<>();
-        for (Player inside : base.getPlayers()) {
+        for(Player inside : base.getPlayers()) {
           players.add("- " + inside.getName());
         }
         itemStack = new ItemBuilder(itemStack).lore(players).build();
       }
-      if (base.getPlayers().contains(player)) {
+      if(base.getPlayers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
       itemStack = new ItemBuilder(itemStack).name(teamName.replace("%base%", base.getFormattedColor())).build();
       pane.addItem(new GuiItem(itemStack, e -> {
         e.setCancelled(true);
-        if (!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
+        if(!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
           return;
         }
         TBPlayerChooseBaseEvent event = new TBPlayerChooseBaseEvent(player, base, arena);
         Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if(event.isCancelled()) {
           return;
         }
-        if (base.getPlayers().contains(player)) {
+        if(base.getPlayers().contains(player)) {
           player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Member"));
           return;
         }
-        if (base.getPlayers().size() >= base.getMaximumSize()) {
+        if(base.getPlayers().size() >= base.getMaximumSize()) {
           player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Full"));
           return;
         }
-        if (arena.inBase(player)){
+        if(arena.inBase(player)) {
           arena.getBase(player).removePlayer(player);
         }
         base.addPlayer(player);
@@ -112,7 +112,7 @@ public class BaseMenuHandler implements Listener {
         e.getWhoClicked().closeInventory();
       }), x, y);
       x++;
-      if (x == 9) {
+      if(x == 9) {
         x = 0;
         y++;
       }
@@ -122,15 +122,15 @@ public class BaseMenuHandler implements Listener {
 
   @EventHandler
   public void onBaseMenuItemClick(PlayerInteractEvent e) {
-    if (!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+    if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
     ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-    if (!stack.equals(baseItem.getItemStack())) {
+    if(!stack.equals(baseItem.getItemStack())) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     e.setCancelled(true);

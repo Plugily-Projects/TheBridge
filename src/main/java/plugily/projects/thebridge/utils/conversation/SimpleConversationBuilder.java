@@ -43,7 +43,7 @@ public class SimpleConversationBuilder {
       .withEscapeSequence("cancel")
       .withTimeout(30)
       .addConversationAbandonedListener(listener -> {
-        if (listener.gracefulExit()) {
+        if(listener.gracefulExit()) {
           return;
         }
         listener.getContext().getForWhom().sendRawMessage(plugin.getChatManager().colorRawMessage("&7Operation cancelled!"));

@@ -20,13 +20,12 @@
 package plugily.projects.thebridge.handlers.language;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.services.ServiceRegistry;
 import plugily.projects.thebridge.utils.services.locale.Locale;
 import plugily.projects.thebridge.utils.services.locale.LocaleRegistry;
-
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.utils.services.locale.LocaleService;
 
 import java.io.File;
@@ -59,7 +58,7 @@ public class LanguageManager {
 
   public static void init(Main plugin) {
     LanguageManager.plugin = plugin;
-    if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
+    if(!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
     //auto update
@@ -91,25 +90,25 @@ public class LanguageManager {
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     /* is beta release */
-    if ((plugin.getDescription().getVersion().contains("locales") || plugin.getDescription().getVersion().contains("pre")) && !plugin.getConfig().getBoolean("Developer-Mode", false)) {
+    if((plugin.getDescription().getVersion().contains("locales") || plugin.getDescription().getVersion().contains("pre")) && !plugin.getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.sendConsoleMsg("&c[The Bridge] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
-    if (service == null) {
+    if(service == null) {
       Debugger.sendConsoleMsg("&c[The Bridge] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
-    if (service.isValidVersion()) {
+    if(service.isValidVersion()) {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
-      if (status == LocaleService.DownloadStatus.FAIL) {
+      if(status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
         Debugger.sendConsoleMsg("&c[The Bridge] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
-      } else if (status == LocaleService.DownloadStatus.SUCCESS) {
+      } else if(status == LocaleService.DownloadStatus.SUCCESS) {
         Debugger.sendConsoleMsg("&c[The Bridge] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
-      } else if (status == LocaleService.DownloadStatus.LATEST) {
+      } else if(status == LocaleService.DownloadStatus.LATEST) {
         Debugger.sendConsoleMsg("&c[The Bridge] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
@@ -117,29 +116,29 @@ public class LanguageManager {
       Debugger.sendConsoleMsg("&c[The Bridge] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
-    try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
+    try(InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
       + pluginLocale.getPrefix() + ".properties"), StandardCharsets.UTF_8)) {
       properties.load(reader);
-    } catch (IOException e) {
+    } catch(IOException e) {
       e.printStackTrace();
     }
   }
 
   private static void setupLocale() {
     String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
-    for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
-      if (locale.getPrefix().equalsIgnoreCase(localeName)) {
+    for(Locale locale : LocaleRegistry.getRegisteredLocales()) {
+      if(locale.getPrefix().equalsIgnoreCase(localeName)) {
         pluginLocale = locale;
         break;
       }
-      for (String alias : locale.getAliases()) {
-        if (alias.equals(localeName)) {
+      for(String alias : locale.getAliases()) {
+        if(alias.equals(localeName)) {
           pluginLocale = locale;
           break;
         }
       }
     }
-    if (pluginLocale == null) {
+    if(pluginLocale == null) {
       Debugger.sendConsoleMsg("&c[The Bridge] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
     }
@@ -153,28 +152,28 @@ public class LanguageManager {
   }
 
   public static String getLanguageMessage(String path) {
-    if (isDefaultLanguageUsed()) {
+    if(isDefaultLanguageUsed()) {
       return getString(path);
     }
     String prop = properties.getProperty(path);
-    if (prop == null){
+    if(prop == null) {
       return getString(path);
     }
-    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+    if(getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))) {
       return prop;
     }
     return getString(path);
   }
 
   public static List<String> getLanguageList(String path) {
-    if (isDefaultLanguageUsed()) {
+    if(isDefaultLanguageUsed()) {
       return getStrings(path);
     }
     String prop = properties.getProperty(path);
-    if (prop == null) {
+    if(prop == null) {
       return getStrings(path);
     }
-    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+    if(getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))) {
       return Arrays.asList(plugin.getChatManager().colorRawMessage(prop).split(";"));
     }
     return getStrings(path);
@@ -182,7 +181,7 @@ public class LanguageManager {
 
 
   private static List<String> getStrings(String path) {
-    if (!languageConfig.isSet(path)) {
+    if(!languageConfig.isSet(path)) {
       Debugger.sendConsoleMsg("&c[TheBridge] Game message not found in your locale!");
       Debugger.sendConsoleMsg("&c[TheBridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
       Debugger.sendConsoleMsg("&c[TheBridge] Path: " + path);
@@ -195,7 +194,7 @@ public class LanguageManager {
 
 
   private static String getString(String path) {
-    if (!languageConfig.isSet(path)) {
+    if(!languageConfig.isSet(path)) {
       Debugger.sendConsoleMsg("&c[TheBridge] Game message not found in your locale!");
       Debugger.sendConsoleMsg("&c[TheBridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
       Debugger.sendConsoleMsg("&c[TheBridge] Path: " + path);

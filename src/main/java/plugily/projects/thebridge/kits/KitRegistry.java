@@ -19,7 +19,6 @@
 
 package plugily.projects.thebridge.kits;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -27,14 +26,18 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.kits.basekits.FreeKit;
 import plugily.projects.thebridge.kits.basekits.Kit;
 import plugily.projects.thebridge.kits.free.BridgeKit;
-import plugily.projects.thebridge.kits.free.KnightKit;
 import plugily.projects.thebridge.kits.free.LightTankKit;
-import plugily.projects.thebridge.kits.level.*;
-import plugily.projects.thebridge.kits.premium.*;
+import plugily.projects.thebridge.kits.level.ArcherKit;
+import plugily.projects.thebridge.kits.level.HardcoreKit;
+import plugily.projects.thebridge.kits.level.HealerKit;
+import plugily.projects.thebridge.kits.level.MediumTankKit;
+import plugily.projects.thebridge.kits.level.TerminatorKit;
+import plugily.projects.thebridge.kits.premium.HeavyTankKit;
+import plugily.projects.thebridge.kits.premium.NakedKit;
+import plugily.projects.thebridge.kits.premium.PremiumHardcoreKit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -49,7 +52,7 @@ public class KitRegistry {
   private static Kit defaultKit = null;
   private static Main plugin;
   private static final List<Class<?>> classKitNames = Arrays.asList(LightTankKit.class, ArcherKit.class, HealerKit.class,
-          MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class);
+    MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class);
 
   private KitRegistry() {
   }
@@ -102,8 +105,8 @@ public class KitRegistry {
    * @return Registered kit or default if not found
    */
   public static Kit getKit(ItemStack itemStack) {
-    for (Kit kit : kits) {
-      if (itemStack.getType() == kit.getMaterial()) {
+    for(Kit kit : kits) {
+      if(itemStack.getType() == kit.getMaterial()) {
         return kit;
       }
     }
@@ -114,11 +117,11 @@ public class KitRegistry {
   private static void setupGameKits() {
     BridgeKit bridgeKit = new BridgeKit();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "kits");
-    for (Class<?> kitClass : classKitNames) {
-      if (config.getBoolean("Enabled-Game-Kits." + kitClass.getSimpleName().replace("Kit", ""))) {
+    for(Class<?> kitClass : classKitNames) {
+      if(config.getBoolean("Enabled-Game-Kits." + kitClass.getSimpleName().replace("Kit", ""))) {
         try {
           Class.forName(kitClass.getName()).newInstance();
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+        } catch(ClassNotFoundException | IllegalAccessException | InstantiationException e) {
           plugin.getLogger().log(Level.SEVERE, "Fatal error while registering existing game kit! Report this error to the developer!");
           plugin.getLogger().log(Level.SEVERE, "Cause: " + e.getMessage() + " (kitClass " + kitClass.getName() + ")");
         }

@@ -52,22 +52,22 @@ public class SpawnComponents implements SetupComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     Arena arena = setupInventory.getArena();
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Main plugin = setupInventory.getPlugin();
     String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
-        + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
+      + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
-        .name(plugin.getChatManager().colorRawMessage("&e&lSet Ending Location"))
-        .lore(ChatColor.GRAY + "Click to set the ending location")
-        .lore(ChatColor.GRAY + "on the place where you are standing.")
-        .lore(ChatColor.DARK_GRAY + "(location where players will be")
-        .lore(ChatColor.DARK_GRAY + "teleported after the game)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".endlocation"))
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Ending Location"))
+      .lore(ChatColor.GRAY + "Click to set the ending location")
+      .lore(ChatColor.GRAY + "on the place where you are standing.")
+      .lore(ChatColor.DARK_GRAY + "(location where players will be")
+      .lore(ChatColor.DARK_GRAY + "teleported after the game)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".endlocation"))
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".endlocation", serializedLocation);
       arena.setEndLocation(player.getLocation());
@@ -76,11 +76,11 @@ public class SpawnComponents implements SetupComponent {
     }), 0, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.LAPIS_BLOCK)
-        .name(plugin.getChatManager().colorRawMessage("&e&lSet Lobby Location"))
-        .lore(ChatColor.GRAY + "Click to set the lobby location")
-        .lore(ChatColor.GRAY + "on the place where you are standing")
-        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".lobbylocation"))
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Lobby Location"))
+      .lore(ChatColor.GRAY + "Click to set the lobby location")
+      .lore(ChatColor.GRAY + "on the place where you are standing")
+      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".lobbylocation"))
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".lobbylocation", serializedLocation);
       arena.setLobbyLocation(player.getLocation());
@@ -128,7 +128,7 @@ public class SpawnComponents implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
-      if (selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
         player.sendMessage(plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&cPlease select both corners before adding an arena location!"));
         return;
       }

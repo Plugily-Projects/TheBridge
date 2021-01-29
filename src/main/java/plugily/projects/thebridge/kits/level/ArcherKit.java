@@ -46,7 +46,8 @@ public class ArcherKit extends LevelKit {
   public ArcherKit() {
     this.setLevel(getKitsConfig().getInt("Required-Level.Archer"));
     setName(getPlugin().getChatManager().colorMessage("Kits.Archer.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Archer.Description"), 40);this.setDescription(description.toArray(new String[0]));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Archer.Description"), 40);
+    this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }
 
@@ -60,12 +61,12 @@ public class ArcherKit extends LevelKit {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
     player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
 
     player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
@@ -81,7 +82,7 @@ public class ArcherKit extends LevelKit {
   @Override
   public void reStock(Player player) {
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));

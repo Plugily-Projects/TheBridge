@@ -43,7 +43,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   private final String inventoryName;
   private final String speedOptionName;
-  private Inventory inv;
+  private final Inventory inv;
   private final Main plugin;
 
   public SpectatorSettingsMenu(Main plugin, String inventoryName, String speedOptionName) {
@@ -60,16 +60,16 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
+    if(!e.getView().getTitle().equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
       return;
     }
     Player p = (Player) e.getWhoClicked();
     p.closeInventory();
 
-    switch (e.getCurrentItem().getType()) {
+    switch(e.getCurrentItem().getType()) {
       case LEATHER_BOOTS:
         p.removePotionEffect(PotionEffectType.SPEED);
         p.setFlySpeed(0.15f);

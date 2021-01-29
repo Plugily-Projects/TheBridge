@@ -24,7 +24,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
@@ -178,27 +177,27 @@ public class Base {
   }
 
   public void removeCageBlocks() {
-    if (!checkCageBlock(cageBlock)) {
+    if(!checkCageBlock(cageBlock)) {
       return;
     }
     cageCuboid.fill(Material.AIR);
   }
 
   public void addCageBlocks() {
-    if (!checkCageBlock(cageBlock)) {
+    if(!checkCageBlock(cageBlock)) {
       return;
     }
     cageCuboid.fill(cageBlock);
   }
 
   private boolean checkCageBlock(Material cageBlock) {
-    if (cageCuboid == null) {
+    if(cageCuboid == null) {
       return false;
     }
-    if (cageBlock == null) {
+    if(cageBlock == null) {
       return false;
     }
-    if (cageBlock == Material.AIR) {
+    if(cageBlock == Material.AIR) {
       Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper!");
       return false;
     }

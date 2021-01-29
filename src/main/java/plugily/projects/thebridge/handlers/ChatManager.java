@@ -57,11 +57,11 @@ public class ChatManager {
   }
 
   public String colorRawMessage(String message) {
-    if (message == null) {
+    if(message == null) {
       return "";
     }
 
-    if (message.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+    if(message.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       message = Utils.matchColorRegex(message);
     }
 
@@ -70,14 +70,14 @@ public class ChatManager {
 
   public String colorMessage(String message, Player player) {
     String returnString = LanguageManager.getLanguageMessage(message);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     return colorRawMessage(returnString);
   }
 
   public void broadcast(Arena arena, String message) {
-    for (Player p : arena.getPlayers()) {
+    for(Player p : arena.getPlayers()) {
       p.sendMessage(PLUGIN_PREFIX + message);
     }
   }
@@ -93,7 +93,7 @@ public class ChatManager {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
     return returnString;
@@ -112,7 +112,7 @@ public class ChatManager {
 
   public void broadcastAction(Arena a, Player p, ActionType action) {
     String message;
-    switch (action) {
+    switch(action) {
       case JOIN:
         message = formatMessage(a, colorMessage("In-Game.Messages.Join"), p);
         break;
@@ -125,7 +125,7 @@ public class ChatManager {
       default:
         return; //likely won't ever happen
     }
-    for (Player player : a.getPlayers()) {
+    for(Player player : a.getPlayers()) {
       player.sendMessage(PLUGIN_PREFIX + message);
     }
   }

@@ -39,12 +39,12 @@ public class SelectBaseArgument {
     registry.mapArgument("thebridge", new CommandArgument("selectbase", "thebridge.command.selectbase", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!Utils.checkIsInGameInstance((Player) sender)) {
+        if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
         Arena arena = ArenaRegistry.getArena((Player) sender);
-        if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-        registry.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
+        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+          registry.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
       }
     });
   }
