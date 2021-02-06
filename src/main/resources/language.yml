@@ -329,6 +329,14 @@ Validator:
   Instance-Started: "[TheBridge] Arena %arena% instance successfully started!"
   No-Instances-Created: "[TheBridge] There are no arena instances created in configuration!"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    Playing: "&lPlaying"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 2
+File-Version-Do-Not-Edit: 3

@@ -122,6 +122,14 @@ public class LanguageMigrator {
       switch(version) {
         case 1:
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+        case 2:
+          MigratorUtils.addNewLines(file, "Placeholders:\r\n" +
+              "  Game-States:\r\n" +
+              "    Waiting: \"&lWaiting for players...\"" +
+              "    Starting: \"&e&lStarting\"" +
+              "    Playing: \"&lPlaying\"" +
+              "    Ending: \"&lEnding\"" +
+              "    Restarting: \"&c&lRestarting\"");
           break;
         default:
           break;
