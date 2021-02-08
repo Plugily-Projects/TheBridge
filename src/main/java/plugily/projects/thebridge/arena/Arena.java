@@ -223,7 +223,7 @@ public class Arena extends BukkitRunnable {
           }
           teleportAllToBaseLocation();
           for(Base base : bases) {
-            base.removeCageBlocks();
+            base.removeCageFloor();
           }
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -267,7 +267,7 @@ public class Arena extends BukkitRunnable {
           }
           if(resetRound == 1) {
             for(Base base : bases) {
-              base.removeCageBlocks();
+              base.removeCageFloor();
             }
           }
           resetRound--;
@@ -661,7 +661,7 @@ public class Arena extends BukkitRunnable {
 
   public void resetRound() {
     for(Base base : bases) {
-      base.addCageBlocks();
+      base.addCageFloor();
     }
     resetRound = arenaOptions.get(ArenaOption.RESET_TIME);
     round++;

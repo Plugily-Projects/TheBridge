@@ -247,6 +247,10 @@ public class ArenaEvents implements Listener {
         e.setCancelled(true);
         break;
       case FALL:
+        if(arena.getBase(victim).isDamageCooldown()) {
+          e.setCancelled(true);
+          break;
+        }
         if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
           if(e.getDamage() >= victim.getHealth()) {
             //kill the player for suicidal death, else do not
