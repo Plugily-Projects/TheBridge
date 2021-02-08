@@ -1,5 +1,6 @@
 ### 1.0.7 Release (18.01.2021)
 * Fixed tb items are not removed if inventory manager is enabled and the server is stopping
+* Fixed players not getting teleported to end location after arena leave
 
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

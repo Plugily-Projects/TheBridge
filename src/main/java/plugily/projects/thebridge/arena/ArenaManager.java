@@ -250,7 +250,7 @@ public class ArenaManager {
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
-    arena.teleportToLobby(player);
+    arena.teleportToEndLocation(player);
     if(!user.isSpectator()) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
