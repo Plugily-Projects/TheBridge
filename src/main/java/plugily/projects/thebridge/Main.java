@@ -133,7 +133,7 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_7_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_8_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
