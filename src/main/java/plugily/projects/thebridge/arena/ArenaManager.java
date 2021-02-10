@@ -335,12 +335,12 @@ public class ArenaManager {
             break;
           case POINTS:
             if(arena.getWinner().getPlayers().contains(player)) {
-              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
-              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-            } else {
               plugin.getUserManager().addStat(player, StatsStorage.StatisticType.WINS);
               plugin.getUserManager().addExperience(player, 5);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
+            } else {
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
             }
             break;
           default:
