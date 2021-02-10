@@ -37,7 +37,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 2;
-  public static final int LANGUAGE_FILE_VERSION = 2;
+  public static final int LANGUAGE_FILE_VERSION = 3;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -122,6 +122,10 @@ public class LanguageMigrator {
       switch(version) {
         case 1:
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+          break;
+        case 2:
+          MigratorUtils.insertAfterLine(file, "  Stats-Command:", "    Wins: \"&aWins: &e\"\n" +
+              "    Loses: \"&aLoses: &e\"");
           break;
         default:
           break;

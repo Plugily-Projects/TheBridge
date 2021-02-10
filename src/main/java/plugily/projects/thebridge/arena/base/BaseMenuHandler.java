@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
@@ -69,7 +70,8 @@ public class BaseMenuHandler implements Listener {
     int x = 0;
     int y = 0;
     for(Base base : arena.getBases()) {
-      ItemStack itemStack = new ItemStack(XMaterial.matchXMaterial(base.getColor().toUpperCase() + "_WOOL").get().parseMaterial(), base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
+      ItemStack itemStack = XMaterial.matchXMaterial(base.getColor().toUpperCase() + "_WOOL").get().parseItem();
+      itemStack.setAmount(base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
       if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
       } else {
@@ -125,7 +127,7 @@ public class BaseMenuHandler implements Listener {
     if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
-    ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+    ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
     if(!stack.equals(baseItem.getItemStack())) {
       return;
     }

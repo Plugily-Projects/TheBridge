@@ -34,17 +34,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.XSound;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -187,7 +189,10 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
-      event.setCancelled(true);
+      if (event.getFrom().getZ() != event.getTo().getZ() && event.getFrom().getX() != event.getTo().getX()) {
+        event.setCancelled(true);
+        return;
+      }
       return;
     }
     if(!arena.inBase(player)) {
@@ -303,7 +308,7 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
-  public void onArrowPickup(PlayerPickupArrowEvent e) {
+  public void onArrowPickup(CBPlayerPickupArrow e) {
     if(ArenaRegistry.isInArena(e.getPlayer())) {
       e.getItem().remove();
       e.setCancelled(true);
@@ -311,7 +316,7 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
-  public void onItemPickup(EntityPickupItemEvent e) {
+  public void onItemPickup(CBEntityPickupItemEvent e) {
     if(!(e.getEntity() instanceof Player)) {
       return;
     }
@@ -359,7 +364,9 @@ public class ArenaEvents implements Listener {
       return;
     }
     arena.addHits(victim, attacker);
-    victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50,1);
+
     if(victim.getHealth() - e.getDamage() < 0) {
       return;
     }
@@ -455,7 +462,7 @@ public class ArenaEvents implements Listener {
         player.setFlying(true);
         user.setSpectator(true);
         ArenaUtils.hidePlayer(player, arena);
-        player.setCollidable(false);
+        VersionUtils.setCollidable(player, false);
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);

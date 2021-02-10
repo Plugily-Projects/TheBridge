@@ -29,7 +29,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -39,6 +38,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.user.User;
@@ -182,7 +182,7 @@ public class SpectatorEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onPickup(EntityPickupItemEvent event) {
+  public void onPickup(CBEntityPickupItemEvent event) {
     if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }

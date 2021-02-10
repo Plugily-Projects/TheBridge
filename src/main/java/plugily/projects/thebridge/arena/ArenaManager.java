@@ -24,13 +24,13 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -158,7 +158,7 @@ public class ArenaManager {
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
     player.setFoodLevel(20);
     if((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
@@ -178,7 +178,7 @@ public class ArenaManager {
 
       user.setSpectator(true);
       arena.addSpectatorPlayer(player);
-      player.setCollidable(false);
+      VersionUtils.setCollidable(player, false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -254,7 +254,6 @@ public class ArenaManager {
     if(!user.isSpectator()) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
-    player.setGlowing(false);
     user.setSpectator(false);
     if(arena.isDeathPlayer(player)) {
       arena.removeDeathPlayer(player);
@@ -262,10 +261,10 @@ public class ArenaManager {
     if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    player.setCollidable(true);
+    VersionUtils.setCollidable(player, true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);
@@ -335,12 +334,12 @@ public class ArenaManager {
             break;
           case POINTS:
             if(arena.getWinner().getPlayers().contains(player)) {
-              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
-              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-            } else {
               plugin.getUserManager().addStat(player, StatsStorage.StatisticType.WINS);
               plugin.getUserManager().addExperience(player, 5);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.WON);
+            } else {
+              plugin.getUserManager().addStat(player, StatsStorage.StatisticType.LOSES);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
             }
             break;
           default:
@@ -397,6 +396,25 @@ public class ArenaManager {
         break;
     }
     formatted = StringUtils.replace(formatted, "%base%", arena.getWinner().getFormattedColor());
+
+    if(formatted.contains("%base_players%") || formatted.contains("%base_scored%")) {
+      StringBuilder baseMember = new StringBuilder();
+      int baseScored = 0;
+      for(Player p : arena.getWinner().getAlivePlayers()) {
+        if(arena.getWinner().getAlivePlayers().size() > 1) {
+          baseMember.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS)).append("), ");
+        } else {
+          baseMember.append(p.getName());
+        }
+        baseScored += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS);
+      }
+      if(arena.getWinner().getAlivePlayers().size() > 1) {
+        baseMember.deleteCharAt(baseMember.length() - 2);
+      }
+
+      formatted = StringUtils.replace(formatted, "%base_players%", baseMember.toString());
+      formatted = StringUtils.replace(formatted, "%base_scored%", String.valueOf(baseScored));
+    }
 
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

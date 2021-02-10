@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -132,7 +133,7 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_12_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_7_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by The Bridge!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
@@ -230,6 +231,8 @@ public class Main extends JavaPlugin {
     kitMenuHandler = new KitMenuHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     cuboidSelector = new CuboidSelector(this);
+
+    new EventsInitializer().initialize(this);
   }
 
   private void registerSoftDependenciesAndServices() {

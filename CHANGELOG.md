@@ -1,7 +1,12 @@
-### 1.0.7 Release (18.01.2021)
+### 1.0.7 Release (18.01.2021 - XX.02.2021)
 * Fixed tb items are not removed if inventory manager is enabled and the server is stopping
 * Fixed players not getting teleported to end location after arena leave
 * Fixed cage fall damage
+* Fixed 2 stats messages were not added
+* Added Legacy Version support
+* Changed player movement on round resets now allows head rotation and jumping
+* Changed round end message ("%base_players% (%base_scored%)")
+* Fixed POINTS mode wins/loses stats
 
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

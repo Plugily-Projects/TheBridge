@@ -23,9 +23,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.Arena;
 
 /**
  * Created by Tom on 25/07/2014.
@@ -101,6 +103,12 @@ public abstract class Kit {
       .name(getName())
       .lore(getDescription())
       .build();
+  }
+
+  public void addBuildBlocks(Player player, Arena arena) {
+    ItemStack itemStack = XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseItem();
+    itemStack.setAmount(64);
+    player.getInventory().addItem(itemStack);
   }
 
   public abstract void reStock(Player player);

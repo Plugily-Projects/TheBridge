@@ -39,10 +39,11 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
@@ -67,7 +68,7 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onItemSwap(PlayerSwapHandItemsEvent e) {
+  public void onItemSwap(CBPlayerSwapHandItemsEvent e) {
     if(ArenaRegistry.isInArena(e.getPlayer())) {
       e.setCancelled(true);
     }
@@ -133,7 +134,7 @@ public class Events implements Listener {
       return;
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+    ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
     if(arena == null || !Utils.isNamed(itemStack)) {
       return;
     }
@@ -161,7 +162,7 @@ public class Events implements Listener {
     if(arena == null) {
       return;
     }
-    if(event.getEntity().getInventory().getItemInMainHand().getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+    if(VersionUtils.getItemInHand(player).getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
       event.setFoodLevel(20);
     }
     if(arena.getArenaState() != ArenaState.IN_GAME) {

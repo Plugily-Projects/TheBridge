@@ -20,10 +20,10 @@
 package plugily.projects.thebridge.kits.free;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
@@ -59,14 +59,14 @@ public class LightTankKit extends FreeKit {
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(26.0);
+        Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
+    VersionUtils.setMaxHealth(player, 26.0);
     player.setHealth(26.0);
     Arena arena = ArenaRegistry.getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 
   @Override
@@ -80,6 +80,6 @@ public class LightTankKit extends FreeKit {
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 }

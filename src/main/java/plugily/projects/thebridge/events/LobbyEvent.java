@@ -19,12 +19,12 @@
 
 package plugily.projects.thebridge.events;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
@@ -57,6 +57,6 @@ public class LobbyEvent implements Listener {
     }
     event.setCancelled(true);
     player.setFireTicks(0);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
   }
 }

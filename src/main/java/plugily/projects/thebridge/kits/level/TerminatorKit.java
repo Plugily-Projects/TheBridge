@@ -71,7 +71,7 @@ public class TerminatorKit extends LevelKit {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
 
   }
 
@@ -89,7 +89,7 @@ public class TerminatorKit extends LevelKit {
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 
 }

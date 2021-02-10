@@ -78,13 +78,13 @@ public class ArenaSelectorArgument implements Listener {
           ItemStack itemStack;
           switch(arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
-              itemStack = XMaterial.LIME_CONCRETE.parseItem();
+              itemStack = XMaterial.LIME_WOOL.parseItem();
               break;
             case STARTING:
-              itemStack = XMaterial.YELLOW_CONCRETE.parseItem();
+              itemStack = XMaterial.YELLOW_WOOL.parseItem();
               break;
             default:
-              itemStack = XMaterial.RED_CONCRETE.parseItem();
+              itemStack = XMaterial.RED_WOOL.parseItem();
               break;
           }
           ItemMeta itemMeta = itemStack.getItemMeta();

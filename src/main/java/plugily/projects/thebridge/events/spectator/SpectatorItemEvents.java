@@ -33,6 +33,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
@@ -70,7 +71,7 @@ public class SpectatorItemEvents implements Listener {
       if(ArenaRegistry.getArena(e.getPlayer()) == null) {
         return;
       }
-      ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
       if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }

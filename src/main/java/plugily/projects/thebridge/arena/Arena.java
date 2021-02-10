@@ -23,7 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -33,6 +32,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -96,7 +97,7 @@ public class Arena extends BukkitRunnable {
     for(ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());
     }
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
       gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
@@ -131,7 +132,7 @@ public class Arena extends BukkitRunnable {
             break;
           }
         } else {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
@@ -146,7 +147,7 @@ public class Arena extends BukkitRunnable {
           setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
           gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
         }
@@ -155,7 +156,7 @@ public class Arena extends BukkitRunnable {
           player.setLevel(getTimer());
         }
         if(getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
@@ -176,7 +177,7 @@ public class Arena extends BukkitRunnable {
           TBGameStartEvent gameStartEvent = new TBGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
@@ -225,7 +226,7 @@ public class Arena extends BukkitRunnable {
           for(Base base : bases) {
             base.removeCageFloor();
           }
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
         }
@@ -252,7 +253,7 @@ public class Arena extends BukkitRunnable {
           String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
           String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
           for(Player p : getPlayers()) {
-            p.sendTitle(title, subtitle, 5, 40, 5);
+            VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
           }
         }
 
@@ -260,7 +261,7 @@ public class Arena extends BukkitRunnable {
           String title = chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound));
           String subtitle = chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle").replace("%seconds%", String.valueOf(resetRound));
           for(Player p : getPlayers()) {
-            p.sendTitle(title, subtitle, 5, 40, 5);
+            VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
             if(resetRound == 1) {
               p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
             }
@@ -283,10 +284,10 @@ public class Arena extends BukkitRunnable {
               winner = base;
               if(mode == Mode.POINTS) {
                 for(Player p : getPlayers()) {
-                  p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                    chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getFormattedColor()), 5, 40, 5);
+                  VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                      chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Reached").replace("%base%", base.getFormattedColor()), 5, 40, 5);
                   if(base.getPlayers().contains(p)) {
-                    p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                    VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), "", 5, 40, 5);
                   }
                 }
                 ArenaManager.stopGame(false, this);
@@ -298,10 +299,10 @@ public class Arena extends BukkitRunnable {
             if(out >= bases.size() - 1) {
               for(Player player : getPlayers()) {
                 if(!isDeathPlayer(player)) {
-                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                  VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), "", 5, 40, 5);
                   winner = getBase(player);
                 } else {
-                  player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
+                  VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), "", 5, 40, 5);
                 }
               }
               ArenaManager.stopGame(false, this);
@@ -316,7 +317,7 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(false);
         }
         if(getTimer() <= 0) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
@@ -351,7 +352,7 @@ public class Arena extends BukkitRunnable {
 
           for(User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
-            user.getPlayer().setCollidable(true);
+            VersionUtils.setCollidable(user.getPlayer(), true);
             user.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", user.getPlayer()));
             plugin.getUserManager().saveAllStatistic(user);
           }
@@ -382,7 +383,7 @@ public class Arena extends BukkitRunnable {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
         break;
@@ -633,6 +634,9 @@ public class Arena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(BarAction action, Player p) {
+    if(!ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+      return;
+    }
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
@@ -673,7 +677,7 @@ public class Arena extends BukkitRunnable {
     for(Player player : getPlayersLeft()) {
       player.teleport(getBase(player).getPlayerSpawnPoint());
       player.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Reset"));
-      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+      player.setHealth(VersionUtils.getHealth(player));
       player.getInventory().clear();
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       player.updateInventory();

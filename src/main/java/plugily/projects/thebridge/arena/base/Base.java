@@ -137,6 +137,12 @@ public class Base {
     return players;
   }
 
+  public List<Player> getAlivePlayers() {
+    List<Player> alivePlayers = new ArrayList<>(getPlayers());
+    alivePlayers.removeIf(player -> plugin.getUserManager().getUser(player).isSpectator());
+    return alivePlayers;
+  }
+
   public Integer getPlayersSize() {
     return players.size();
   }
