@@ -261,30 +261,15 @@ public class ArenaManager {
     if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    VersionUtils.setCollidable(player, true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(VersionUtils.getHealth(player));
-    player.setFoodLevel(20);
-    player.setLevel(0);
-    player.setExp(0);
-    player.setFlying(false);
-    player.setAllowFlight(false);
-    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-    player.setWalkSpeed(0.2f);
-    player.setFireTicks(0);
+    ArenaUtils.resetPlayerAfterGame(player);
+
     if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(0);
     }
 
-    player.setGameMode(GameMode.SURVIVAL);
-    for(Player players : plugin.getServer().getOnlinePlayers()) {
-      if(!ArenaRegistry.isInArena(players)) {
-        NMS.showPlayer(players, player);
-      }
-      NMS.showPlayer(player, players);
-    }
     arena.teleportToEndLocation(player);
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

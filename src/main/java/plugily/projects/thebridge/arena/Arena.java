@@ -324,23 +324,8 @@ public class Arena extends BukkitRunnable {
           List<Player> playersToQuit = new ArrayList<>(getPlayers());
           for(Player player : playersToQuit) {
             plugin.getUserManager().getUser(player).removeScoreboard();
-            player.setGameMode(GameMode.SURVIVAL);
-            for(Player players : Bukkit.getOnlinePlayers()) {
-              NMS.showPlayer(player, players);
-              if(!ArenaRegistry.isInArena(players)) {
-                NMS.showPlayer(players, player);
-              }
-            }
-            player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-            player.setWalkSpeed(0.2f);
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            player.getInventory().clear();
-
-            player.getInventory().setArmorContents(null);
             doBarAction(BarAction.REMOVE, player);
-            player.setFireTicks(0);
-            player.setFoodLevel(20);
+            ArenaUtils.resetPlayerAfterGame(player);
           }
           teleportAllToEndLocation();
 

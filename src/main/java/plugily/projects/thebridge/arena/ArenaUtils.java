@@ -58,8 +58,10 @@ public class ArenaUtils {
 
   public static void resetPlayerAfterGame(Player player) {
     for(Player players : plugin.getServer().getOnlinePlayers()) {
-      NMS.showPlayer(players, player);
-      NMS.showPlayer(player, players);
+      VersionUtils.showPlayer(plugin, player, players);
+      if(!ArenaRegistry.isInArena(players)) {
+        VersionUtils.showPlayer(plugin, players, player);
+      }
     }
     player.setGameMode(GameMode.SURVIVAL);
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -71,6 +73,10 @@ public class ArenaUtils {
     player.setHealth(VersionUtils.getHealth(player));
     player.setFireTicks(0);
     player.setFoodLevel(20);
+    player.setWalkSpeed(0.2f);
+    player.setLevel(0);
+    player.setExp(0);
+    VersionUtils.setCollidable(player, true);
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }

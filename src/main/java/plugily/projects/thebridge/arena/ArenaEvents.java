@@ -44,7 +44,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.XSound;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
 import plugily.projects.thebridge.ConfigPreferences;
