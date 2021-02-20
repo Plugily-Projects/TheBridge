@@ -7,6 +7,7 @@
 * Changed player movement on round resets now allows head rotation and jumping
 * Changed round end message ("%base_players% (%base_scored%)")
 * Fixed POINTS mode wins/loses stats
+* Fixed NPE on fall damage before a player is on any base
 
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

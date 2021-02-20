@@ -22,7 +22,6 @@ package plugily.projects.thebridge.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -44,9 +43,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -189,7 +188,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
-      if (event.getFrom().getZ() != event.getTo().getZ() && event.getFrom().getX() != event.getTo().getX()) {
+      if(event.getFrom().getZ() != event.getTo().getZ() && event.getFrom().getX() != event.getTo().getX()) {
         event.setCancelled(true);
         return;
       }
@@ -252,10 +251,11 @@ public class ArenaEvents implements Listener {
         e.setCancelled(true);
         break;
       case FALL:
-        if(arena.getBase(victim).isDamageCooldown()) {
-          e.setCancelled(true);
-          break;
-        }
+        if(arena.getBase(victim) != null)
+          if(arena.getBase(victim).isDamageCooldown()) {
+            e.setCancelled(true);
+            break;
+          }
         if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
           if(e.getDamage() >= victim.getHealth()) {
             //kill the player for suicidal death, else do not
@@ -365,7 +365,7 @@ public class ArenaEvents implements Listener {
     }
     arena.addHits(victim, attacker);
 
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50,1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
 
     if(victim.getHealth() - e.getDamage() < 0) {
       return;
