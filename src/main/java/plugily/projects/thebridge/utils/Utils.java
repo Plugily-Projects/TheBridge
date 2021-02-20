@@ -140,26 +140,6 @@ public class Utils {
     return false;
   }
 
-  @SuppressWarnings("deprecation")
-  public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
-    if(Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
-      return CompletableFuture.supplyAsync(() -> {
-        meta.setPlayerProfile(player.getPlayerProfile());
-        return meta;
-      }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
-        return meta;
-      }).join();
-    }
-
-    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_12_R1)) {
-      meta.setOwningPlayer(player);
-    } else {
-      meta.setOwner(player.getName());
-    }
-    return meta;
-  }
-
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),

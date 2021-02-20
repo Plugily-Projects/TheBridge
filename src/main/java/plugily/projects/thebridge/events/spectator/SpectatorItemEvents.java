@@ -98,7 +98,7 @@ public class SpectatorItemEvents implements Listener {
       if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta = Utils.setPlayerHead(player, meta);
+        meta = VersionUtils.setPlayerHead(player, meta);
         meta.setDisplayName(player.getName());
         meta.setLore(Collections.singletonList(ArenaRegistry.getArena(player).getBase(player).getFormattedColor()));
         NMS.setDurability(skull, (short) SkullType.PLAYER.ordinal());
