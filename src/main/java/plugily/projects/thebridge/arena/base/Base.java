@@ -81,6 +81,31 @@ public class Base {
     return color;
   }
 
+  public String getMaterialColor() {
+    switch(color.toLowerCase()) {
+      case "dark_blue":
+      case "dark_aqua":
+      case "aqua":
+        return "blue";
+      case "blue":
+        return "light_blue";
+      case  "dark_green":
+        return "green";
+      case "green":
+        return "lime";
+      case "dark_red":
+        return "red";
+      case "dark_purple":
+        return "purple";
+      case "dark_gray":
+        return "gray";
+      case "light_purple":
+        return "magenta";
+        //not used? BROWN, PINK, ORANGE
+    }
+    return color;
+  }
+
   public String getFormattedColor() {
     return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("Bases.Colors." + getColor()) + "&r");
   }

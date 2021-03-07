@@ -70,7 +70,7 @@ public class BaseMenuHandler implements Listener {
     int x = 0;
     int y = 0;
     for(Base base : arena.getBases()) {
-      ItemStack itemStack = XMaterial.matchXMaterial(base.getColor().toUpperCase() + "_WOOL").get().parseItem();
+      ItemStack itemStack = XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL").get().parseItem();
       itemStack.setAmount(base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
       if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
