@@ -9,6 +9,7 @@
 * Fixed POINTS mode wins/loses stats
 * Fixed NPE on fall damage before a player is on any base
 * Fixed block dropping on breaking
+* Changed own portal jump to kill players who stuck on own portal
 
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

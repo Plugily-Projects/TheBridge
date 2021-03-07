@@ -57,12 +57,14 @@ import plugily.projects.thebridge.handlers.items.SpecialItem;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 import plugily.projects.thebridge.user.User;
+import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Tigerpanzer_02
@@ -203,6 +205,7 @@ public class ArenaEvents implements Listener {
     // Player dies 5 blocks out of arena instead of void
     if(!arena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
       player.damage(100);
+      Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 5 blocks outside arena location");
       return;
     }
     if(cooldownPortal.containsKey(player)) {
@@ -212,6 +215,15 @@ public class ArenaEvents implements Listener {
     if(arena.getBase(player).getPortalCuboid().isIn(player)) {
       cooldownPortal.put(player, System.currentTimeMillis());
       player.sendMessage(chatManager.colorMessage("In-Game.Messages.Portal.Own", player));
+      //prevent players being stuck on portal location
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if(player != null) {
+          if(arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 1)){
+            player.damage(100);
+            Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 3 seconds on own portal (seems to stuck)");
+          }
+        }
+      }, 20 * 3 /* 3 seconds as cooldown to prevent instant respawning */);
       return;
     }
     for(Base base : arena.getBases()) {
