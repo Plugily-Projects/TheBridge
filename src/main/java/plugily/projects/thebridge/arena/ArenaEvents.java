@@ -45,6 +45,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
@@ -107,10 +108,12 @@ public class ArenaEvents implements Listener {
     }
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
+      // Does not work?
       event.getBlock().getDrops().clear();
-    } else {
-      event.setCancelled(true);
+      // Alternative
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
     }
+    event.setCancelled(true);
   }
 
   @EventHandler
