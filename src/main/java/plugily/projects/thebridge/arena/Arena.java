@@ -296,7 +296,7 @@ public class Arena extends BukkitRunnable {
             }
           }
           if(mode == Mode.HEARTS) {
-            if(out >= bases.size() - 1) {
+            if(out >= bases.size() - 1 - ArenaUtils.emptyBases(this)) {
               for(Player player : getPlayers()) {
                 if(!isDeathPlayer(player)) {
                   VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), "", 5, 40, 5);

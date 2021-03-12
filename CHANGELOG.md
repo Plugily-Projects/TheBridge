@@ -11,6 +11,7 @@
 * Fixed block dropping on breaking
 * Changed own portal jump to kill players who stuck on own portal
 * Fixed material could not fetch colors on some types of color
+* Fixed winner check on Heart mode games with empty bases
   
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

@@ -168,6 +168,11 @@ public class Base {
     return alivePlayers;
   }
 
+  public Integer getAlivePlayersSize() {
+    return getAlivePlayers().size();
+  }
+
+
   public Integer getPlayersSize() {
     return players.size();
   }

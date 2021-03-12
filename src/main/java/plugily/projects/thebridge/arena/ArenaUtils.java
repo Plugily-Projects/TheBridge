@@ -37,8 +37,12 @@ import plugily.projects.thebridge.utils.NMS;
 public class ArenaUtils {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static final ChatManager chatManager = plugin.getChatManager();
 
+  public static int emptyBases(Arena arena) {
+  return (int) arena.getBases().stream()
+        .filter(base -> base.getPlayersSize() == 0)
+        .count();
+  }
 
   public static boolean areInSameArena(Player one, Player two) {
     return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
