@@ -20,7 +20,10 @@
 package plugily.projects.thebridge.commands.arguments.admin.arena;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -32,10 +35,14 @@ import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
+import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -84,7 +91,15 @@ public class ReloadArgument {
           ArenaManager.stopGame(true, arena);
           Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
         }
+        ArenaRegistry.getArenas().forEach(ArenaRegistry::unregisterArena);
+        for(ArmorStand armorStand : HologramManager.getArmorStands()) {
+          armorStand.remove();
+          armorStand.setCustomNameVisible(false);
+        }
+        registry.getPlugin().getSignManager().updateSigns();
         ArenaRegistry.registerArenas();
+        registry.getPlugin().getSignManager().loadSigns();
+        registry.getPlugin().getSignManager().updateSigns();
         sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
         Debugger.debug(Level.INFO, "[Reloader] Finished reloading took {0}ms", System.currentTimeMillis() - start);
       }
