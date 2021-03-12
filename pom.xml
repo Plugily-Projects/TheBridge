@@ -25,7 +25,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>thebridge</artifactId>
-    <version>1.0.6-b</version>
+    <version>1.0.7</version>
     <name>TheBridge</name>
 
     <properties>
@@ -43,16 +43,16 @@
 
     <repositories>
         <repository>
+            <id>plugily-repo</id>
+            <url>https://maven.plugily.xyz/</url>
+        </repository>
+        <repository>
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
             <id>papi-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>plajerlair-repo</id>
-            <url>https://maven.plugily.xyz/</url>
         </repository>
         <!-- repository is dead, contents moved to maven.plajer.xyz
          <repository>
@@ -90,19 +90,19 @@
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -271,16 +271,15 @@
             </extension>
         </extensions>
     </build>
-
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://46.249.204.191</url>
+            <url>ftp://81.19.211.8</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
             <name>thebridge</name>
-            <url>ftp://46.249.204.191</url>
+            <url>ftp://81.19.211.8</url>
         </site>
     </distributionManagement>
 

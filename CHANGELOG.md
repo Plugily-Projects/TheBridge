@@ -1,4 +1,4 @@
-### 1.0.7 Release (18.01.2021 - XX.02.2021)
+### 1.0.7 Release (18.01.2021 - 07.03.2021)
 * Fixed tb items are not removed if inventory manager is enabled and the server is stopping
 * Fixed players not getting teleported to end location after arena leave
 * Fixed cage fall damage
@@ -10,7 +10,8 @@
 * Fixed NPE on fall damage before a player is on any base
 * Fixed block dropping on breaking
 * Changed own portal jump to kill players who stuck on own portal
-
+* Fixed material could not fetch colors on some types of color
+  
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough
 * Fixed joining through a sign while hotbar slot for leave-item is active
