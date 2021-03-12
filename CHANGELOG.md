@@ -1,4 +1,4 @@
-### 1.0.7 Release (18.01.2021 - 07.03.2021)
+### 1.0.7 Release (18.01.2021 - 12.03.2021)
 * Added Legacy Version support
 * Fixed tb items are not removed if inventory manager is enabled and the server is stopping
 * Fixed players not getting teleported to end location after arena leave
