@@ -31,6 +31,7 @@ import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
@@ -233,6 +234,7 @@ public class Main extends JavaPlugin {
     cuboidSelector = new CuboidSelector(this);
 
     new EventsInitializer().initialize(this);
+    MiscUtils.sendStartUpMessage(this, "TheBridge", getDescription(),true, true);
   }
 
   private void registerSoftDependenciesAndServices() {
