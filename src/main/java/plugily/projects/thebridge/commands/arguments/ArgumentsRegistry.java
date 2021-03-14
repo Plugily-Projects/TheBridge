@@ -36,6 +36,7 @@ import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.commands.arguments.admin.ListArenasArgument;
 import plugily.projects.thebridge.commands.arguments.admin.LocationWandArgument;
 import plugily.projects.thebridge.commands.arguments.admin.SpectateArgument;
+import plugily.projects.thebridge.commands.arguments.admin.TeleportArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.thebridge.commands.arguments.admin.arena.ReloadArgument;
@@ -111,6 +112,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LocationWandArgument(this);
     new AddLevelArgument(this);
     new SetLevelArgument(this);
+    new TeleportArgument(this);
   }
 
   @Override
