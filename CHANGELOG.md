@@ -1,6 +1,8 @@
-### 1.0.7 Release (18.01.2021 - 12.03.2021)
+### 1.0.7 Release (18.01.2021 - 14.03.2021)
 * Added Legacy Version support
 * Added configurable maxLifeTime value for MySQL databases  
+* Added TeleportArgument (/tba tp)
+* Added new RewardType scoreboard_remove
 * Fixed tb items are not removed if inventory manager is enabled and the server is stopping
 * Fixed players not getting teleported to end location after arena leave
 * Fixed cage fall damage
@@ -14,7 +16,6 @@
 * Changed own portal jump to kill players who stuck on own portal
 * Changed player movement on round resets now allows head rotation and jumping
 * Changed round end message ("%base_players% (%base_scored%)")
-* Added TeleportArgument (/tba tp)
 
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough

@@ -88,7 +88,7 @@ public class Reward {
 
   public enum RewardType {
     WON("won"), LOSE("lose"), KILL("kill"), POINT("point"), RESET_ROUND("resetround"),
-    END_GAME("endgame"), DEATH("death");
+    END_GAME("endgame"), DEATH("death"), SCOREBOARD_REMOVED("scoreboard_remove");
 
     private final String path;
 

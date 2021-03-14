@@ -323,7 +323,7 @@ public class Arena extends BukkitRunnable {
 
           List<Player> playersToQuit = new ArrayList<>(getPlayers());
           for(Player player : playersToQuit) {
-            plugin.getUserManager().getUser(player).removeScoreboard();
+            plugin.getUserManager().getUser(player).removeScoreboard(this);
             doBarAction(BarAction.REMOVE, player);
             ArenaUtils.resetPlayerAfterGame(player);
           }

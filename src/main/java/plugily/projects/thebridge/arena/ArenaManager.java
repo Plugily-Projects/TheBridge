@@ -261,7 +261,7 @@ public class ArenaManager {
     if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    user.removeScoreboard();
+    user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     ArenaUtils.resetPlayerAfterGame(player);
 
@@ -348,7 +348,7 @@ public class ArenaManager {
           MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
         }
       }
-      user.removeScoreboard();
+      user.removeScoreboard(arena);
       if(!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
         new BukkitRunnable() {
           int i = 0;

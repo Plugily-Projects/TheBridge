@@ -37,6 +37,7 @@ import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
+import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class ScoreboardManager {
       if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
+        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED);
         return;
       }
     }

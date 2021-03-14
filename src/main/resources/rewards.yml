@@ -48,3 +48,6 @@ rewards:
     - You scored ;)
   resetround:
     - Round gets reset!
+  #Helpful for servers that are using more than one scoreboard!
+  scoreboard_remove:
+    - p:sb on
