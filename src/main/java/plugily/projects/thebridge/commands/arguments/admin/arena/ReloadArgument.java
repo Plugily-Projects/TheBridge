@@ -90,8 +90,8 @@ public class ReloadArgument {
           }
           ArenaManager.stopGame(true, arena);
           Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
+          ArenaRegistry.unregisterArena(arena);
         }
-        ArenaRegistry.getArenas().forEach(ArenaRegistry::unregisterArena);
         for(ArmorStand armorStand : HologramManager.getArmorStands()) {
           armorStand.remove();
           armorStand.setCustomNameVisible(false);
