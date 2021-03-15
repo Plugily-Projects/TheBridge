@@ -37,6 +37,7 @@ import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaEvents;
 import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.ChatEvents;
@@ -190,6 +191,9 @@ public class Main extends JavaPlugin {
       }
       arena.teleportAllToEndLocation();
       arena.cleanUpArena();
+      arena.getBases().forEach(Base::reset);
+      arena.resetPlacedBlocks();
+      arena.resetHits();
     }
     Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);
   }

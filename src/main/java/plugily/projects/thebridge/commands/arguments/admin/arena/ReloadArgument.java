@@ -37,7 +37,9 @@ import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -84,7 +86,10 @@ public class ReloadArgument {
             }
             ArenaManager.stopGame(true, arena);
             Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
-            ArenaRegistry.unregisterArena(arena);
+          }
+          if(!ArenaRegistry.getArenas().isEmpty()) {
+            ArenaRegistry.getArenas().forEach(Arena::cleanUpArena);
+            new ArrayList<>(ArenaRegistry.getArenas()).forEach(ArenaRegistry::unregisterArena);
           }
         }
         if(HologramManager.getArmorStands().size() == 0) {
@@ -96,6 +101,7 @@ public class ReloadArgument {
             armorStand.setCustomNameVisible(false);
             removed++;
           }
+          HologramManager.getArmorStands().clear();
           Debugger.debug(Level.INFO, "[Reloader] Removed {0} Armorstand", removed);
         }
         Debugger.debug(Level.INFO, "[Reloader] Updating old arena signs");

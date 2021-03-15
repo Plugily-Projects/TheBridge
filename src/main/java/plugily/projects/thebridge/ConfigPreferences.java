@@ -68,7 +68,7 @@ public class ConfigPreferences {
     BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
     DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true),
     DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false),
-    DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true);
+    DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true), DISABLE_FOOD_LOSE("Disable-Food-Lose", true);
 
     private final String path;
     private final boolean def;

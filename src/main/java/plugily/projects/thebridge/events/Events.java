@@ -102,8 +102,8 @@ public class Events implements Listener {
       return;
     }
     if(command.equalsIgnoreCase("tb") || command.equalsIgnoreCase("thebridge")
-      || event.getMessage().contains("thebridgeadmin") || event.getMessage().contains("leave")
-      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("tba")) {
+        || event.getMessage().contains("thebridgeadmin") || event.getMessage().contains("leave")
+        || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("tba")) {
       return;
     }
     event.setCancelled(true);
@@ -161,6 +161,10 @@ public class Events implements Listener {
     Arena arena = ArenaRegistry.getArena(player);
     if(arena == null) {
       return;
+    }
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FOOD_LOSE)) {
+      event.setCancelled(true);
+      event.setFoodLevel(20);
     }
     if(VersionUtils.getItemInHand(player).getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
       event.setFoodLevel(20);

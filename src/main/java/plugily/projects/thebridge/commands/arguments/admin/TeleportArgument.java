@@ -62,6 +62,7 @@ public class TeleportArgument {
         for(Arena arena : ArenaRegistry.getArenas()) {
           if(arena.getId().equalsIgnoreCase(args[1])) {
             teleport(player, arena, LocationType.valueOf(args[2].toUpperCase()));
+            break;
           }
         }
       }

@@ -84,6 +84,9 @@ Disable-Separate-Chat: false
 #Disable Party features of external party plugins (such as PAF, Parties ...)
 Disable-Parties: true
 
+#Disable Food lose
+Disable-Food-Lose: true
+
 # Should we fire some cool fireworks at location of every player after the game ends?
 Firework-When-Game-Ends: true
 
@@ -108,6 +111,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 2
+Version: 3
 
 # No way! You've reached the end! But... where's the dragon!?

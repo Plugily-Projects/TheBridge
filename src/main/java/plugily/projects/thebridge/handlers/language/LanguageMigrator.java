@@ -36,7 +36,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 2;
+  public static final int CONFIG_FILE_VERSION = 3;
   public static final int LANGUAGE_FILE_VERSION = 3;
   private final Main plugin;
 
@@ -89,6 +89,11 @@ public class LanguageMigrator {
             "#    it - Lingua italiana           ru - Русский язык\r\n" +
             "#    nl - Dutch\r\n" +
             "locale: default\r\n");
+          break;
+        case 2:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "#Disable Food lose\r\n" +
+              "Disable-Food-Lose: true\r\n");
           break;
         default:
           break;

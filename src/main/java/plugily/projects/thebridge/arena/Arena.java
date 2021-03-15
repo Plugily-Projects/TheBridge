@@ -810,6 +810,9 @@ public class Arena extends BukkitRunnable {
   void removePlayer(Player player) {
     if(player != null) {
       players.remove(player);
+      if(getBase(player) != null) {
+        getBase(player).removePlayer(player);
+      }
     }
   }
 

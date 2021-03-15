@@ -86,8 +86,6 @@ public class Base {
       case "dark_blue":
       case "dark_aqua":
       case "aqua":
-        return "blue";
-      case "blue":
         return "light_blue";
       case  "dark_green":
         return "green";
@@ -244,7 +242,7 @@ public class Base {
       return false;
     }
     if(cageBlock == Material.AIR) {
-      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper!");
+      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
       return false;
     }
     return true;
