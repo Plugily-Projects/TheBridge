@@ -20,10 +20,8 @@
 package plugily.projects.thebridge.commands.arguments.admin.arena;
 
 import org.bukkit.Bukkit;
-import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -35,14 +33,11 @@ import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -57,7 +52,7 @@ public class ReloadArgument {
 
   public ReloadArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("thebridgeadmin", new LabeledCommandArgument("reload", "thebridge.admin.reload", CommandArgument.ExecutorType.BOTH,
-      new LabelData("/tba reload", "/tba reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7thebridge.admin.reload")) {
+        new LabelData("/tba reload", "/tba reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7thebridge.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if(!confirmations.contains(sender)) {
@@ -69,35 +64,48 @@ public class ReloadArgument {
         confirmations.remove(sender);
         Debugger.debug(Level.INFO, "Initiated plugin reload by {0}", sender.getName());
         long start = System.currentTimeMillis();
-
+        if(ArenaRegistry.getArenas().size() == 0) {
+          Debugger.debug(Level.INFO, "[Reloader] There are no arenas to reload");
+        } else {
+          for(Arena arena : ArenaRegistry.getArenas()) {
+            Debugger.debug(Level.INFO, "[Reloader] Stopping {0} instance.");
+            long stopTime = System.currentTimeMillis();
+            for(Player player : arena.getPlayers()) {
+              arena.doBarAction(Arena.BarAction.REMOVE, player);
+              arena.teleportToEndLocation(player);
+              if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+                InventorySerializer.loadInventory(registry.getPlugin(), player);
+              } else {
+                player.getInventory().clear();
+                player.getInventory().setArmorContents(null);
+                player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
+                player.setWalkSpeed(0.2f);
+              }
+            }
+            ArenaManager.stopGame(true, arena);
+            Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
+            ArenaRegistry.unregisterArena(arena);
+          }
+        }
+        if(HologramManager.getArmorStands().size() == 0) {
+          Debugger.debug(Level.INFO, "[Reloader] There are no holograms to reload");
+        } else {
+          int removed = 0;
+          for(ArmorStand armorStand : HologramManager.getArmorStands()) {
+            armorStand.remove();
+            armorStand.setCustomNameVisible(false);
+            removed++;
+          }
+          Debugger.debug(Level.INFO, "[Reloader] Removed {0} Armorstand", removed);
+        }
+        Debugger.debug(Level.INFO, "[Reloader] Updating old arena signs");
+        registry.getPlugin().getSignManager().updateSigns();
+        Debugger.debug(Level.INFO, "[Reloader] Reloading plugin config and language");
         registry.getPlugin().reloadConfig();
         LanguageManager.reloadConfig();
-
-        for(Arena arena : ArenaRegistry.getArenas()) {
-          Debugger.debug(Level.INFO, "[Reloader] Stopping {0} instance.");
-          long stopTime = System.currentTimeMillis();
-          for(Player player : arena.getPlayers()) {
-            arena.doBarAction(Arena.BarAction.REMOVE, player);
-            arena.teleportToEndLocation(player);
-            if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-              InventorySerializer.loadInventory(registry.getPlugin(), player);
-            } else {
-              player.getInventory().clear();
-              player.getInventory().setArmorContents(null);
-              player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
-              player.setWalkSpeed(0.2f);
-            }
-          }
-          ArenaManager.stopGame(true, arena);
-          Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
-          ArenaRegistry.unregisterArena(arena);
-        }
-        for(ArmorStand armorStand : HologramManager.getArmorStands()) {
-          armorStand.remove();
-          armorStand.setCustomNameVisible(false);
-        }
-        registry.getPlugin().getSignManager().updateSigns();
+        Debugger.debug(Level.INFO, "[Reloader] Registering arenas");
         ArenaRegistry.registerArenas();
+        Debugger.debug(Level.INFO, "[Reloader] Updating new arena signs");
         registry.getPlugin().getSignManager().loadSigns();
         registry.getPlugin().getSignManager().updateSigns();
         sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));

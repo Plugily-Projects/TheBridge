@@ -65,6 +65,9 @@ public class RewardsFactory {
       return;
     }
     Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null) {
+      return;
+    }
     for(Reward reward : rewards) {
       if(reward.getType() == type) {
         //cannot execute if chance wasn't met
@@ -72,21 +75,19 @@ public class RewardsFactory {
           continue;
         }
         String command = reward.getExecutableCode();
-        if(player != null)
-          command = StringUtils.replace(command, "%PLAYER%", player.getName());
+        command = StringUtils.replace(command, "%PLAYER%", player.getName());
         command = formatCommandPlaceholders(command, arena);
         switch(reward.getExecutor()) {
           case CONSOLE:
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             break;
           case PLAYER:
-            if(player != null)
+            if(player.isOnline())
               player.performCommand(command);
             break;
           case SCRIPT:
             ScriptEngine engine = new ScriptEngine();
-            if(player != null)
-              engine.setValue("player", player);
+            engine.setValue("player", player);
             engine.setValue("server", Bukkit.getServer());
             engine.setValue("arena", arena);
             engine.execute(command);
