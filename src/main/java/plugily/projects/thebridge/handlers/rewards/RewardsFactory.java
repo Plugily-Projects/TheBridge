@@ -72,16 +72,16 @@ public class RewardsFactory {
           continue;
         }
         String command = reward.getExecutableCode();
-        command = StringUtils.replace(command, "%PLAYER%", player.getName());
+        if(player != null)
+          command = StringUtils.replace(command, "%PLAYER%", player.getName());
         command = formatCommandPlaceholders(command, arena);
         switch(reward.getExecutor()) {
           case CONSOLE:
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             break;
           case PLAYER:
-            if(player.isOnline()) {
+            if(player != null)
               player.performCommand(command);
-            }
             break;
           case SCRIPT:
             ScriptEngine engine = new ScriptEngine();
