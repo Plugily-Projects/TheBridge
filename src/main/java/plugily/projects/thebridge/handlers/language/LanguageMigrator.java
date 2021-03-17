@@ -37,7 +37,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 3;
-  public static final int LANGUAGE_FILE_VERSION = 3;
+  public static final int LANGUAGE_FILE_VERSION = 4;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -132,6 +132,14 @@ public class LanguageMigrator {
           MigratorUtils.insertAfterLine(file, "  Stats-Command:", "    Wins: \"&aWins: &e\"\n" +
               "    Loses: \"&aLoses: &e\"");
           break;
+        case 3:
+          MigratorUtils.addNewLines(file, "Placeholders:\r\n" +
+              "  Game-States:\r\n" +
+              "    Waiting: \"&lWaiting for players...\"\r\n" +
+              "    Starting: \"&e&lStarting\"\r\n" +
+              "    Playing: \"&lPlaying\"\r\n" +
+              "    Ending: \"&lEnding\"\r\n" +
+              "    Restarting: \"&c&lRestarting\"\r\n");
         default:
           break;
       }

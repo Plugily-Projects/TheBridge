@@ -19,6 +19,9 @@
 
 package plugily.projects.thebridge.arena;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.thebridge.Main;
+
 /**
  * @author Tigerpanzer_02, 2Wild4You
  * <p>
@@ -27,10 +30,16 @@ package plugily.projects.thebridge.arena;
 public enum ArenaState {
   WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Finishing"), RESTARTING("Restarting");
 
-  String formattedName;
+  private final String formattedName;
+  private final String placeholder;
 
   ArenaState(String formattedName) {
     this.formattedName = formattedName;
+    this.placeholder = JavaPlugin.getPlugin(Main.class).getChatManager().colorMessage("Placeholders.Game-States." + formattedName);
+  }
+
+  public String getPlaceholder() {
+    return placeholder;
   }
 
   public String getFormattedName() {

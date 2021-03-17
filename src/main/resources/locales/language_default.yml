@@ -324,6 +324,14 @@ Bases:
     UNDERLINED: "&nUNDERLINED"
     ITALIC: "&oITALIC"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    Playing: "&lPlaying"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 Validator:
   Invalid-Arena-Configuration: "[TheBridge] Arena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[TheBridge] Arena %arena% instance successfully started!"
@@ -331,4 +339,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 3
+File-Version-Do-Not-Edit: 4
