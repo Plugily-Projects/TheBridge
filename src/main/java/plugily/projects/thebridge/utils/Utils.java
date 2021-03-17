@@ -36,6 +36,7 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
@@ -73,7 +74,7 @@ public class Utils {
    * @return serialized number
    */
   public static int serializeInt(Integer i) {
-    if (i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
+    if(i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
   }
 
@@ -93,15 +94,15 @@ public class Utils {
 
       @Override
       public void run() {
-        if (!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
+        if(!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
           this.cancel();
         }
-        if (ticks >= seconds * 20) {
+        if(ticks >= seconds * 20) {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
+        VersionUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
+            .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
@@ -109,9 +110,9 @@ public class Utils {
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
-    for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-      for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-        for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
           blocks.add(location.getWorld().getBlockAt(x, y, z));
         }
       }
@@ -124,7 +125,7 @@ public class Utils {
   }
 
   public static boolean checkIsInGameInstance(Player player) {
-    if (!ArenaRegistry.isInArena(player)) {
+    if(!ArenaRegistry.isInArena(player)) {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Not-Playing", player));
       return false;
     }
@@ -132,31 +133,11 @@ public class Utils {
   }
 
   public static boolean hasPermission(CommandSender sender, String perm) {
-    if (sender.hasPermission(perm)) {
+    if(sender.hasPermission(perm)) {
       return true;
     }
     sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
     return false;
-  }
-
-  @SuppressWarnings("deprecation")
-  public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
-    if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
-      return CompletableFuture.supplyAsync(() -> {
-        meta.setPlayerProfile(player.getPlayerProfile());
-        return meta;
-      }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
-        return meta;
-      }).join();
-    }
-
-    if (ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_12_R1)) {
-      meta.setOwningPlayer(player);
-    } else {
-      meta.setOwner(player.getName());
-    }
-    return meta;
   }
 
   public static Vector rotateAroundAxisX(Vector v, double angle) {
@@ -181,13 +162,13 @@ public class Utils {
   public static String matchColorRegex(String s) {
     String regex = "&?#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})";
     Matcher matcher = Pattern.compile(regex).matcher(s);
-    while (matcher.find()) {
+    while(matcher.find()) {
       String group = matcher.group(0);
       String group2 = matcher.group(1);
 
       try {
         s = s.replace(group, net.md_5.bungee.api.ChatColor.of("#" + group2) + "");
-      } catch (Exception e) {
+      } catch(Exception e) {
         Debugger.debug("Bad hex color match: " + group);
       }
     }
@@ -199,7 +180,7 @@ public class Utils {
     List<String> matchList = new ArrayList<>();
     Pattern regex = Pattern.compile(".{1," + max + "}(?:\\s|$)", Pattern.DOTALL);
     Matcher regexMatcher = regex.matcher(string);
-    while (regexMatcher.find()) {
+    while(regexMatcher.find()) {
       matchList.add(plugin.getChatManager().colorRawMessage("&7") + regexMatcher.group());
     }
     return matchList;
@@ -221,7 +202,7 @@ public class Utils {
     try {
       Integer.parseInt(s);
       return true;
-    } catch (NumberFormatException ex) {
+    } catch(NumberFormatException ex) {
       return false;
     }
   }

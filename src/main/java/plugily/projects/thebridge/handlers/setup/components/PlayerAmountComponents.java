@@ -49,31 +49,31 @@ public class PlayerAmountComponents implements SetupComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     Arena arena = setupInventory.getArena();
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     FileConfiguration config = setupInventory.getConfig();
     Main plugin = setupInventory.getPlugin();
     pane.addItem(new GuiItem(new ItemBuilder(Material.COAL).amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("minimumplayers"))
-        .name(plugin.getChatManager().colorRawMessage("&e&lSet Minimum Players Amount"))
-        .lore(ChatColor.GRAY + "LEFT click to decrease")
-        .lore(ChatColor.GRAY + "RIGHT click to increase")
-        .lore(ChatColor.DARK_GRAY + "(how many players are needed")
-        .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".minimumplayers"))
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Minimum Players Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "(how many players are needed")
+      .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".minimumplayers"))
+      .build(), e -> {
       ItemStack itemStack = e.getInventory().getItem(e.getSlot());
-      if (itemStack == null || e.getCurrentItem() == null) {
+      if(itemStack == null || e.getCurrentItem() == null) {
         return;
       }
-      if (itemStack.getAmount() <= 1) {
+      if(itemStack.getAmount() <= 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
         itemStack.setAmount(1);
       }
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         itemStack.setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if(e.getClick().isLeftClick()) {
         itemStack.setAmount(e.getCurrentItem().getAmount() - 1);
       }
       config.set("instances." + arena.getId() + ".minimumplayers", e.getCurrentItem().getAmount());
@@ -83,24 +83,24 @@ public class PlayerAmountComponents implements SetupComponent {
     }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
-        .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumsize"))
-        .name(plugin.getChatManager().colorRawMessage("&e&lSet Maximum Players Per Base Amount"))
-        .lore(ChatColor.GRAY + "LEFT click to decrease")
-        .lore(ChatColor.GRAY + "RIGHT click to increase")
-        .lore(ChatColor.DARK_GRAY + "(how many players one base can hold)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumsize"))
-        .build(), e -> {
+      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumsize"))
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Maximum Players Per Base Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "(how many players one base can hold)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumsize"))
+      .build(), e -> {
       ItemStack itemStack = e.getInventory().getItem(e.getSlot());
-      if (itemStack == null || e.getCurrentItem() == null) {
+      if(itemStack == null || e.getCurrentItem() == null) {
         return;
       }
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if(e.getClick().isLeftClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (itemStack.getAmount() < 1) {
+      if(itemStack.getAmount() < 1) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1!"));
         itemStack.setAmount(1);
       }

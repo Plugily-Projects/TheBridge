@@ -19,10 +19,9 @@
 
 package plugily.projects.thebridge.commands.arguments.data;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.handlers.ChatManager;
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Tigerpanzer_02, 2Wild4You

@@ -21,11 +21,13 @@ package plugily.projects.thebridge.arena.base;
 
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
@@ -56,8 +58,11 @@ public class Base {
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
   private Material cageBlock;
+  private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
+
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
@@ -73,6 +78,29 @@ public class Base {
   }
 
   public String getColor() {
+    return color;
+  }
+
+  public String getMaterialColor() {
+    switch(color.toLowerCase()) {
+      case "dark_blue":
+      case "dark_aqua":
+      case "aqua":
+        return "light_blue";
+      case  "dark_green":
+        return "green";
+      case "green":
+        return "lime";
+      case "dark_red":
+        return "red";
+      case "dark_purple":
+        return "purple";
+      case "dark_gray":
+        return "gray";
+      case "light_purple":
+        return "magenta";
+        //not used? BROWN, PINK, ORANGE
+    }
     return color;
   }
 
@@ -132,6 +160,17 @@ public class Base {
     return players;
   }
 
+  public List<Player> getAlivePlayers() {
+    List<Player> alivePlayers = new ArrayList<>(getPlayers());
+    alivePlayers.removeIf(player -> plugin.getUserManager().getUser(player).isSpectator());
+    return alivePlayers;
+  }
+
+  public Integer getAlivePlayersSize() {
+    return getAlivePlayers().size();
+  }
+
+
   public Integer getPlayersSize() {
     return players.size();
   }
@@ -164,50 +203,58 @@ public class Base {
     return cageCuboid;
   }
 
-  public Material getCageBlock() {
+  public Material getCageFloorMaterial() {
     return cageBlock;
   }
 
-  public void setCageBlock(Material cageBlock) {
+  public void setCageFloorMaterial(Material cageBlock) {
     this.cageBlock = cageBlock;
   }
 
   public void setCageCuboid(Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
-    setCageBlock(cageCuboid.getCenter().getBlock().getType());
+    setCageFloorMaterial(cageCuboid.getCenter().getBlock().getType());
   }
 
-  public void removeCageBlocks() {
-    if (!checkCageBlock(cageBlock)) {
+  public void removeCageFloor() {
+    if(!checkCageFloor(cageBlock)) {
       return;
     }
     cageCuboid.fill(Material.AIR);
+    damageCooldown = true;
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      damageCooldown = false;
+    }, 20 * 4);
   }
 
-  public void addCageBlocks() {
-    if (!checkCageBlock(cageBlock)) {
+  public void addCageFloor() {
+    if(!checkCageFloor(cageBlock)) {
       return;
     }
     cageCuboid.fill(cageBlock);
   }
 
-  private boolean checkCageBlock(Material cageBlock) {
-    if (cageCuboid == null) {
+  private boolean checkCageFloor(Material cageBlock) {
+    if(cageCuboid == null) {
       return false;
     }
-    if (cageBlock == null) {
+    if(cageBlock == null) {
       return false;
     }
-    if (cageBlock == Material.AIR) {
-      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper!");
+    if(cageBlock == Material.AIR) {
+      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
       return false;
     }
     return true;
   }
 
+  public boolean isDamageCooldown() {
+    return damageCooldown;
+  }
+
   public void reset() {
     this.points = 0;
     resetPlayers();
-    addCageBlocks();
+    addCageFloor();
   }
 }

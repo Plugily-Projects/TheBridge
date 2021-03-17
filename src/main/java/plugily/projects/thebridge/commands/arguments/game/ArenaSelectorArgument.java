@@ -29,7 +29,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
@@ -64,7 +64,7 @@ public class ArenaSelectorArgument implements Listener {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (ArenaRegistry.getArenas().size() == 0) {
+        if(ArenaRegistry.getArenas().size() == 0) {
           player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
@@ -73,25 +73,25 @@ public class ArenaSelectorArgument implements Listener {
         int slot = 0;
         arenas.clear();
 
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
           arenas.put(slot, arena);
           ItemStack itemStack;
-          switch (arena.getArenaState()) {
+          switch(arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
-              itemStack = XMaterial.LIME_CONCRETE.parseItem();
+              itemStack = XMaterial.LIME_WOOL.parseItem();
               break;
             case STARTING:
-              itemStack = XMaterial.YELLOW_CONCRETE.parseItem();
+              itemStack = XMaterial.YELLOW_WOOL.parseItem();
               break;
             default:
-              itemStack = XMaterial.RED_CONCRETE.parseItem();
+              itemStack = XMaterial.RED_WOOL.parseItem();
               break;
           }
           ItemMeta itemMeta = itemStack.getItemMeta();
           itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
-          for (String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
+          for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
 
@@ -109,7 +109,7 @@ public class ArenaSelectorArgument implements Listener {
   private String formatItem(String string, Arena arena, Main plugin) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
-    if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
+    if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       formatted = StringUtils.replace(formatted, "%state%", chatManager.colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getSignManager().getGameStateToString().get(arena.getArenaState()));
@@ -122,17 +122,17 @@ public class ArenaSelectorArgument implements Listener {
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if(!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 
     Arena arena = arenas.get(e.getRawSlot());
-    if (arena != null) {
+    if(arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));

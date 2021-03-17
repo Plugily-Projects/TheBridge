@@ -42,6 +42,8 @@ Commands:
     Footer: "&l--------------------"
     Kills: "&aKills: &e"
     Deaths: "&aDeaths: &e"
+    Wins: "&aWins: &e"
+    Loses: "&aLoses: &e"
     Games-Played: "&aGames played: &e"
     Scored-Points: "&aScored points: &e"
     Level: "&aLevel: &e"
@@ -245,6 +247,9 @@ In-Game:
         - ""
         - "%summary%"
         - ""
+        - "Base members"
+        - "%base_players% (%base_scored%)"
+        - ""
         - "&a&m--------------------------------------------------"
       Summary-Base-Hearts-Win: "&7%base% survived successfully!"
       Summary-Base-Points-Win: "&7%base% got the most points!"
@@ -326,4 +331,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 2
+File-Version-Do-Not-Edit: 3

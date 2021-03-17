@@ -24,7 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import pl.plajerlair.commonsbox.minecraft.misc.ColorUtil;
@@ -44,7 +44,8 @@ public class KnightKit extends FreeKit {
 
   public KnightKit() {
     setName(getPlugin().getChatManager().colorMessage("Kits.Knight.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Knight.Description"), 40);this.setDescription(description.toArray(new String[0]));
+    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Knight.Description"), 40);
+    this.setDescription(description.toArray(new String[0]));
     KitRegistry.registerKit(this);
   }
 
@@ -57,14 +58,14 @@ public class KnightKit extends FreeKit {
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 
   @Override
@@ -75,9 +76,9 @@ public class KnightKit extends FreeKit {
   @Override
   public void reStock(Player player) {
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 }

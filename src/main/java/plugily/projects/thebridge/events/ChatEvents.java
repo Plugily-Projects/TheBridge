@@ -55,32 +55,32 @@ public class ChatEvents implements Listener {
   @EventHandler(ignoreCancelled = true)
   public void onChatIngame(AsyncPlayerChatEvent event) {
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
-        for (Arena loopArena : ArenaRegistry.getArenas()) {
-          for (Player player : loopArena.getPlayers()) {
+    if(arena == null) {
+      if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+        for(Arena loopArena : ArenaRegistry.getArenas()) {
+          for(Player player : loopArena.getPlayers()) {
             event.getRecipients().remove(player);
           }
         }
       }
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
       String eventMessage = event.getMessage();
-      for (String regexChar : regexChars) {
-        if (eventMessage.contains(regexChar)) {
+      for(String regexChar : regexChars) {
+        if(eventMessage.contains(regexChar)) {
           eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
         }
       }
       String message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+      if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
         event.setCancelled(true);
         boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
-        for (Player player : arena.getPlayers()) {
-          if (dead && arena.getPlayersLeft().contains(player)) {
+        for(Player player : arena.getPlayers()) {
+          if(dead && arena.getPlayersLeft().contains(player)) {
             continue;
           }
-          if (dead) {
+          if(dead) {
             String prefix = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Death-Format"), plugin.getUserManager().getUser(event.getPlayer()), null);
             player.sendMessage(prefix + message);
           } else {
@@ -99,20 +99,20 @@ public class ChatEvents implements Listener {
     formatted = StringUtils.replace(formatted, "%level%", String.valueOf(user.getStat(StatsStorage.StatisticType.LEVEL)));
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
-    if (user.getArena().getBase(user.getPlayer()) == null) {
+    if(user.getArena().getBase(user.getPlayer()) == null) {
       formatted = StringUtils.replace(formatted, "%base%", LanguageManager.getLanguageMessage("Scoreboard.Bases.Not-Inside"));
       formatted = StringUtils.replace(formatted, "%base_formatted%", LanguageManager.getLanguageMessage("Scoreboard.Bases.Not-Inside"));
     } else {
       formatted = StringUtils.replace(formatted, "%base%", user.getArena().getBase(user.getPlayer()).getColor());
       formatted = StringUtils.replace(formatted, "%base_formatted%", user.getArena().getBase(user.getPlayer()).getFormattedColor());
     }
-    if (user.isSpectator()) {
+    if(user.isSpectator()) {
       formatted = StringUtils.replace(formatted, "%kit%", plugin.getChatManager().colorMessage("Messages.DEAD_TAG_ON_DEATH"));
     } else {
       formatted = StringUtils.replace(formatted, "%kit%", user.getKit().getName());
     }
     formatted = plugin.getChatManager().colorRawMessage(formatted);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
     }
     return formatted;

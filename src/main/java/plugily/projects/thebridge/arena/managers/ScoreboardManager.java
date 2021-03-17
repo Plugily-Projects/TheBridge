@@ -37,6 +37,7 @@ import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
+import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 
 import java.util.ArrayList;
@@ -88,10 +89,11 @@ public class ScoreboardManager {
    * @see User
    */
   public void removeScoreboard(User user) {
-    for (Scoreboard board : scoreboards) {
-      if (board.getHolder().equals(user.getPlayer())) {
+    for(Scoreboard board : scoreboards) {
+      if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
+        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED);
         return;
       }
     }
@@ -108,27 +110,27 @@ public class ScoreboardManager {
   private List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
+    if(arena.getArenaState() == ArenaState.IN_GAME) {
       lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing");
     } else {
       //apply fix
-      if (arena.getArenaState() == ArenaState.ENDING) {
+      if(arena.getArenaState() == ArenaState.ENDING) {
         lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing");
       } else {
         lines = LanguageManager.getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName());
       }
     }
-    for (String line : lines) {
-      if (line.contains("%ONLYIFRESETBLOCKS%") && arena.getOption(ArenaOption.RESET_BLOCKS) == 0) {
+    for(String line : lines) {
+      if(line.contains("%ONLYIFRESETBLOCKS%") && arena.getOption(ArenaOption.RESET_BLOCKS) == 0) {
         continue;
       }
-      if (line.contains("%BASES%")) {
-        if (cachedBaseFormat.isEmpty()) {
-          for (Base base : arena.getBases()) {
+      if(line.contains("%BASES%")) {
+        if(cachedBaseFormat.isEmpty()) {
+          for(Base base : arena.getBases()) {
             builder.next(formatBase(LanguageManager.getLanguageMessage("Scoreboard.Bases.Format"), user, base));
           }
         } else {
-          for (String cached : cachedBaseFormat) {
+          for(String cached : cachedBaseFormat) {
             builder.next(cached);
           }
         }
@@ -156,7 +158,7 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%LOCAL_SCORED_POINTS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS)));
     formattedLine = StringUtils.replace(formattedLine, "%LOCAL_DEATHS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_DEATHS)));
     formattedLine = chatManager.colorRawMessage(formattedLine);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
     }
     return formattedLine;
@@ -170,18 +172,18 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%BASE_FORMATTED%", base.getFormattedColor());
     formattedLine = StringUtils.replace(formattedLine, "%BASE_PLAYERS%", String.valueOf(base.getPlayers().size()));
     boolean baseYou = false;
-    if (formattedLine.contains("%BASE_YOU%")) baseYou = true;
-    if (base.getPlayers().contains(user.getPlayer())) {
+    if(formattedLine.contains("%BASE_YOU%")) baseYou = true;
+    if(base.getPlayers().contains(user.getPlayer())) {
       formattedLine = StringUtils.replace(formattedLine, "%BASE_YOU%", String.valueOf(LanguageManager.getLanguageMessage("Scoreboard.Bases.Inside")));
     } else {
       formattedLine = StringUtils.replace(formattedLine, "%BASE_YOU%", "");
     }
-    if (line.contains("%FORMATTED_POINTS%")) {
+    if(line.contains("%FORMATTED_POINTS%")) {
       StringBuilder points = new StringBuilder();
       String got = LanguageManager.getLanguageMessage("Scoreboard.Mode." + arena.getMode().toString() + ".Got");
       String missing = LanguageManager.getLanguageMessage("Scoreboard.Mode." + arena.getMode().toString() + ".Missing");
-      for (int i = 0; i + 1 <= arena.getOption(ArenaOption.MODE_VALUE); i++) {
-        if (i >= base.getPoints()) {
+      for(int i = 0; i + 1 <= arena.getOption(ArenaOption.MODE_VALUE); i++) {
+        if(i >= base.getPoints()) {
           points.append(arena.getMode() == Arena.Mode.HEARTS ? got : missing);
         } else {
           points.append(arena.getMode() == Arena.Mode.HEARTS ? missing : got);
@@ -190,7 +192,7 @@ public class ScoreboardManager {
       formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_POINTS%", points.toString());
     }
     formattedLine = chatManager.colorRawMessage(formattedLine);
-    if (!baseYou)
+    if(!baseYou)
       cachedBaseFormat.add(formattedLine);
     return formattedLine;
   }

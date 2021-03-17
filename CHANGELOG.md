@@ -1,3 +1,25 @@
+### 1.0.7 Release (18.01.2021 - 15.03.2021)
+* Added Legacy Version support
+* Added configurable maxLifeTime value for MySQL databases  
+* Added TeleportArgument (/tba tp)
+* Added new RewardType scoreboard_remove
+* Added option to disable hunger completely  
+* Fixed tb items are not removed if inventory manager is enabled and the server is stopping
+* Fixed players not getting teleported to end location after arena leave
+* Fixed cage fall damage
+* Fixed 2 stats messages were not added
+* Fixed POINTS mode wins/loses stats
+* Fixed NPE on fall damage before a player is on any base
+* Fixed block dropping on breaking
+* Fixed material could not fetch colors on some types of color
+* Fixed winner check on Heart mode games with empty bases
+* Fixed reload command that does now proper unregister arenas
+* Fixed baseselector does not remove players if they leave before the game starts  
+* Fixed blocks reset on server stop
+* Changed own portal jump to kill players who stuck on own portal
+* Changed player movement on round resets now allows head rotation and jumping
+* Changed round end message ("%base_players% (%base_scored%)")
+
 ### 1.0.6 Release (13.01.2021 - 18.01.2021)
 * ArenaRegistry will set isDone to false if arena cuboid is not big enough
 * Fixed joining through a sign while hotbar slot for leave-item is active

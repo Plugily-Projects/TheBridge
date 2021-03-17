@@ -25,7 +25,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import pl.plajerlair.commonsbox.minecraft.misc.ColorUtil;
@@ -60,17 +60,17 @@ public class HealerKit extends LevelKit {
   @Override
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
     player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 2, true));
     player.getInventory().addItem(Utils.getPotion(PotionType.REGEN, 1, true));
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
 
   }
 
@@ -81,16 +81,16 @@ public class HealerKit extends LevelKit {
 
   @Override
   public void reStock(Player player) {
-    for (int i = 0; i < 2; i++) {
+    for(int i = 0; i < 2; i++) {
       player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 2, true));
     }
-    for (int i = 0; i < 2; i++) {
+    for(int i = 0; i < 2; i++) {
       player.getInventory().addItem(Utils.getPotion(PotionType.REGEN, 1, true));
     }
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 }

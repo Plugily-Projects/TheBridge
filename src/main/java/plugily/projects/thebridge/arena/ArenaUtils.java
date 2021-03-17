@@ -20,9 +20,9 @@
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.GameMode;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
@@ -37,49 +37,58 @@ import plugily.projects.thebridge.utils.NMS;
 public class ArenaUtils {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static final ChatManager chatManager = plugin.getChatManager();
 
+  public static int emptyBases(Arena arena) {
+  return (int) arena.getBases().stream()
+        .filter(base -> base.getPlayersSize() == 0)
+        .count();
+  }
 
   public static boolean areInSameArena(Player one, Player two) {
     return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
   }
 
   public static void hidePlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       NMS.hidePlayer(player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       NMS.showPlayer(player, p);
     }
   }
 
   public static void resetPlayerAfterGame(Player player) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      NMS.showPlayer(players, player);
-      NMS.showPlayer(player, players);
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
+      VersionUtils.showPlayer(plugin, player, players);
+      if(!ArenaRegistry.isInArena(players)) {
+        VersionUtils.showPlayer(plugin, players, player);
+      }
     }
-    player.setGlowing(false);
     player.setGameMode(GameMode.SURVIVAL);
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setFlying(false);
     player.setAllowFlight(false);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    VersionUtils.setMaxHealth(player, 20.0);
+    player.setHealth(VersionUtils.getHealth(player));
     player.setFireTicks(0);
     player.setFoodLevel(20);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    player.setWalkSpeed(0.2f);
+    player.setLevel(0);
+    player.setExp(0);
+    VersionUtils.setCollidable(player, true);
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
   }
 
   public static void hidePlayersOutsideTheGame(Player player, Arena arena) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (arena.getPlayers().contains(players)) {
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
+      if(arena.getPlayers().contains(players)) {
         continue;
       }
       NMS.hidePlayer(player, players);

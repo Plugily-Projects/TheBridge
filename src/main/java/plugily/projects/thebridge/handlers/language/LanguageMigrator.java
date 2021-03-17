@@ -36,8 +36,8 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 2;
-  public static final int LANGUAGE_FILE_VERSION = 2;
+  public static final int CONFIG_FILE_VERSION = 3;
+  public static final int LANGUAGE_FILE_VERSION = 3;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -49,7 +49,7 @@ public class LanguageMigrator {
   }
 
   private void configUpdate() {
-    if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
+    if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[The Bridge] System notify >> Your config file is outdated! Updating...");
@@ -58,8 +58,8 @@ public class LanguageMigrator {
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
 
-    for (int i = version; i < CONFIG_FILE_VERSION; i++) {
-      switch (i) {
+    for(int i = version; i < CONFIG_FILE_VERSION; i++) {
+      switch(i) {
         case 1:
           MigratorUtils.addNewLines(file, "\r\n" +
             "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
@@ -90,6 +90,11 @@ public class LanguageMigrator {
             "#    nl - Dutch\r\n" +
             "locale: default\r\n");
           break;
+        case 2:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "#Disable Food lose\r\n" +
+              "Disable-Food-Lose: true\r\n");
+          break;
         default:
           break;
       }
@@ -103,13 +108,13 @@ public class LanguageMigrator {
 
   private void languageFileUpdate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    if (config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+    if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[The Bridge] [System notify] Your language file is outdated! Updating...");
 
     int version = LANGUAGE_FILE_VERSION - 1;
-    if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
+    if(NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
       version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
     } else {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[The Bridge] [System notify] Failed to parse language file version!");
@@ -118,10 +123,14 @@ public class LanguageMigrator {
 
     File file = new File(plugin.getDataFolder() + "/language.yml");
 
-    for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
-      switch (version) {
+    for(int i = version; i < LANGUAGE_FILE_VERSION; i++) {
+      switch(version) {
         case 1:
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+          break;
+        case 2:
+          MigratorUtils.insertAfterLine(file, "  Stats-Command:", "    Wins: \"&aWins: &e\"\n" +
+              "    Loses: \"&aLoses: &e\"");
           break;
         default:
           break;

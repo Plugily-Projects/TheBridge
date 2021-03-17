@@ -33,7 +33,7 @@ import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -62,41 +62,41 @@ public class MiscComponents implements SetupComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     Arena arena = setupInventory.getArena();
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Main plugin = setupInventory.getPlugin();
     ItemStack bungeeItem;
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
-          .name(plugin.getChatManager().colorRawMessage("&e&lAdd Game Sign"))
-          .lore(ChatColor.GRAY + "Target a sign and click this.")
-          .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
-          .build();
+        .name(plugin.getChatManager().colorRawMessage("&e&lAdd Game Sign"))
+        .lore(ChatColor.GRAY + "Target a sign and click this.")
+        .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
+        .build();
     } else {
       bungeeItem = new ItemBuilder(Material.BARRIER)
-          .name(plugin.getChatManager().colorRawMessage("&c&lAdd Game Sign"))
-          .lore(ChatColor.GRAY + "Option disabled with Bungee Cord module.")
-          .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
-          .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
-          .build();
+        .name(plugin.getChatManager().colorRawMessage("&c&lAdd Game Sign"))
+        .lore(ChatColor.GRAY + "Option disabled with Bungee Cord module.")
+        .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
+        .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
+        .build();
     }
     pane.addItem(new GuiItem(bungeeItem, e -> {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         return;
       }
       e.getWhoClicked().closeInventory();
       Location location = player.getTargetBlock(null, 10).getLocation();
-      if (!(location.getBlock().getState() instanceof Sign)) {
+      if(!(location.getBlock().getState() instanceof Sign)) {
         player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cPlease look at sign to add as a game sign!"));
         return;
       }
-      if (location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
-          && e.getClick() != ClickType.SHIFT_LEFT) {
+      if(location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
+        && e.getClick() != ClickType.SHIFT_LEFT) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Server spawn protection is set to &6" + Bukkit.getServer().getSpawnRadius()
-            + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
+          + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&cYou can ignore this warning and add sign with Shift + Left Click, but for now &c&loperation is cancelled"));
         return;
       }
@@ -111,10 +111,10 @@ public class MiscComponents implements SetupComponent {
     }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
-        .name(plugin.getChatManager().colorRawMessage("&e&lSet Map Name"))
-        .lore(ChatColor.GRAY + "Click to set arena map name")
-        .lore("", plugin.getChatManager().colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&e&lSet Map Name"))
+      .lore(ChatColor.GRAY + "Click to set arena map name")
+      .lore("", plugin.getChatManager().colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
@@ -137,21 +137,21 @@ public class MiscComponents implements SetupComponent {
     }), 8, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_INGOT.parseItem())
-        .name(plugin.getChatManager().colorRawMessage("&6&l► Enhancements Addon ◄ &8(AD)"))
-        .lore(ChatColor.GRAY + "Enhance The Bridge gameplay with paid addon!")
-        .lore(ChatColor.GOLD + "Features of this addon:")
-        .lore(ChatColor.GOLD + "Custom Kits, Achievements, Replay Ability")
-        .lore(ChatColor.GRAY + "Click to get link for patron program!")
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&6&l► Enhancements Addon ◄ &8(AD)"))
+      .lore(ChatColor.GRAY + "Enhance The Bridge gameplay with paid addon!")
+      .lore(ChatColor.GOLD + "Features of this addon:")
+      .lore(ChatColor.GOLD + "Custom Kits, Achievements, Replay Ability")
+      .lore(ChatColor.GRAY + "Click to get link for patron program!")
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check patron program here: https://patreon.plugily.xyz/"));
     }), 7, 1);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
-        .name(plugin.getChatManager().colorRawMessage("&e&lView Setup Video"))
-        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
-        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
-        .build(), e -> {
+      .name(plugin.getChatManager().colorRawMessage("&e&lView Setup Video"))
+      .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+      .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
     }), 8, 1);

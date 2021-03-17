@@ -20,11 +20,11 @@
 package plugily.projects.thebridge.kits.premium;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
 import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
 import plugily.projects.thebridge.arena.Arena;
@@ -53,20 +53,21 @@ public class HeavyTankKit extends PremiumKit {
   public boolean isUnlockedByPlayer(Player player) {
     return player.hasPermission("thebridge.kit.heavytankkit") || PermissionsManager.gotKitsPerm(player);
   }
+
   @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.STICK), new Enchantment[] {Enchantment.DURABILITY, Enchantment.DAMAGE_ALL}, new int[] {3, 2}));
+    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.STICK), new Enchantment[]{Enchantment.DURABILITY, Enchantment.DAMAGE_ALL}, new int[]{3, 2}));
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[] {
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[] {10, 2}));
+    VersionUtils.setMaxHealth(player, 40.0);
+    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     player.setHealth(40.0);
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
 
   }
 
@@ -78,9 +79,9 @@ public class HeavyTankKit extends PremiumKit {
   @Override
   public void reStock(Player player) {
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    player.getInventory().addItem(new ItemStack(XMaterial.matchXMaterial(arena.getBase(player).getColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseMaterial(), 64));
+    addBuildBlocks(player, arena);
   }
 }

@@ -19,12 +19,11 @@
 
 package plugily.projects.thebridge.user;
 
-import plugily.projects.thebridge.Main;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
+import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.player.TBPlayerStatisticChangeEvent;
 import plugily.projects.thebridge.arena.Arena;
@@ -86,17 +85,18 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    if (!stats.containsKey(stat)) {
+    if(!stats.containsKey(stat)) {
       stats.put(stat, 0);
       return 0;
-    } else if (stats.get(stat) == null) {
+    } else if(stats.get(stat) == null) {
       return 0;
     }
     return stats.get(stat);
   }
 
-  public void removeScoreboard() {
-    player.setScoreboard(scoreboardManager.getNewScoreboard());
+  public void removeScoreboard(Arena arena) {
+    arena.getScoreboardManager().removeScoreboard(this);
+    //player.setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {

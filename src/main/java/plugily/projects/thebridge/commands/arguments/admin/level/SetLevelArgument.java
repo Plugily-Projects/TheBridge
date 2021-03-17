@@ -40,34 +40,34 @@ public class SetLevelArgument {
 
   public SetLevelArgument(ArgumentsRegistry registry) {
     registry.mapArgument("thebridgeadmin", new LabeledCommandArgument("setlevel", "thebridge.admin.setlevel",
-        CommandArgument.ExecutorType.BOTH, new LabelData("/tba setlevel &6<amount> &c[player]", "/tba setlevel <amount>",
-        "&7Set level to yourself or target player\n&7Can be used from console too\n&6Permission: &7thebridge.admin.setlevel (for yourself)\n"
-            + "&6Permission: &7thebridge.admin.setlevel.others (for others)")) {
+      CommandArgument.ExecutorType.BOTH, new LabelData("/tba setlevel &6<amount> &c[player]", "/tba setlevel <amount>",
+      "&7Set level to yourself or target player\n&7Can be used from console too\n&6Permission: &7thebridge.admin.setlevel (for yourself)\n"
+        + "&6Permission: &7thebridge.admin.setlevel.others (for others)")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type number of levels to set!");
           return;
         }
         Player target;
-        if (args.length == 2) {
+        if(args.length == 2) {
           target = (Player) sender;
         } else {
           target = Bukkit.getPlayerExact(args[2]);
         }
 
-        if (target == null) {
+        if(target == null) {
           sender.sendMessage(registry.getPlugin().getChatManager().colorMessage("Commands.Admin-Commands.Player-Not-Found"));
           return;
         }
 
-        if (Utils.isInteger(args[1])) {
+        if(Utils.isInteger(args[1])) {
           User user = registry.getPlugin().getUserManager().getUser(target);
           user.setStat(StatsStorage.StatisticType.LEVEL, Integer.parseInt(args[1]));
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Command-Executed"));
         } else {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wrong-Usage")
-              .replace("%correct%", "/tba setlevel <amount> [player]"));
+            .replace("%correct%", "/tba setlevel <amount> [player]"));
         }
       }
     });

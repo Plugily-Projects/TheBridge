@@ -19,10 +19,9 @@
 
 package plugily.projects.thebridge.utils.services.metrics;
 
-import plugily.projects.thebridge.utils.services.ServiceRegistry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.thebridge.utils.services.ServiceRegistry;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -44,10 +43,10 @@ public class MetricsService {
   private JavaPlugin plugin;
 
   public MetricsService(JavaPlugin plugin) {
-    if (ServiceRegistry.getRegisteredService() == null || !ServiceRegistry.getRegisteredService().equals(plugin)) {
+    if(ServiceRegistry.getRegisteredService() == null || !ServiceRegistry.getRegisteredService().equals(plugin)) {
       throw new IllegalArgumentException("MetricsService cannot be used without registering service via ServiceRegistry first!");
     }
-    if (!ServiceRegistry.isServiceEnabled()) {
+    if(!ServiceRegistry.isServiceEnabled()) {
       return;
     }
     this.plugin = plugin;
@@ -59,7 +58,7 @@ public class MetricsService {
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        if (!plugin.isEnabled()) {
+        if(!plugin.isEnabled()) {
           timer.cancel();
           return;
         }
@@ -84,23 +83,23 @@ public class MetricsService {
                 os.close();
                 StringBuilder content;
 
-                try (BufferedReader in = new BufferedReader(
+                try(BufferedReader in = new BufferedReader(
                   new InputStreamReader(conn.getInputStream()))) {
 
                   String line;
                   content = new StringBuilder();
 
-                  while ((line = in.readLine()) != null) {
+                  while((line = in.readLine()) != null) {
                     content.append(line);
                     content.append(System.lineSeparator());
                   }
                 }
 
                 plugin.getLogger().log(Level.FINE, "Metrics response: " + content.toString());
-              } catch (IOException ignored) {
+              } catch(IOException ignored) {
               }
             }).start();
-          } catch (IOException ignored) {/*cannot connect or there is a problem*/}
+          } catch(IOException ignored) {/*cannot connect or there is a problem*/}
         });
       }
     }, 1000 * 60 * 5, 1000 * 60 * 30);
