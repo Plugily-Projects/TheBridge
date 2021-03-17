@@ -28,7 +28,7 @@ import plugily.projects.thebridge.Main;
  * Created at 31.10.2020
  */
 public enum ArenaState {
-  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Finishing"), RESTARTING("Restarting");
+  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
 
   private final String formattedName;
   private final String placeholder;
