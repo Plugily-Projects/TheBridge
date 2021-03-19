@@ -36,7 +36,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 3;
+  public static final int CONFIG_FILE_VERSION = 4;
   public static final int LANGUAGE_FILE_VERSION = 4;
   private final Main plugin;
 
@@ -94,6 +94,17 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
               "#Disable Food lose\r\n" +
               "Disable-Food-Lose: true\r\n");
+          break;
+        case 3:
+          MigratorUtils.addNewLines(file, "\r\n" +
+              "Arena-Selector:\r\n" +
+              "  # Change items of arena selector\r\n" +
+              "  State-Item:\r\n" +
+              "    Waiting: LIME_CONCRETE\r\n" +
+              "    Starting: YELLOW_CONCRETE\r\n" +
+              "    In-Game: RED_CONCRETE\r\n" +
+              "    Ending: RED_CONCRETE\r\n" +
+              "    Restarting: RED_CONCRETE\r\n");
           break;
         default:
           break;

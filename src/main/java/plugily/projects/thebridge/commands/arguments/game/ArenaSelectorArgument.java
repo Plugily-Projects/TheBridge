@@ -30,6 +30,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
@@ -54,7 +55,7 @@ import java.util.Map;
 public class ArenaSelectorArgument implements Listener {
 
   private final ChatManager chatManager;
-  private final Map<Integer, Arena> arenas = new HashMap<>();
+  private final Map<Integer, Arena> arenaMappings = new HashMap<>();
 
   public ArenaSelectorArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.chatManager = chatManager;
@@ -68,37 +69,35 @@ public class ArenaSelectorArgument implements Listener {
           player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
-        Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
+        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
 
-        int slot = 0;
-        arenas.clear();
+        int sloti = 0;
+        arenaMappings.clear();
 
         for(Arena arena : ArenaRegistry.getArenas()) {
-          arenas.put(slot, arena);
-          ItemStack itemStack;
-          switch(arena.getArenaState()) {
-            case WAITING_FOR_PLAYERS:
-              itemStack = XMaterial.LIME_WOOL.parseItem();
-              break;
-            case STARTING:
-              itemStack = XMaterial.YELLOW_WOOL.parseItem();
-              break;
-            default:
-              itemStack = XMaterial.RED_WOOL.parseItem();
-              break;
-          }
+          arenaMappings.put(sloti, arena);
+
+          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
+
+          if(itemStack == null)
+            return;
+
           ItemMeta itemMeta = itemStack.getItemMeta();
-          itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
+          if(itemMeta == null) {
+            return;
+          }
+
+          ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
           for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
 
-          itemMeta.setLore(lore);
+          ComplementAccessor.getComplement().setLore(itemMeta, lore);
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
-          slot++;
+          sloti++;
         }
         player.openInventory(inventory);
       }
@@ -112,7 +111,7 @@ public class ArenaSelectorArgument implements Listener {
     if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       formatted = StringUtils.replace(formatted, "%state%", chatManager.colorMessage("Signs.Game-States.Full-Game"));
     } else {
-      formatted = StringUtils.replace(formatted, "%state%", plugin.getSignManager().getGameStateToString().get(arena.getArenaState()));
+      formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
     formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(arena.getPlayers().size()));
     formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(arena.getMaximumPlayers()));
@@ -122,7 +121,7 @@ public class ArenaSelectorArgument implements Listener {
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if(!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -131,7 +130,7 @@ public class ArenaSelectorArgument implements Listener {
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 
-    Arena arena = arenas.get(e.getRawSlot());
+    Arena arena = arenaMappings.get(e.getRawSlot());
     if(arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {

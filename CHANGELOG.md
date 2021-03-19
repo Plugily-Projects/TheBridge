@@ -1,3 +1,7 @@
+### 1.0.9 Release (19.03.2021)
+* Added configurable arena selector items (per state)
+* Fixed particle issues on some versions
+
 ### 1.0.8 Release (17.03.2021)
 * Added customizable arena state placeholder
 
