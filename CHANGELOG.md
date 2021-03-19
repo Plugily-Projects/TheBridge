@@ -1,5 +1,6 @@
 ### 1.0.8 Release (17.03.2021)
 * Added customizable arena state placeholder
+* Added configurable arena selector items (per state)
 
 ### 1.0.7 Release (18.01.2021 - 15.03.2021)
 * Added Legacy Version support
