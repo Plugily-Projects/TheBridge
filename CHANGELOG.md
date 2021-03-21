@@ -1,3 +1,6 @@
+### 1.1.0 Release (21.03.2021)
+* Fixed per arena join perm does not work
+
 ### 1.0.9 Release (19.03.2021)
 * Added configurable arena selector items (per state)
 * Fixed particle issues on some versions
