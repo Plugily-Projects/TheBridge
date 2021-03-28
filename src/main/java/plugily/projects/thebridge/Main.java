@@ -254,7 +254,7 @@ public class Main extends JavaPlugin {
   }
 
   private void startPluginMetrics() {
-    Metrics metrics = new Metrics(this);
+    Metrics metrics = new Metrics(this, 10838);
     if(!metrics.isEnabled())
       return;
 
