@@ -1,5 +1,7 @@
-### 1.1.0 Release (21.03.2021)
+### 1.1.0 Release (21.03.2021 - 13.04.2021)
 * Fixed per arena join perm does not work
+* Fixed NPE on ArrowEvents and other version improvements
+* Fixed when arena selector GUI does not open
 
 ### 1.0.9 Release (19.03.2021)
 * Added configurable arena selector items (per state)
