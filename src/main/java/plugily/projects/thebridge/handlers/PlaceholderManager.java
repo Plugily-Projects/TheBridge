@@ -45,12 +45,12 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String getAuthor() {
-    return "Tigerpanzer_02, 2Wild4You";
+    return "Plugily Projects";
   }
 
   @Override
   public String getVersion() {
-    return "1.0.0";
+    return "1.0.1";
   }
 
   @Override
@@ -77,6 +77,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.XP));
       case "exp_to_next_level":
         return String.valueOf(Math.ceil(Math.pow(50 * StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL), 1.5)));
+      case "arena_players_online":
+        return Integer.toString(ArenaRegistry.getArenaPlayersOnline());
       default:
         return handleArenaPlaceholderRequest(id);
     }
