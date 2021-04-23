@@ -2,6 +2,7 @@
 * Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online
+* Added possibility to define baseSize on join commands
 
 ### 1.1.0 Release (21.03.2021 - 13.04.2021)
 * Fixed per arena join perm does not work

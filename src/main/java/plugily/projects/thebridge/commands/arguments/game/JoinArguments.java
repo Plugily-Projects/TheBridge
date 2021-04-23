@@ -29,7 +29,9 @@ import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
+import plugily.projects.thebridge.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +56,35 @@ public class JoinArguments {
           return;
         }
         if(args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
+          List<Arena> arenaList = new ArrayList<>();
           Map<Arena, Integer> arenas = new HashMap<>();
           for(Arena arena : ArenaRegistry.getArenas()) {
             arenas.put(arena, arena.getPlayers().size());
           }
+          if(args.length == 2) {
+            if(!Utils.isInteger(args[1])) {
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wrong-Usage")
+                  .replace("%correct%", "/tb randomjoin <teamSize>"));
+              return;
+            }
+            arenas.clear();
+            for(Arena arena : ArenaRegistry.getArenas()) {
+              if(arena.getBases().get(0).getMaximumSize() == Integer.parseInt(args[1])) {
+                arenas.put(arena, arena.getPlayers().size());
+                arenaList.add(arena);
+              }
+            }
+          }
+          if(arenas.isEmpty()) {
+            ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
+            return;
+          }
           if(ArenaRegistry.getArenaPlayersOnline() == 0) {
+            if(!arenaList.isEmpty()) {
+              Arena arena = arenaList.get(ThreadLocalRandom.current().nextInt(arenaList.size()));
+              ArenaManager.joinAttempt((Player) sender, arena);
+              return;
+            }
             ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
             return;
           }
@@ -84,24 +110,45 @@ public class JoinArguments {
       registry.mapArgument("thebridge", new CommandArgument("randomjoin", "", CommandArgument.ExecutorType.PLAYER) {
         @Override
         public void execute(CommandSender sender, String[] args) {
-          //check starting arenas -> random
-          List<Arena> arenas = ArenaRegistry.getArenas().stream().filter(arena -> arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
-          if(!arenas.isEmpty()) {
-            Arena arena = arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
-            ArenaManager.joinAttempt((Player) sender, arena);
+          if(args.length == 2) {
+            if(!Utils.isInteger(args[1])) {
+              sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wrong-Usage")
+                  .replace("%correct%", "/tb randomjoin <teamSize>"));
+              return;
+            }
+            randomJoin(Integer.parseInt(args[1]), sender, chatManager);
             return;
           }
-          //check waiting arenas -> random
-          arenas = ArenaRegistry.getArenas().stream().filter(arena -> (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-              && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
-          if(!arenas.isEmpty()) {
-            Arena arena = arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
-            ArenaManager.joinAttempt((Player) sender, arena);
-            return;
-          }
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Free-Arenas"));
+          randomJoin(0, sender, chatManager);
         }
       });
     }
   }
+
+  private void randomJoin(int teamSize, CommandSender sender, ChatManager chatManager) {
+    //check starting arenas -> random
+    List<Arena> arenas = ArenaRegistry.getArenas().stream().filter(arena -> arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
+    if(teamSize != 0) {
+      arenas = ArenaRegistry.getArenas().stream().filter(arena -> arena.getBases().get(0).getMaximumSize() == teamSize).filter(arena -> arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
+    }
+    if(!arenas.isEmpty()) {
+      Arena arena = arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
+      ArenaManager.joinAttempt((Player) sender, arena);
+      return;
+    }
+    //check waiting arenas -> random
+    arenas = ArenaRegistry.getArenas().stream().filter(arena -> (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+        && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
+    if(teamSize != 0) {
+      arenas = ArenaRegistry.getArenas().stream().filter(arena -> arena.getBases().get(0).getMaximumSize() == teamSize).filter(arena -> (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+          && arena.getPlayers().size() < arena.getMaximumPlayers()).collect(Collectors.toList());
+    }
+    if(!arenas.isEmpty()) {
+      Arena arena = arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
+      ArenaManager.joinAttempt((Player) sender, arena);
+      return;
+    }
+    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Free-Arenas"));
+  }
+
 }
