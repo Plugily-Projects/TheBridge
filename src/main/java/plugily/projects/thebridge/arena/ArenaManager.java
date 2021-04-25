@@ -39,6 +39,7 @@ import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.game.TBGameJoinAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameLeaveAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStopEvent;
+import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
@@ -51,6 +52,7 @@ import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.NMS;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Tigerpanzer_02
@@ -97,6 +99,9 @@ public class ArenaManager {
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader().equals(player)) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          //who knows what api plugins do?
+          Base base = arena.getBases().get(ThreadLocalRandom.current().nextInt(arena.getBases().size()));
+          base.addPlayer(player);
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
@@ -113,6 +118,12 @@ public class ArenaManager {
         } else {
           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           return;
+        }
+      }
+      Player partyLeader = party.getLeader();
+      if(arena.getPlayers().contains(partyLeader)) {
+        if(arena.inBase(partyLeader)) {
+          arena.getBase(partyLeader).addPlayer(player);
         }
       }
     }
