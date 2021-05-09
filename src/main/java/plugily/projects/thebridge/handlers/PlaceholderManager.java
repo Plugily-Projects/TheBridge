@@ -79,6 +79,11 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return String.valueOf(Math.ceil(Math.pow(50 * StatsStorage.getUserStats(player, StatsStorage.StatisticType.LEVEL), 1.5)));
       case "arena_players_online":
         return Integer.toString(ArenaRegistry.getArenaPlayersOnline());
+      case "base_color":
+        if(ArenaRegistry.getArena(player) == null || ArenaRegistry.getArena(player).getBase(player) == null) {
+          return "";
+        }
+        return ArenaRegistry.getArena(player).getBase(player).getFormattedColor();
       default:
         return handleArenaPlaceholderRequest(id);
     }

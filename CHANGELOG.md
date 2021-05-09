@@ -6,6 +6,7 @@
 * Added party players will now be on the same base team as the leader as long as there is enough size on the base
 * Added new RewardType scoreboard_add 
 * Changed You can now move if the base got a cage while round reset
+* Added new placeholder base_color
 
 ### 1.1.0 Release (21.03.2021 - 13.04.2021)
 * Fixed per arena join perm does not work
