@@ -4,6 +4,7 @@
 * Added placeholder arena_players_online
 * Added possibility to define baseSize on join commands
 * Added party players will now be on the same base team as the leader as long as there is enough size on the base
+* Added new RewardType scoreboard_add 
 
 ### 1.1.0 Release (21.03.2021 - 13.04.2021)
 * Fixed per arena join perm does not work
