@@ -98,18 +98,10 @@ public class BaseMenuHandler implements Listener {
         if(event.isCancelled()) {
           return;
         }
-        if(base.getPlayers().contains(player)) {
-          player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Member"));
+        if(!base.addPlayer(player)) {
           return;
         }
-        if(base.getPlayers().size() >= base.getMaximumSize()) {
-          player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Full"));
-          return;
-        }
-        if(arena.inBase(player)) {
-          arena.getBase(player).removePlayer(player);
-        }
-        base.addPlayer(player);
+
         player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Base-Choose").replace("%base%", base.getFormattedColor()));
         e.getWhoClicked().closeInventory();
       }), x, y);

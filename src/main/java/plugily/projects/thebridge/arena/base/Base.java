@@ -28,6 +28,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
 import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.ArenaRegistry;
+import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
@@ -140,8 +142,20 @@ public class Base {
     return portalCuboid;
   }
 
-  public void addPlayer(Player player) {
+  public boolean addPlayer(Player player) {
+    if(players.contains(player)) {
+      player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Member"));
+      return false;
+    }
+    if(players.size() >= maximumSize) {
+      player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Full"));
+      return false;
+    }
+    if(ArenaRegistry.getArena(player).inBase(player)) {
+      ArenaRegistry.getArena(player).getBase(player).removePlayer(player);
+    }
     this.players.add(player);
+    return true;
   }
 
   public void removePlayer(Player player) {
