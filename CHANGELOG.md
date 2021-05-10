@@ -1,12 +1,12 @@
-### 1.1.1 Release (23.04.2021 - XX.XX.2021)
-* Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
+### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online
 * Added possibility to define baseSize on join commands
 * Added party players will now be on the same base team as the leader as long as there is enough size on the base
-* Added new RewardType scoreboard_add 
-* Changed You can now move if the base got a cage while round reset
+* Added new RewardType scoreboard_add
 * Added new placeholder base_color
+* Changed You can now move if the base got a cage while round reset
+* Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
 
 ### 1.1.0 Release (21.03.2021 - 13.04.2021)
 * Fixed per arena join perm does not work
