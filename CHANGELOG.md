@@ -1,6 +1,7 @@
 ### 1.1.2 Release (18.05.2021 - XX.XX.2021)
 * Fixed NPE on disable - Do not attempt to teleport players twice
 * Fixed Players are not always teleported to lobby location after falling into void
+* Fixed NPE (Cannot invoke) if no cage on base
 
 ### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
