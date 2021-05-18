@@ -189,7 +189,6 @@ public class Main extends JavaPlugin {
           InventorySerializer.loadInventory(this, player);
         }
       }
-      arena.teleportAllToEndLocation();
       arena.cleanUpArena();
       arena.getBases().forEach(Base::reset);
       arena.resetPlacedBlocks();
