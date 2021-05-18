@@ -284,13 +284,16 @@ public class ArenaEvents implements Listener {
         }
         break;
       case VOID:
-        //kill the player and move to the spawn point
-        victim.damage(1000.0);
+        //only move to lobby spawn without damage
         if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
           victim.teleport(arena.getLobbyLocation());
+          e.setCancelled(true);
         }
-        if(arena.getBase(victim) != null)
+        //kill the player and move to the spawn point
+        if(arena.getBase(victim) != null) {
+          victim.damage(1000.0);
           victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
+        }
         break;
       default:
         break;
