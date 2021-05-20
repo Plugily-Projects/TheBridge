@@ -664,6 +664,7 @@ public class Arena extends BukkitRunnable {
       player.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Reset"));
       player.setHealth(VersionUtils.getHealth(player));
       player.getInventory().clear();
+      player.setFireTicks(0);
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       player.updateInventory();
       plugin.getUserManager().addExperience(player, 2);
