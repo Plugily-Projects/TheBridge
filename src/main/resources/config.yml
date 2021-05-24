@@ -37,6 +37,16 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
 InventoryManager: true
 
+# Enable No Weather option to disable rain/storm in game per worlds.
+NoWeather: true
+
+# Name of the worlds enabled the No Weather option.
+# This will be ignored if NoWeather is set to false.
+NoWeather-Worlds:
+  - world
+  - world_nether
+  - world_the_end
+
 # Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/thebridge/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "thebridge.fullgames"
