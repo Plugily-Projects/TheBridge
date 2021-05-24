@@ -40,6 +40,7 @@ import plugily.projects.thebridge.api.events.game.TBGameJoinAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameLeaveAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStopEvent;
 import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
@@ -51,6 +52,7 @@ import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.NMS;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -275,8 +277,9 @@ public class ArenaManager {
     user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     ArenaUtils.resetPlayerAfterGame(player);
-
-    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING &&
+        (arena.getPlayers().size() <= 1 || (arena.getPlayers().size() <= arena.getOption(ArenaOption.SIZE)
+            && arena.getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get().getAlivePlayersSize() == arena.getPlayers().size()))) {
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(0);
     }
