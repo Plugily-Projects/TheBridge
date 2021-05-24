@@ -40,10 +40,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
@@ -52,6 +54,8 @@ import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.utils.Utils;
+
+import java.util.Objects;
 
 /**
  * @author Tigerpanzer_02
@@ -239,9 +243,8 @@ public class Events implements Listener {
 
   @EventHandler
   public void onCraft(PlayerInteractEvent event) {
-    if(!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
-    }
+    if(!ArenaRegistry.isInArena(event.getPlayer())) return;
+
     if(event.getPlayer().getTargetBlock(null, 7).getType() == XMaterial.CRAFTING_TABLE.parseMaterial()) {
       event.setCancelled(true);
     }
@@ -249,11 +252,22 @@ public class Events implements Listener {
 
   @EventHandler
   public void onPlayerTeleport(PlayerTeleportEvent event) {
-    if(!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
-    }
+    if(!ArenaRegistry.isInArena(event.getPlayer())) return;
+
     if(event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
       event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void WeatherChangeEvent(WeatherChangeEvent event) {
+    if (!event.toWeatherState()) return;
+    if (!(Objects.equals(ConfigUtils.getConfig(plugin, "config").getString("NoWeather"), "true"))) return;
+
+    if (ConfigUtils.getConfig(plugin, "config").getStringList("NoWeather-Worlds").contains(event.getWorld().getName())) {
+      event.setCancelled(true);
+      event.getWorld().setWeatherDuration(0);
+      event.getWorld().setThundering(false);
     }
   }
 }
