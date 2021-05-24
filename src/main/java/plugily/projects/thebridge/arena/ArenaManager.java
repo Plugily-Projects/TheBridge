@@ -95,15 +95,14 @@ public class ArenaManager {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
-
+    Base partyBase = null;
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader().equals(player)) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           //who knows what api plugins do?
-          Base base = arena.getBases().get(ThreadLocalRandom.current().nextInt(arena.getBases().size()));
-          base.addPlayer(player);
+          partyBase = arena.getBases().get(ThreadLocalRandom.current().nextInt(arena.getBases().size()));
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
@@ -125,7 +124,7 @@ public class ArenaManager {
       Player partyLeader = party.getLeader();
       if(arena.getPlayers().contains(partyLeader)) {
         if(arena.inBase(partyLeader)) {
-          arena.getBase(partyLeader).addPlayer(player);
+          partyBase = arena.getBase(partyLeader);
         }
       }
     }
@@ -169,6 +168,7 @@ public class ArenaManager {
     }
 
     arena.addPlayer(player);
+    partyBase.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
     player.setHealth(VersionUtils.getHealth(player));
