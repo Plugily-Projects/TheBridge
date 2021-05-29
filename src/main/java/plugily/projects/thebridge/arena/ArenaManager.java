@@ -168,7 +168,9 @@ public class ArenaManager {
     }
 
     arena.addPlayer(player);
-    partyBase.addPlayer(player);
+    if(partyBase != null) {
+      partyBase.addPlayer(player);
+    }
     player.setLevel(0);
     player.setExp(1);
     player.setHealth(VersionUtils.getHealth(player));

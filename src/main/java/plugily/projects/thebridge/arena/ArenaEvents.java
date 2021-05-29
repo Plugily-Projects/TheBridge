@@ -193,7 +193,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
-      if(arena.getBase(event.getPlayer()).getCageCuboid() == null) {
+      if(arena.getBase(event.getPlayer()).getCageCuboid() != null) {
         return;
       }
       if(event.getFrom().getZ() != event.getTo().getZ() && event.getFrom().getX() != event.getTo().getX()) {
