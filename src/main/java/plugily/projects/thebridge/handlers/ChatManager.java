@@ -37,19 +37,19 @@ import plugily.projects.thebridge.utils.Utils;
  */
 public class ChatManager {
 
-  private final String PLUGIN_PREFIX;
+  private final String pluginPrefix;
   private final Main plugin;
 
   public ChatManager(Main plugin) {
     this.plugin = plugin;
-    PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
+    pluginPrefix = colorMessage("In-Game.Plugin-Prefix");
   }
 
   /**
    * @return game prefix
    */
   public String getPrefix() {
-    return PLUGIN_PREFIX;
+    return pluginPrefix;
   }
 
   public String colorMessage(String message) {
@@ -77,8 +77,10 @@ public class ChatManager {
   }
 
   public void broadcast(Arena arena, String message) {
-    for(Player p : arena.getPlayers()) {
-      p.sendMessage(PLUGIN_PREFIX + message);
+    if(message != null && !message.isEmpty()) {
+      for(Player player : arena.getPlayers()) {
+        player.sendMessage(pluginPrefix + message);
+      }
     }
   }
 
@@ -110,24 +112,22 @@ public class ChatManager {
     return returnString;
   }
 
-  public void broadcastAction(Arena a, Player p, ActionType action) {
-    String message;
+  public void broadcastAction(Arena arena, Player player, ActionType action) {
+    String path;
     switch(action) {
       case JOIN:
-        message = formatMessage(a, colorMessage("In-Game.Messages.Join"), p);
+        path = "In-Game.Messages.Join";
         break;
       case LEAVE:
-        message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
+        path = "In-Game.Messages.Leave";
         break;
       case DEATH:
-        message = formatMessage(a, colorMessage("In-Game.Messages.Death-Own"), p);
+        path = "In-Game.Messages.Death-Own";
         break;
       default:
         return; //likely won't ever happen
     }
-    for(Player player : a.getPlayers()) {
-      player.sendMessage(PLUGIN_PREFIX + message);
-    }
+    broadcast(arena, formatMessage(arena, colorMessage(path), player));
   }
 
   public enum ActionType {

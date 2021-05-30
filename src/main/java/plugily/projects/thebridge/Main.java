@@ -276,8 +276,8 @@ public class Main extends JavaPlugin {
       }
       if(result.getNewestVersion().contains("b")) {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[TheBridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[TheBridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[The Bridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[The Bridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
             result.getNewestVersion()));
         }
         return;

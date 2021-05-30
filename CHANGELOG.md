@@ -5,6 +5,7 @@
 * Fixed fireticks are not removed after jumped into lava portal
 * Fixed arena does not end if there are only players in one base left
 * Fixed parties can not join to leader because it throws NPE
+* Changed empty message is no longer sent
 
 ### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players

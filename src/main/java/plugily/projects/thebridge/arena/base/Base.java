@@ -256,7 +256,7 @@ public class Base {
       return false;
     }
     if(cageBlock == Material.AIR) {
-      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
+      Debugger.sendConsoleMsg("[The Bridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
       return false;
     }
     return true;
