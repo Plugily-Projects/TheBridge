@@ -227,7 +227,6 @@ public class Main extends JavaPlugin {
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
     specialItemManager = new SpecialItemManager(this);
-    specialItemManager.registerItems();
     Kit.init(this);
     KitRegistry.init(this);
     SetupInventory.init(this);

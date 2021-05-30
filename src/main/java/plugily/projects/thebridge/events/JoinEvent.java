@@ -26,12 +26,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.PermissionsManager;
-import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.UpdateChecker;
 
 /**
@@ -72,8 +72,8 @@ public class JoinEvent implements Listener {
       if(ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      NMS.hidePlayer(player, event.getPlayer());
-      NMS.hidePlayer(event.getPlayer(), player);
+      VersionUtils.hidePlayer(plugin, player, event.getPlayer());
+      VersionUtils.hidePlayer(plugin, event.getPlayer(), player);
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back

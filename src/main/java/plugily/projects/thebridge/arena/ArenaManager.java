@@ -50,7 +50,6 @@ import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 
 import java.util.Comparator;
 import java.util.List;
@@ -200,9 +199,9 @@ public class ArenaManager {
 
       for(Player spectator : arena.getPlayers()) {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
-          NMS.hidePlayer(player, spectator);
+          VersionUtils.hidePlayer(plugin, player, spectator);
         } else {
-          NMS.showPlayer(player, spectator);
+          VersionUtils.showPlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);

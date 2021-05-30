@@ -189,11 +189,4 @@ public class SpectatorEvents implements Listener {
     }
   }
 
-  @EventHandler
-  public void onRightClick(PlayerInteractEvent event) {
-    if(ArenaRegistry.isInArena(event.getPlayer()) && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
-
 }

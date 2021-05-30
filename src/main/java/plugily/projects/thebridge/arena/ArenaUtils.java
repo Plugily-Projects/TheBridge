@@ -26,8 +26,6 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.utils.NMS;
 
 /**
  * @author Tigerpanzer_02
@@ -50,13 +48,13 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      NMS.hidePlayer(player, p);
+      VersionUtils.hidePlayer(plugin, player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      NMS.showPlayer(player, p);
+      VersionUtils.showPlayer(plugin, player, p);
     }
   }
 
@@ -91,8 +89,8 @@ public class ArenaUtils {
       if(arena.getPlayers().contains(players)) {
         continue;
       }
-      NMS.hidePlayer(player, players);
-      NMS.hidePlayer(players, player);
+      VersionUtils.hidePlayer(plugin, player, players);
+      VersionUtils.hidePlayer(plugin, players, player);
     }
   }
 

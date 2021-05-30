@@ -42,6 +42,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.thebridge.ConfigPreferences;
@@ -129,7 +130,7 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onSpecialItem(PlayerInteractEvent event) {
+  public void onSpecialItem(CBPlayerInteractEvent event) {
     if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }

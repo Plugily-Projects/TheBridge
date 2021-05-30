@@ -35,12 +35,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
-import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.Collections;
@@ -99,9 +99,9 @@ public class SpectatorItemEvents implements Listener {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = VersionUtils.setPlayerHead(player, meta);
-        meta.setDisplayName(player.getName());
+        ComplementAccessor.getComplement().setDisplayName(meta, player.getName());
         meta.setLore(Collections.singletonList(ArenaRegistry.getArena(player).getBase(player).getFormattedColor()));
-        NMS.setDurability(skull, (short) SkullType.PLAYER.ordinal());
+        VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
       }

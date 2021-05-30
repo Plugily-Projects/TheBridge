@@ -58,7 +58,6 @@ import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -322,7 +321,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      NMS.setDurability(e.getBow(), (short) 0);
+      VersionUtils.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }

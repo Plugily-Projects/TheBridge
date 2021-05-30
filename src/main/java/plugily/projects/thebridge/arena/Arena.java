@@ -49,7 +49,6 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -824,8 +823,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for(Player player : getPlayers()) {
       for(Player p : getPlayers()) {
-        NMS.showPlayer(player, p);
-        NMS.showPlayer(p, player);
+        VersionUtils.showPlayer(plugin, player, p);
+        VersionUtils.showPlayer(plugin, p, player);
       }
     }
   }

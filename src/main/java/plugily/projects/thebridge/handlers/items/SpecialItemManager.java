@@ -45,6 +45,7 @@ public class SpecialItemManager {
   public SpecialItemManager(Main plugin) {
     this.plugin = plugin;
     this.config = ConfigUtils.getConfig(plugin, "special_items");
+    registerItems();
   }
 
   public void addItem(SpecialItem item) {
