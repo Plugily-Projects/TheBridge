@@ -6,6 +6,7 @@
 * Fixed arena does not end if there are only players in one base left
 * Fixed parties can not join to leader because it throws NPE
 * Changed empty message is no longer sent
+* Fixed party (parties v3.1.0) not working anymore
 
 ### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
