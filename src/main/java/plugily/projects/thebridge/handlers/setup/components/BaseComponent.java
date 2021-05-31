@@ -19,7 +19,7 @@
 
 package plugily.projects.thebridge.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,12 +31,12 @@ import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;

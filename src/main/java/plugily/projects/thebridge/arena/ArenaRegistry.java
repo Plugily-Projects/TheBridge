@@ -24,11 +24,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 

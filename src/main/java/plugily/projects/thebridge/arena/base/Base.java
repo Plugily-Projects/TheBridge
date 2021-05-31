@@ -27,10 +27,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaUtils;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 

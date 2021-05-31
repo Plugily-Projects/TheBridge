@@ -19,7 +19,7 @@
 
 package plugily.projects.thebridge.handlers.setup;
 
-import com.github.stefvanschie.inventoryframework.Gui;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -46,9 +46,9 @@ public class SetupInventory {
   private final FileConfiguration config;
   private final Arena arena;
   private final Player player;
-  private Gui gui;
-  private Gui bases;
-  private Gui modes;
+  private ChestGui gui;
+  private ChestGui bases;
+  private ChestGui modes;
   private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
@@ -64,17 +64,17 @@ public class SetupInventory {
   }
 
   private void prepareGuis() {
-    this.gui = new Gui(plugin, 2, "The Bridge Arena Setup");
+    this.gui = new ChestGui(2, "The Bridge Arena Setup");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane gui = new StaticPane(9, 4);
     this.gui.addPane(gui);
 
-    this.bases = new Gui(plugin, 2, "The Bridge Setup > Base");
+    this.bases = new ChestGui(2, "The Bridge Setup > Base");
     this.bases.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane bases = new StaticPane(9, 4);
     this.bases.addPane(bases);
 
-    this.modes = new Gui(plugin, 2, "The Bridge Setup > Mode");
+    this.modes = new ChestGui(2, "The Bridge Setup > Mode");
     this.modes.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane modes = new StaticPane(9, 4);
     this.modes.addPane(modes);
@@ -176,7 +176,7 @@ public class SetupInventory {
     return player;
   }
 
-  public Gui getGui() {
+  public ChestGui getGui() {
     return gui;
   }
 

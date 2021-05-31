@@ -19,8 +19,9 @@
 
 package plugily.projects.thebridge.arena.base;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -64,7 +65,7 @@ public class BaseMenuHandler implements Listener {
   }
 
   public void createMenu(Player player, Arena arena) {
-    Gui gui = new Gui(plugin, Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Bases.Team.Menu-Name"));
+    ChestGui gui = new ChestGui(Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Bases.Team.Menu-Name"));
     StaticPane pane = new StaticPane(9, gui.getRows());
     gui.addPane(pane);
     int x = 0;
