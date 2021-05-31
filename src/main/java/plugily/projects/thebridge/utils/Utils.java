@@ -19,9 +19,6 @@
 
 package plugily.projects.thebridge.utils;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,12 +27,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.thebridge.Main;
@@ -44,7 +39,6 @@ import plugily.projects.thebridge.arena.ArenaState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -121,7 +115,16 @@ public class Utils {
   }
 
   public static Location getBlockCenter(Location location) {
-    return location.clone().add(0.5, 0, 0.5);
+    double x = location.getX();
+    double z = location.getZ();
+    Location center = location.clone();
+    if(x % 1 == 0) {
+      center.add(0.5, 0, 0);
+    }
+    if(z % 1 == 0) {
+      center.add(0, 0, 0.5);
+    }
+    return center;
   }
 
   public static boolean checkIsInGameInstance(Player player) {
@@ -143,9 +146,9 @@ public class Utils {
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      y = v.getY() * cos - v.getZ() * sin,
-      z = v.getY() * sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        y = v.getY() * cos - v.getZ() * sin,
+        z = v.getY() * sin + v.getZ() * cos;
     return v.setY(y).setZ(z);
   }
 
@@ -153,9 +156,9 @@ public class Utils {
     angle = -angle;
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      x = v.getX() * cos + v.getZ() * sin,
-      z = v.getX() * -sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        x = v.getX() * cos + v.getZ() * sin,
+        z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
   }
 
