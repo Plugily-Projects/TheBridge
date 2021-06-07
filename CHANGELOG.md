@@ -12,6 +12,7 @@
 * Fixed when plugins scoreboards not re-appeared after game end
 * Removed temp added scoreboard rewards
 * Added title for scored point
+* Fixed join maxplayers did not match the arena with highest player amount
 
 ### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
