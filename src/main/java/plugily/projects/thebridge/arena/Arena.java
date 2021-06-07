@@ -257,9 +257,9 @@ public class Arena extends BukkitRunnable {
         }
 
         if(resetRound > 0) {
-          String title = chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound));
-          String subtitle = chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle").replace("%seconds%", String.valueOf(resetRound));
           for(Player p : getPlayers()) {
+            String title = chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound)), p);
+            String subtitle = chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle", p).replace("%seconds%", String.valueOf(resetRound)), p);
             VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
             if(resetRound == 1) {
               p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
