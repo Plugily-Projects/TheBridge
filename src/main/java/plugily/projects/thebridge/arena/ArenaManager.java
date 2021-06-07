@@ -129,10 +129,10 @@ public class ArenaManager {
     }
 
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && !(player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
+        && !(player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+        || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-        PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+          PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
     if(arena.getArenaState() == ArenaState.RESTARTING) {
@@ -161,6 +161,9 @@ public class ArenaManager {
     }
     Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
+    user.lastBoard = player.getScoreboard();
+    //reset scoreboard
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     arena.getScoreboardManager().createScoreboard(user);
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
@@ -250,7 +253,6 @@ public class ArenaManager {
     Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
 
-    arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       if(arena.getPlayersLeft().size() - 1 > 1) {
@@ -287,7 +289,7 @@ public class ArenaManager {
 
     arena.teleportToEndLocation(player);
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);

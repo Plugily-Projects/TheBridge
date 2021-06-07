@@ -336,6 +336,7 @@ public class Arena extends BukkitRunnable {
 
           for(User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
+            user.removeScoreboard(this);
             VersionUtils.setCollidable(user.getPlayer(), true);
             user.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", user.getPlayer()));
             plugin.getUserManager().saveAllStatistic(user);
