@@ -243,6 +243,11 @@ public class ArenaEvents implements Listener {
         } else if(arena.getMode() == Arena.Mode.POINTS) {
           arena.getBase(player).addPoint();
         }
+        String title = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Title").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
+        String subtitle = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Subtitle").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
+        for(Player p : arena.getPlayers()) {
+          VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
+        }
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
         plugin.getUserManager().addStat(player, StatsStorage.StatisticType.SCORED_POINTS);
