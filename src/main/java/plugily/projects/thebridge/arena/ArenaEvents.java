@@ -246,7 +246,7 @@ public class ArenaEvents implements Listener {
         String title = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Title").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
         String subtitle = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Subtitle").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
         for(Player p : arena.getPlayers()) {
-          VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
+          VersionUtils.sendTitles(p, title, subtitle, 5, 80, 5);
         }
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
