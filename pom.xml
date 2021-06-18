@@ -25,7 +25,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>thebridge</artifactId>
-    <version>1.1.1-dev10</version>
+    <version>1.1.1-dev11</version>
     <name>TheBridge</name>
 
     <properties>
