@@ -115,7 +115,8 @@ public class SpecialItemManager {
 
   public enum SpecialItems {
     KIT_SELECTOR("Kit-Menu"), LOBBY_LEAVE_ITEM("Leave-Lobby"), PLAYERS_LIST("Player-List"),
-    SPECTATOR_OPTIONS("Spectator-Options"), SPECTATOR_LEAVE_ITEM("Leave-Spectator"), BASE_SELECTOR("Base-Selector");
+    SPECTATOR_OPTIONS("Spectator-Options"), SPECTATOR_LEAVE_ITEM("Leave-Spectator"),
+    BASE_SELECTOR("Base-Selector"), FORCESTART("Forcestart");
 
     private final String name;
 

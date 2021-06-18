@@ -51,6 +51,7 @@ import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
+import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.utils.Utils;
 
@@ -141,6 +142,11 @@ public class Events implements Listener {
     }
     String key = plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName();
     if(key == null) {
+      return;
+    }
+    if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.FORCESTART.getName())) {
+      event.setCancelled(true);
+      ArenaUtils.arenaForceStart(event.getPlayer());
       return;
     }
     if(key.equals(SpecialItemManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {

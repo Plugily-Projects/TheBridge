@@ -1,4 +1,5 @@
 ### 1.1.2 Release (18.05.2021 - XX.XX.2021)
+* Added forcestart item
 >>> b1
 * Fixed NPE on disable - Do not attempt to teleport players twice
 * Fixed Players are not always teleported to lobby location after falling into void
