@@ -42,11 +42,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -58,7 +58,6 @@ import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -184,6 +183,7 @@ public class ArenaEvents implements Listener {
   }
 
   private final HashMap<Player, Long> cooldownPortal = new HashMap<>();
+  private final HashMap<Player, Long> cooldownOutside = new HashMap<>();
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerMove(PlayerMoveEvent event) {
@@ -193,7 +193,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
-      if(!arena.getBase(event.getPlayer()).getCageCuboid().isEmpty()) {
+      if(arena.getBase(event.getPlayer()).getCageCuboid() != null) {
         return;
       }
       if(event.getFrom().getZ() != event.getTo().getZ() && event.getFrom().getX() != event.getTo().getX()) {
@@ -205,10 +205,13 @@ public class ArenaEvents implements Listener {
     if(!arena.inBase(player)) {
       return;
     }
-    // Player dies 5 blocks out of arena instead of void
     if(!arena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
+      if(cooldownOutside.containsKey(player) && cooldownOutside.get(player) <= System.currentTimeMillis() - 1500) {
+        cooldownOutside.remove(player);
+        return;
+      }
       player.damage(100);
-      Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 5 blocks outside arena location");
+      Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 5 blocks outside arena location, Location: " + player.getLocation() + "; ArenaBorder: " + arena.getArenaBorder().getMinPoint() + ";" + arena.getArenaBorder().getMaxPoint() + ";" + arena.getArenaBorder().getCenter());
       return;
     }
     if(cooldownPortal.containsKey(player)) {
@@ -221,7 +224,7 @@ public class ArenaEvents implements Listener {
       //prevent players being stuck on portal location
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         if(player != null) {
-          if(arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 1)){
+          if(arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 1)) {
             player.damage(100);
             Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 3 seconds on own portal (seems to stuck)");
           }
@@ -243,6 +246,11 @@ public class ArenaEvents implements Listener {
           base.addPoint();
         } else if(arena.getMode() == Arena.Mode.POINTS) {
           arena.getBase(player).addPoint();
+        }
+        String title = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Title").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
+        String subtitle = chatManager.colorMessage("In-Game.Messages.Portal.Scored.Subtitle").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor());
+        for(Player p : arena.getPlayers()) {
+          VersionUtils.sendTitles(p, title, subtitle, 5, 80, 5);
         }
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Portal.Opponent").replace("%player%", player.getName()).replace("%base%", arena.getBase(player).getFormattedColor()).replace("%base_jumped%", base.getFormattedColor()));
         arena.getScoreboardManager().resetBaseCache();
@@ -284,13 +292,16 @@ public class ArenaEvents implements Listener {
         }
         break;
       case VOID:
-        //kill the player and move to the spawn point
-        victim.damage(1000.0);
+        //only move to lobby spawn without damage
         if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
           victim.teleport(arena.getLobbyLocation());
+          e.setCancelled(true);
         }
-        if(arena.getBase(victim) != null)
+        //kill the player and move to the spawn point
+        if(arena.getBase(victim) != null) {
+          victim.damage(1000.0);
           victim.teleport(arena.getBase(victim).getPlayerRespawnPoint());
+        }
         break;
       default:
         break;
@@ -319,7 +330,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      NMS.setDurability(e.getBow(), (short) 0);
+      VersionUtils.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }
@@ -455,6 +466,7 @@ public class ArenaEvents implements Listener {
     if(arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
       if(arena.inBase(player) && !user.isSpectator()) {
+        cooldownOutside.put(player, System.currentTimeMillis());
         if(e.getPlayer().getLastDamageCause() != null && e.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID) {
           player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
         }
@@ -474,6 +486,16 @@ public class ArenaEvents implements Listener {
         plugin.getUserManager().addStat(player, StatsStorage.StatisticType.DEATHS);
         user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         rewardLastAttacker(arena, player);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+          if(player != null) {
+            if(!arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 5)) {
+              player.teleport(arena.getBase(player).getPlayerRespawnPoint());
+              player.getInventory().clear();
+              plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+              player.updateInventory();
+            }
+          }
+        }, 5 /* 1/4 of a second as cooldown to prevent respawn from other plugins */);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());
         player.setAllowFlight(true);

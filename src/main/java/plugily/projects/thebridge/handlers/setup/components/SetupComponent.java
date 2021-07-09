@@ -19,7 +19,7 @@
 
 package plugily.projects.thebridge.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 
 /**

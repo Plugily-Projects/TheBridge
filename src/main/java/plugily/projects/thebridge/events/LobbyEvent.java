@@ -19,12 +19,16 @@
 
 package plugily.projects.thebridge.events;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
@@ -58,5 +62,30 @@ public class LobbyEvent implements Listener {
     event.setCancelled(true);
     player.setFireTicks(0);
     player.setHealth(VersionUtils.getHealth(player));
+  }
+
+  @EventHandler
+  public void onItemFrameRotate(PlayerInteractEntityEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    if(event.getRightClicked() instanceof ItemFrame && !((ItemFrame) event.getRightClicked()).getItem().getType().equals(Material.AIR)) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onHangingBreak(HangingBreakByEntityEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    event.setCancelled(true);
   }
 }

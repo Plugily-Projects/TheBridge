@@ -28,7 +28,7 @@ import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
@@ -67,7 +67,6 @@ public class ScoreboardManager {
    * @see User
    */
   public void createScoreboard(User user) {
-    plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_ADD);
     Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
       @Override
       public String getTitle(Player player) {
@@ -94,7 +93,6 @@ public class ScoreboardManager {
       if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED);
         return;
       }
     }

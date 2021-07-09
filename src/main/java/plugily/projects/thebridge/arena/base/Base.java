@@ -26,11 +26,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 
@@ -256,7 +255,7 @@ public class Base {
       return false;
     }
     if(cageBlock == Material.AIR) {
-      Debugger.sendConsoleMsg("[TheBridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
+      Debugger.sendConsoleMsg("[The Bridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
       return false;
     }
     return true;

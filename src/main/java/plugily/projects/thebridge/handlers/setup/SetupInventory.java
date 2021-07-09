@@ -19,11 +19,11 @@
 
 package plugily.projects.thebridge.handlers.setup;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.handlers.setup.components.ArenaRegisterComponent;
@@ -46,9 +46,9 @@ public class SetupInventory {
   private final FileConfiguration config;
   private final Arena arena;
   private final Player player;
-  private Gui gui;
-  private Gui bases;
-  private Gui modes;
+  private ChestGui gui;
+  private ChestGui bases;
+  private ChestGui modes;
   private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
@@ -64,17 +64,17 @@ public class SetupInventory {
   }
 
   private void prepareGuis() {
-    this.gui = new Gui(plugin, 2, "The Bridge Arena Setup");
+    this.gui = new ChestGui(2, "The Bridge Arena Setup");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane gui = new StaticPane(9, 4);
     this.gui.addPane(gui);
 
-    this.bases = new Gui(plugin, 2, "The Bridge Setup > Base");
+    this.bases = new ChestGui(2, "The Bridge Setup > Base");
     this.bases.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane bases = new StaticPane(9, 4);
     this.bases.addPane(bases);
 
-    this.modes = new Gui(plugin, 2, "The Bridge Setup > Mode");
+    this.modes = new ChestGui(2, "The Bridge Setup > Mode");
     this.modes.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane modes = new StaticPane(9, 4);
     this.modes.addPane(modes);
@@ -121,10 +121,10 @@ public class SetupInventory {
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7LeaderHeads leaderboard plugin is supported with our plugin! Check here: https://bit.ly/2Riu5L0"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7PlaceholderApi plugin is supported with our plugin! Check here: https://wiki.plugily.xyz/thebridge/placeholders/placeholderapi"));
         break;
       case 4:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Achievements, custom kits and replay ability are things available in our paid addon for this minigame!"));
+        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Achievements, custom kits and replay ability are things available in our paid addon for this minigame! https://wiki.plugily.xyz/thebridge/addon/overview"));
         break;
       case 5:
         p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/TheBridge"));
@@ -176,7 +176,7 @@ public class SetupInventory {
     return player;
   }
 
-  public Gui getGui() {
+  public ChestGui getGui() {
     return gui;
   }
 

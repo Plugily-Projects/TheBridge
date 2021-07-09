@@ -22,6 +22,7 @@ package plugily.projects.thebridge.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -51,6 +52,7 @@ public class User {
   private Kit kit = KitRegistry.getDefaultKit();
   private boolean spectator = false;
   private boolean permanentSpectator = false;
+  public Scoreboard lastBoard;
 
   public User(Player player) {
     this.player = player;
@@ -96,7 +98,10 @@ public class User {
 
   public void removeScoreboard(Arena arena) {
     arena.getScoreboardManager().removeScoreboard(this);
-    //player.setScoreboard(scoreboardManager.getNewScoreboard());
+    if(lastBoard != null) {
+      getPlayer().setScoreboard(lastBoard);
+      lastBoard = null;
+    }
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {

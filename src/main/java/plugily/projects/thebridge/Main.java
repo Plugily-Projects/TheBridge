@@ -27,12 +27,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaEvents;
@@ -51,7 +52,6 @@ import plugily.projects.thebridge.handlers.BungeeManager;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.PlaceholderManager;
-import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.handlers.party.PartyHandler;
@@ -189,7 +189,6 @@ public class Main extends JavaPlugin {
           InventorySerializer.loadInventory(this, player);
         }
       }
-      arena.teleportAllToEndLocation();
       arena.cleanUpArena();
       arena.getBases().forEach(Base::reset);
       arena.resetPlacedBlocks();
@@ -228,7 +227,6 @@ public class Main extends JavaPlugin {
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
     specialItemManager = new SpecialItemManager(this);
-    specialItemManager.registerItems();
     Kit.init(this);
     KitRegistry.init(this);
     SetupInventory.init(this);
@@ -277,8 +275,8 @@ public class Main extends JavaPlugin {
       }
       if(result.getNewestVersion().contains("b")) {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[TheBridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[TheBridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[The Bridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[The Bridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
             result.getNewestVersion()));
         }
         return;

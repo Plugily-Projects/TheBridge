@@ -19,9 +19,10 @@
 
 package plugily.projects.thebridge.arena.base;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,9 +30,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.events.player.TBPlayerChooseBaseEvent;
 import plugily.projects.thebridge.arena.Arena;
@@ -64,7 +65,7 @@ public class BaseMenuHandler implements Listener {
   }
 
   public void createMenu(Player player, Arena arena) {
-    Gui gui = new Gui(plugin, Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Bases.Team.Menu-Name"));
+    ChestGui gui = new ChestGui(Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Bases.Team.Menu-Name"));
     StaticPane pane = new StaticPane(9, gui.getRows());
     gui.addPane(pane);
     int x = 0;

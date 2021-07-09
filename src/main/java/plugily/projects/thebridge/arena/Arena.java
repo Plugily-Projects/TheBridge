@@ -32,11 +32,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -49,7 +49,6 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -258,9 +257,9 @@ public class Arena extends BukkitRunnable {
         }
 
         if(resetRound > 0) {
-          String title = chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound));
-          String subtitle = chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle").replace("%seconds%", String.valueOf(resetRound));
           for(Player p : getPlayers()) {
+            String title = chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Blocked.Title").replace("%seconds%", String.valueOf(resetRound)), p);
+            String subtitle = chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Blocked.Subtitle", p).replace("%seconds%", String.valueOf(resetRound)), p);
             VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
             if(resetRound == 1) {
               p.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Run"));
@@ -337,6 +336,7 @@ public class Arena extends BukkitRunnable {
 
           for(User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
+            user.removeScoreboard(this);
             VersionUtils.setCollidable(user.getPlayer(), true);
             user.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", user.getPlayer()));
             plugin.getUserManager().saveAllStatistic(user);
@@ -664,6 +664,7 @@ public class Arena extends BukkitRunnable {
       player.sendMessage(chatManager.colorMessage("In-Game.Messages.Blocked.Reset"));
       player.setHealth(VersionUtils.getHealth(player));
       player.getInventory().clear();
+      player.setFireTicks(0);
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       player.updateInventory();
       plugin.getUserManager().addExperience(player, 2);
@@ -823,8 +824,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for(Player player : getPlayers()) {
       for(Player p : getPlayers()) {
-        NMS.showPlayer(player, p);
-        NMS.showPlayer(p, player);
+        VersionUtils.showPlayer(plugin, player, p);
+        VersionUtils.showPlayer(plugin, p, player);
       }
     }
   }

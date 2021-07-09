@@ -22,12 +22,11 @@ package plugily.projects.thebridge.arena;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.utils.NMS;
+import plugily.projects.thebridge.utils.Utils;
 
 /**
  * @author Tigerpanzer_02
@@ -39,7 +38,7 @@ public class ArenaUtils {
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static int emptyBases(Arena arena) {
-  return (int) arena.getBases().stream()
+    return (int) arena.getBases().stream()
         .filter(base -> base.getPlayersSize() == 0)
         .count();
   }
@@ -50,13 +49,13 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      NMS.hidePlayer(player, p);
+      VersionUtils.hidePlayer(plugin, player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      NMS.showPlayer(player, p);
+      VersionUtils.showPlayer(plugin, player, p);
     }
   }
 
@@ -91,8 +90,30 @@ public class ArenaUtils {
       if(arena.getPlayers().contains(players)) {
         continue;
       }
-      NMS.hidePlayer(player, players);
-      NMS.hidePlayer(players, player);
+      VersionUtils.hidePlayer(plugin, player, players);
+      VersionUtils.hidePlayer(plugin, players, player);
+    }
+  }
+
+  public static void arenaForceStart(Player player) {
+    if(!Utils.hasPermission(player, "thebridge.admin.forcestart")) {
+      return;
+    }
+    if(!Utils.checkIsInGameInstance(player)) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena.getPlayers().size() < 2) {
+      plugin.getChatManager().broadcast(arena, plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
+      return;
+    }
+    if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+      arena.setArenaState(ArenaState.STARTING);
+      arena.setForceStart(true);
+      arena.setTimer(0);
+      for(Player players : ArenaRegistry.getArena(player).getPlayers()) {
+        players.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+      }
     }
   }
 

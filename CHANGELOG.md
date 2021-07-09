@@ -1,3 +1,27 @@
+### 1.1.2 Release (18.05.2021 - 09.07.2021)
+* 1.17 compatible
+* !CLASS NAME CHANGE OF COMMONSBOX!
+* Added forcestart item
+* Fixed golden apple does not insta heal
+* Fixed respawn bug with some other plugins that respawns you on other places
+* Fixed netherportals will teleport to nether
+* Changed kit slot locations for blocks
+>>> b1
+* Added title for scored point
+* Added possibility to edit bases ingame
+* Fixed NPE on disable - Do not attempt to teleport players twice
+* Fixed Players are not always teleported to lobby location after falling into void
+* Fixed NPE (Cannot invoke) if no cage on base
+* Fixed fireticks are not removed after jumped into lava portal
+* Fixed arena does not end if there are only players in one base left
+* Fixed parties can not join to leader because it throws NPE
+* Fixed party (parties v3.1.0) not working anymore
+* Fixed portal hologram is not on mid if its manually added
+* Fixed when plugins scoreboards not re-appeared after game end
+* Removed temp added scoreboard rewards
+* Fixed join maxplayers did not match the arena with highest player amount
+* Changed empty message is no longer sent
+
 ### 1.1.1 Release (23.04.2021 - 10.05.2021)
 * Added /tb join maxplayers which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online

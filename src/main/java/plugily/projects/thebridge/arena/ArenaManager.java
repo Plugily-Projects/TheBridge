@@ -30,9 +30,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -40,6 +40,7 @@ import plugily.projects.thebridge.api.events.game.TBGameJoinAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameLeaveAttemptEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStopEvent;
 import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.options.ArenaOption;
 import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.handlers.PermissionsManager;
 import plugily.projects.thebridge.handlers.items.SpecialItem;
@@ -49,8 +50,8 @@ import plugily.projects.thebridge.handlers.rewards.Reward;
 import plugily.projects.thebridge.kits.KitRegistry;
 import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.NMS;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -93,15 +94,14 @@ public class ArenaManager {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
-
+    Base partyBase = null;
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader().equals(player)) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           //who knows what api plugins do?
-          Base base = arena.getBases().get(ThreadLocalRandom.current().nextInt(arena.getBases().size()));
-          base.addPlayer(player);
+          partyBase = arena.getBases().get(ThreadLocalRandom.current().nextInt(arena.getBases().size()));
           for(Player partyPlayer : party.getPlayers()) {
             if(partyPlayer == player) {
               continue;
@@ -123,16 +123,16 @@ public class ArenaManager {
       Player partyLeader = party.getLeader();
       if(arena.getPlayers().contains(partyLeader)) {
         if(arena.inBase(partyLeader)) {
-          arena.getBase(partyLeader).addPlayer(player);
+          partyBase = arena.getBase(partyLeader);
         }
       }
     }
 
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && !(player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
+        && !(player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+        || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-        PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+          PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
     if(arena.getArenaState() == ArenaState.RESTARTING) {
@@ -161,12 +161,18 @@ public class ArenaManager {
     }
     Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
+    user.lastBoard = player.getScoreboard();
+    //reset scoreboard
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     arena.getScoreboardManager().createScoreboard(user);
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
 
     arena.addPlayer(player);
+    if(partyBase != null) {
+      partyBase.addPlayer(player);
+    }
     player.setLevel(0);
     player.setExp(1);
     player.setHealth(VersionUtils.getHealth(player));
@@ -196,9 +202,9 @@ public class ArenaManager {
 
       for(Player spectator : arena.getPlayers()) {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
-          NMS.hidePlayer(player, spectator);
+          VersionUtils.hidePlayer(plugin, player, spectator);
         } else {
-          NMS.showPlayer(player, spectator);
+          VersionUtils.showPlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -247,7 +253,6 @@ public class ArenaManager {
     Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
 
-    arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       if(arena.getPlayersLeft().size() - 1 > 1) {
@@ -275,15 +280,16 @@ public class ArenaManager {
     user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     ArenaUtils.resetPlayerAfterGame(player);
-
-    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING &&
+        (arena.getPlayers().size() <= 1 || (arena.getPlayers().size() <= arena.getOption(ArenaOption.SIZE)
+            && arena.getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get().getAlivePlayersSize() == arena.getPlayers().size()))) {
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(0);
     }
 
     arena.teleportToEndLocation(player);
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);

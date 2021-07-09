@@ -19,18 +19,18 @@
 
 package plugily.projects.thebridge.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;

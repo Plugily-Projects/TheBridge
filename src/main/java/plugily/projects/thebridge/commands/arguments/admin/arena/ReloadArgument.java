@@ -23,7 +23,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
@@ -33,7 +34,6 @@ import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.commands.arguments.data.LabelData;
 import plugily.projects.thebridge.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.hologram.HologramManager;
 import plugily.projects.thebridge.handlers.language.LanguageManager;
 import plugily.projects.thebridge.utils.Debugger;
 

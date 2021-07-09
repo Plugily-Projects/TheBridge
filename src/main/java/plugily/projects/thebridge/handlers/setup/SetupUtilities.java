@@ -22,7 +22,7 @@ package plugily.projects.thebridge.handlers.setup;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 

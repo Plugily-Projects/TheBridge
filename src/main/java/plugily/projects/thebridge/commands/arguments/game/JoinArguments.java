@@ -32,12 +32,13 @@ import plugily.projects.thebridge.handlers.ChatManager;
 import plugily.projects.thebridge.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Tigerpanzer_02, 2Wild4You
@@ -55,7 +56,7 @@ public class JoinArguments {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
-        if(args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
+        if(!ArenaRegistry.getArenas().isEmpty() && args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
           List<Arena> arenaList = new ArrayList<>();
           Map<Arena, Integer> arenas = new HashMap<>();
           for(Arena arena : ArenaRegistry.getArenas()) {
@@ -76,7 +77,7 @@ public class JoinArguments {
             }
           }
           if(arenas.isEmpty()) {
-            ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
+            sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.No-Free-Arenas"));
             return;
           }
           if(ArenaRegistry.getArenaPlayersOnline() == 0) {
@@ -88,12 +89,19 @@ public class JoinArguments {
             ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
             return;
           }
-          Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
-          if(sorted.findFirst().isPresent()) {
-            Arena arena = sorted.findFirst().get().getKey();
+
+          LinkedHashMap<Arena, Integer> orderedArenas = new LinkedHashMap<>();
+          arenas.entrySet()
+              .stream()
+              .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+              .forEachOrdered(x -> orderedArenas.put(x.getKey(), x.getValue()));
+
+          if(!orderedArenas.isEmpty()) {
+            Arena arena = orderedArenas.keySet().stream().findFirst().get();
             ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
+          return;
         }
         for(Arena arena : ArenaRegistry.getArenas()) {
           if(args[1].equalsIgnoreCase(arena.getId())) {

@@ -38,7 +38,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.user.User;
@@ -185,13 +185,6 @@ public class SpectatorEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   public void onPickup(CBEntityPickupItemEvent event) {
     if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
-
-  @EventHandler
-  public void onRightClick(PlayerInteractEvent event) {
-    if(ArenaRegistry.isInArena(event.getPlayer()) && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       event.setCancelled(true);
     }
   }

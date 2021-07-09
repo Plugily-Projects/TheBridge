@@ -22,13 +22,13 @@ package plugily.projects.thebridge.arena;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.options.ArenaOption;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 
@@ -100,8 +100,8 @@ public class ArenaRegistry {
 
   public static int getArenaPlayersOnline() {
     int players = 0;
-    for(Arena arena : arenas){
-      players =+ arena.getPlayers().size();
+    for(Arena arena : arenas) {
+      players += arena.getPlayers().size();
     }
     return players;
   }
@@ -153,14 +153,14 @@ public class ArenaRegistry {
           for(String baseID : config.getConfigurationSection(s + "bases").getKeys(false)) {
             if(config.isSet(s + "bases." + baseID + ".isdone")) {
               Base base = new Base(
-                config.getString("instances." + arena.getId() + ".bases." + baseID + ".color"),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint")),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint")),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation1")),
-                LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation2")),
-                config.getInt("instances." + arena.getId() + ".maximumsize")
+                  config.getString("instances." + arena.getId() + ".bases." + baseID + ".color"),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation1")),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".baselocation2")),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".spawnpoint")),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".respawnpoint")),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation1")),
+                  LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + baseID + ".portallocation2")),
+                  config.getInt("instances." + arena.getId() + ".maximumsize")
               );
               arena.addBase(base);
               if(config.getString("instances." + arena.getId() + ".bases." + baseID + ".cagelocation1") != null)

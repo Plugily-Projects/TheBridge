@@ -21,7 +21,7 @@ package plugily.projects.thebridge.utils.services.locale;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.utils.services.ServiceRegistry;
 
 import javax.net.ssl.HttpsURLConnection;

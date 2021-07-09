@@ -190,7 +190,7 @@ Kits:
     Description: "&7One hit most players with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
 
 In-Game:
-  Plugin-Prefix: "&e[TheBridge] "
+  Plugin-Prefix: "&e[The Bridge] "
   Already-Playing: "&cYou are already queued for a game! You can leave a game with /tb leave."
   Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
@@ -233,6 +233,9 @@ In-Game:
     Portal:
       Own: "&7That is your own portal"
       Opponent: "&7%base% %player% jumped into %base_jumped%!"
+      Scored:
+        Title: "&7%base% %player%"
+        Subtitle: "jumped into %base_jumped%"
       Hologram: "%base%;Jump into this portal!"
       Out: "This base is already out!"
     Blocked:
@@ -333,10 +336,10 @@ Placeholders:
     Restarting: "&c&lRestarting"
 
 Validator:
-  Invalid-Arena-Configuration: "[TheBridge] Arena %arena% has invalid configuration! Missing node: %error%"
-  Instance-Started: "[TheBridge] Arena %arena% instance successfully started!"
-  No-Instances-Created: "[TheBridge] There are no arena instances created in configuration!"
+  Invalid-Arena-Configuration: "[The Bridge] Arena %arena% has invalid configuration! Missing node: %error%"
+  Instance-Started: "[The Bridge] Arena %arena% instance successfully started!"
+  No-Instances-Created: "[The Bridge] There are no arena instances created in configuration!"
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 4
+File-Version-Do-Not-Edit: 5

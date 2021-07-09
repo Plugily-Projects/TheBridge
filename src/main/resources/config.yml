@@ -24,7 +24,7 @@ Bossbar-Enabled: true
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
 # thebridge doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/minecraft/thebridge/addons.php#bungee-signs-not-official
+# Check here for more info: https://wiki.plugily.xyz/thebridge/support/servertips#bungeecord-lobby-signs
 BungeeActivated: false
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -37,7 +37,7 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
 InventoryManager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/thebridge/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/thebridge/setup/cmdsandperms#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "thebridge.fullgames"
   # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.AC02'

@@ -20,7 +20,7 @@
 package plugily.projects.thebridge.handlers.language;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.services.ServiceRegistry;
@@ -182,9 +182,9 @@ public class LanguageManager {
 
   private static List<String> getStrings(String path) {
     if(!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[TheBridge] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[TheBridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[TheBridge] Path: " + path);
+      Debugger.sendConsoleMsg("&c[The Bridge] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[The Bridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[The Bridge] Path: " + path);
       return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
@@ -195,9 +195,9 @@ public class LanguageManager {
 
   private static String getString(String path) {
     if(!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[TheBridge] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[TheBridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[TheBridge] Path: " + path);
+      Debugger.sendConsoleMsg("&c[The Bridge] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[The Bridge] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[The Bridge] Path: " + path);
       return "ERR_MESSAGE_" + path + "_NOT_FOUND";
     }
     return languageConfig.getString(path, "not found");

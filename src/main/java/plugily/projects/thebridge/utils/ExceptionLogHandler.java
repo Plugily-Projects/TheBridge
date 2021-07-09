@@ -73,7 +73,7 @@ public class ExceptionLogHandler extends Handler {
     }
     new ReportedException(plugin, (Exception) throwable);
     record.setThrown(null);
-    record.setMessage("[thebridge] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given" +
+    record.setMessage("[The Bridge] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given" +
       " above!");
   }
 

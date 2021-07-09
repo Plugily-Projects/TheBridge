@@ -41,16 +41,19 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
+import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
+import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 
 /**
@@ -129,7 +132,7 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onSpecialItem(PlayerInteractEvent event) {
+  public void onSpecialItem(CBPlayerInteractEvent event) {
     if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
@@ -140,6 +143,11 @@ public class Events implements Listener {
     }
     String key = plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName();
     if(key == null) {
+      return;
+    }
+    if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.FORCESTART.getName())) {
+      event.setCancelled(true);
+      ArenaUtils.arenaForceStart(event.getPlayer());
       return;
     }
     if(key.equals(SpecialItemManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
@@ -166,12 +174,16 @@ public class Events implements Listener {
       event.setCancelled(true);
       event.setFoodLevel(20);
     }
-    if(VersionUtils.getItemInHand(player).getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
-      event.setFoodLevel(20);
-    }
     if(arena.getArenaState() != ArenaState.IN_GAME) {
       event.setFoodLevel(20);
       event.setCancelled(true);
+    }
+    if(event.getItem() == null) {
+      return;
+    }
+    if(event.getItem().getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+      event.setFoodLevel(20);
+      player.setHealth(VersionUtils.getMaxHealth(player));
     }
   }
 
@@ -253,6 +265,9 @@ public class Events implements Listener {
       return;
     }
     if(event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
+      event.setCancelled(true);
+    }
+    if(event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
       event.setCancelled(true);
     }
   }

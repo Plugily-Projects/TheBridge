@@ -19,8 +19,8 @@
 
 package plugily.projects.thebridge.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,15 +28,15 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.handlers.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.utils.CuboidSelector;
@@ -65,10 +65,10 @@ public class BaseComponent implements SetupComponent {
     Main plugin = setupInventory.getPlugin();
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Color"))
-      .lore(ChatColor.GRAY + "Click to set base color name")
-      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".bases." + getId(player) + ".color"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Color"))
+        .lore(ChatColor.GRAY + "Click to set base color name")
+        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".bases." + getId(player) + ".color"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
@@ -80,6 +80,7 @@ public class BaseComponent implements SetupComponent {
         public Prompt acceptInput(ConversationContext context, String input) {
           if(!ChatColor.valueOf(input).isColor()) {
             player.sendRawMessage(plugin.getChatManager().colorRawMessage("&cTry again. This is not an color!"));
+            return Prompt.END_OF_CONVERSATION;
           }
           String color = ChatColor.valueOf(input).name();
           player.sendRawMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aColor of base " + getId(player) + " set to " + color));
@@ -93,12 +94,12 @@ public class BaseComponent implements SetupComponent {
     }), 0, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BEDROCK.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Base Location"))
-      .lore(ChatColor.GRAY + "Click to set the base location")
-      .lore(ChatColor.GRAY + "after you selected it with the location wand")
-      .lore(ChatColor.DARK_GRAY + "(corners of one base)")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Base Location"))
+        .lore(ChatColor.GRAY + "Click to set the base location")
+        .lore(ChatColor.GRAY + "after you selected it with the location wand")
+        .lore(ChatColor.DARK_GRAY + "(corners of one base)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
       if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
@@ -114,12 +115,12 @@ public class BaseComponent implements SetupComponent {
     }), 1, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Location"))
-      .lore(ChatColor.GRAY + "Click to set the portal location")
-      .lore(ChatColor.GRAY + "after you selected it with the location wand")
-      .lore(ChatColor.DARK_GRAY + "(corners of the portal on the base)")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Location"))
+        .lore(ChatColor.GRAY + "Click to set the portal location")
+        .lore(ChatColor.GRAY + "after you selected it with the location wand")
+        .lore(ChatColor.DARK_GRAY + "(corners of the portal on the base)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
       if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
@@ -137,12 +138,12 @@ public class BaseComponent implements SetupComponent {
     }), 2, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Cage Location (Only floor)"))
-      .lore(ChatColor.GRAY + "Click to set the cage location (only floor needed)")
-      .lore(ChatColor.GRAY + "after you selected it with the location wand")
-      .lore(ChatColor.DARK_GRAY + "(Please just select the blocks that should be removed/set)")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Cage Location (Only floor)"))
+        .lore(ChatColor.GRAY + "Click to set the cage location (only floor needed)")
+        .lore(ChatColor.GRAY + "after you selected it with the location wand")
+        .lore(ChatColor.DARK_GRAY + "(Please just select the blocks that should be removed/set)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
       if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
@@ -162,15 +163,15 @@ public class BaseComponent implements SetupComponent {
     }), 3, 0);
 
     String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
-      + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
+        + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet SpawnPoint Location"))
-      .lore(ChatColor.GRAY + "Click to set the spawn point location")
-      .lore(ChatColor.GRAY + "on the place where you are standing.")
-      .lore(ChatColor.DARK_GRAY + "(location where players spawns first time")
-      .lore(ChatColor.DARK_GRAY + "and on every round reset)")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet SpawnPoint Location"))
+        .lore(ChatColor.GRAY + "Click to set the spawn point location")
+        .lore(ChatColor.GRAY + "on the place where you are standing.")
+        .lore(ChatColor.DARK_GRAY + "(location where players spawns first time")
+        .lore(ChatColor.DARK_GRAY + "and on every round reset)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aSpawnPoint location for base " + getId(player) + " set at your location!"));
@@ -179,13 +180,13 @@ public class BaseComponent implements SetupComponent {
     }), 4, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.LAPIS_BLOCK.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet ReSpawnPoint Location"))
-      .lore(ChatColor.GRAY + "Click to set the respawn point location")
-      .lore(ChatColor.GRAY + "on the place where you are standing.")
-      .lore(ChatColor.DARK_GRAY + "(location where players respawns every")
-      .lore(ChatColor.DARK_GRAY + "time after death)")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet ReSpawnPoint Location"))
+        .lore(ChatColor.GRAY + "Click to set the respawn point location")
+        .lore(ChatColor.GRAY + "on the place where you are standing.")
+        .lore(ChatColor.DARK_GRAY + "(location where players respawns every")
+        .lore(ChatColor.DARK_GRAY + "time after death)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint", serializedLocation);
       player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aReSpawnPoint location for base " + getId(player) + " set at your location!"));
@@ -194,11 +195,11 @@ public class BaseComponent implements SetupComponent {
     }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Hologram Location"))
-      .lore(ChatColor.GRAY + "Click to set the portal hologram location")
-      .lore(ChatColor.GRAY + "on the place where you are standing.")
-      .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram"))
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lSet Portal Hologram Location"))
+        .lore(ChatColor.GRAY + "Click to set the portal hologram location")
+        .lore(ChatColor.GRAY + "on the place where you are standing.")
+        .lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram"))
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".portalhologram", serializedLocation);
       if(config.getBoolean("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", false)) {
@@ -210,9 +211,9 @@ public class BaseComponent implements SetupComponent {
     }), 6, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
-      .name(plugin.getChatManager().colorRawMessage("&e&lFinish Base"))
-      .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
-      .build(), e -> {
+        .name(plugin.getChatManager().colorRawMessage("&e&lFinish Base"))
+        .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
+        .build(), e -> {
       e.getWhoClicked().closeInventory();
       if(config.get("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1") == null) {
         e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cBase validation failed! Please configure base location properly!"));
@@ -241,14 +242,14 @@ public class BaseComponent implements SetupComponent {
       player.sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new base: " + getId(player)));
       config.set("instances." + arena.getId() + ".bases." + getId(player) + ".isdone", true);
       Base base = new Base(
-        config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".color"),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1")),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2")),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint")),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint")),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1")),
-        LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2")),
-        config.getInt("instances." + arena.getId() + ".maximumsize")
+          config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".color"),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation1")),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".baselocation2")),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".spawnpoint")),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".respawnpoint")),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation1")),
+          LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".portallocation2")),
+          config.getInt("instances." + arena.getId() + ".maximumsize")
       );
       if(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1") != null)
         base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation1")), LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".cagelocation2"))));
@@ -262,6 +263,43 @@ public class BaseComponent implements SetupComponent {
       BaseUtilities.getBaseId().remove(player);
       BaseUtilities.removeEditing(player);
     }), 7, 0);
+
+    pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
+        .name(plugin.getChatManager().colorRawMessage("&e&lEdit a already created base"))
+        .lore(ChatColor.GRAY + "Click to enter base id (first created base = 0)")
+        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".bases." + getId(player) + ".color"))
+        .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      new SimpleConversationBuilder().withPrompt(new StringPrompt() {
+        @Override
+        public String getPromptText(ConversationContext context) {
+          return plugin.getChatManager().colorRawMessage(plugin.getChatManager().getPrefix() + "&ePlease type in base id (starts with 0)!");
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String input) {
+          if(!Utils.isInteger(input)) {
+            player.sendRawMessage(plugin.getChatManager().colorRawMessage("&cTry again. Its not a number!"));
+            return Prompt.END_OF_CONVERSATION;
+          }
+          int number = Integer.parseInt(input);
+          if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases") != null) {
+            if(number >= setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArena().getId() + ".bases").getKeys(false).size()) {
+              player.sendRawMessage(plugin.getChatManager().colorRawMessage("&cTry again. The number is higher than bases that you have!"));
+              return Prompt.END_OF_CONVERSATION;
+            }
+          } else {
+            player.sendRawMessage(plugin.getChatManager().colorRawMessage("&cYou do not have bases atm!"));
+            return Prompt.END_OF_CONVERSATION;
+          }
+          setId(player, number);
+          player.sendRawMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aNow editing base " + getId(player) + " with color " + config.getString("instances." + arena.getId() + ".bases." + getId(player) + ".color")));
+          BaseUtilities.addEditing(player);
+          new SetupInventory(arena, player).openBases();
+          return Prompt.END_OF_CONVERSATION;
+        }
+      }).buildFor(player);
+    }), 0, 1);
   }
 
   public int getId(Player player) {
@@ -275,5 +313,12 @@ public class BaseComponent implements SetupComponent {
       BaseUtilities.getBaseId().put(player, secondMap);
     }
     return BaseUtilities.getBaseId().get(player).get(setupInventory.getArena().getId());
+  }
+
+  public void setId(Player player, int id) {
+    HashMap<String, Integer> secondMap = new HashMap<>();
+    secondMap.put(setupInventory.getArena().getId(), id);
+    BaseUtilities.getBaseId().remove(player);
+    BaseUtilities.getBaseId().put(player, secondMap);
   }
 }
