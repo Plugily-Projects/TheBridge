@@ -1,4 +1,5 @@
-### 1.1.2 Release (18.05.2021 - XX.XX.2021)
+### 1.1.2 Release (18.05.2021 - 09.07.2021)
+* 1.17 compatible
 * !CLASS NAME CHANGE OF COMMONSBOX!
 * Added forcestart item
 * Fixed golden apple does not insta heal
