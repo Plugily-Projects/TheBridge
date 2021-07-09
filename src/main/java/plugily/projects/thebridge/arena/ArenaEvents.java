@@ -495,7 +495,7 @@ public class ArenaEvents implements Listener {
               player.updateInventory();
             }
           }
-        }, 5 /* 2 seconds as cooldown to prevent respawn from other plugins */);
+        }, 5 /* 1/4 of a second as cooldown to prevent respawn from other plugins */);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());
         player.setAllowFlight(true);
