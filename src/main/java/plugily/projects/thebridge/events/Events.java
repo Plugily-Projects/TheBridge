@@ -39,8 +39,10 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
@@ -53,7 +55,6 @@ import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.handlers.items.SpecialItemManager;
-import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.Utils;
 
 /**
@@ -178,11 +179,18 @@ public class Events implements Listener {
       event.setFoodLevel(20);
       event.setCancelled(true);
     }
-    if(event.getItem() == null) {
+  }
+
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onFoodLevelChange(PlayerItemConsumeEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null) {
       return;
     }
     if(event.getItem().getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
-      event.setFoodLevel(20);
+      player.setFoodLevel(20);
       player.setHealth(VersionUtils.getMaxHealth(player));
     }
   }

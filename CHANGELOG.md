@@ -1,3 +1,6 @@
+### 1.1.3 Release (09.07.2021)
+* Fixed golden apple insta heal does not work on lower 1.15 servers
+
 ### 1.1.2 Release (18.05.2021 - 09.07.2021)
 * 1.17 compatible
 * !CLASS NAME CHANGE OF COMMONSBOX!
