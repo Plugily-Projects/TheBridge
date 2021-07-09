@@ -21,7 +21,7 @@ package plugily.projects.thebridge.utils;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 
 import java.util.HashSet;
 import java.util.logging.Level;

@@ -38,7 +38,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.user.User;

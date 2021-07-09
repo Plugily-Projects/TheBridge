@@ -22,7 +22,7 @@ package plugily.projects.thebridge.commands.arguments.admin.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;

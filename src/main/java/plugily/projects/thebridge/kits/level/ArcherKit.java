@@ -24,10 +24,10 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.helper.ArmorHelper;
-import pl.plajerlair.commonsbox.minecraft.helper.WeaponHelper;
-import pl.plajerlair.commonsbox.minecraft.misc.ColorUtil;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
+import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
+import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;
@@ -60,7 +60,7 @@ public class ArcherKit extends LevelKit {
   public void giveKitItems(Player player) {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
-    player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
+    player.getInventory().setItem(9, XMaterial.ARROW.parseItem());
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
 

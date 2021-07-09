@@ -23,7 +23,7 @@ import plugily.projects.inventoryframework.gui.type.ChestGui;
 import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.handlers.setup.components.ArenaRegisterComponent;

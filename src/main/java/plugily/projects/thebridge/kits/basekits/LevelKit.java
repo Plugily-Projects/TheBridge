@@ -20,7 +20,7 @@
 package plugily.projects.thebridge.kits.basekits;
 
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * Created by Tom on 14/08/2014.

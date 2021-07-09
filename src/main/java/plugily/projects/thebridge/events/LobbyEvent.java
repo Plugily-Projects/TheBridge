@@ -28,7 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaRegistry;

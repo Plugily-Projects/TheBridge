@@ -28,7 +28,7 @@ import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.arena.Arena;

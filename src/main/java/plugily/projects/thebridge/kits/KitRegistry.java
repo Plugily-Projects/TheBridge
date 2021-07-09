@@ -21,7 +21,7 @@ package plugily.projects.thebridge.kits;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.kits.basekits.FreeKit;
 import plugily.projects.thebridge.kits.basekits.Kit;

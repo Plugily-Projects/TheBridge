@@ -20,7 +20,7 @@
 package plugily.projects.thebridge.handlers.language;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.utils.Debugger;
 import plugily.projects.thebridge.utils.services.ServiceRegistry;

@@ -42,11 +42,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
 import plugily.projects.thebridge.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
@@ -183,6 +183,7 @@ public class ArenaEvents implements Listener {
   }
 
   private final HashMap<Player, Long> cooldownPortal = new HashMap<>();
+  private final HashMap<Player, Long> cooldownOutside = new HashMap<>();
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerMove(PlayerMoveEvent event) {
@@ -204,10 +205,13 @@ public class ArenaEvents implements Listener {
     if(!arena.inBase(player)) {
       return;
     }
-    // Player dies 5 blocks out of arena instead of void
     if(!arena.getArenaBorder().isInWithMarge(player.getLocation(), 5)) {
+      if(cooldownOutside.containsKey(player) && cooldownOutside.get(player) <= System.currentTimeMillis() - 1500) {
+        cooldownOutside.remove(player);
+        return;
+      }
       player.damage(100);
-      Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 5 blocks outside arena location");
+      Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 5 blocks outside arena location, Location: " + player.getLocation() + "; ArenaBorder: " + arena.getArenaBorder().getMinPoint() + ";" + arena.getArenaBorder().getMaxPoint() + ";" + arena.getArenaBorder().getCenter());
       return;
     }
     if(cooldownPortal.containsKey(player)) {
@@ -220,7 +224,7 @@ public class ArenaEvents implements Listener {
       //prevent players being stuck on portal location
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         if(player != null) {
-          if(arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 1)){
+          if(arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 1)) {
             player.damage(100);
             Debugger.debug(Level.INFO, "Killed " + player.getName() + " because he is more than 3 seconds on own portal (seems to stuck)");
           }
@@ -462,6 +466,7 @@ public class ArenaEvents implements Listener {
     if(arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
       if(arena.inBase(player) && !user.isSpectator()) {
+        cooldownOutside.put(player, System.currentTimeMillis());
         if(e.getPlayer().getLastDamageCause() != null && e.getPlayer().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID) {
           player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
         }
@@ -481,6 +486,16 @@ public class ArenaEvents implements Listener {
         plugin.getUserManager().addStat(player, StatsStorage.StatisticType.DEATHS);
         user.addStat(StatsStorage.StatisticType.LOCAL_DEATHS, 1);
         rewardLastAttacker(arena, player);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+          if(player != null) {
+            if(!arena.getBase(player).getPortalCuboid().isInWithMarge(player.getLocation(), 5)) {
+              player.teleport(arena.getBase(player).getPlayerRespawnPoint());
+              player.getInventory().clear();
+              plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
+              player.updateInventory();
+            }
+          }
+        }, 5 /* 2 seconds as cooldown to prevent respawn from other plugins */);
       } else {
         e.setRespawnLocation(arena.getSpectatorLocation());
         player.setAllowFlight(true);

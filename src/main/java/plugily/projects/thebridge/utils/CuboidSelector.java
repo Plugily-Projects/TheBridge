@@ -26,7 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.thebridge.Main;
 
 import java.util.HashMap;

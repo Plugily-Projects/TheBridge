@@ -21,8 +21,8 @@ package plugily.projects.thebridge.user.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.user.User;

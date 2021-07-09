@@ -1,4 +1,9 @@
 ### 1.1.2 Release (18.05.2021 - XX.XX.2021)
+* !CLASS NAME CHANGE OF COMMONSBOX!
+* Fixed golden apple does not insta heal
+* Fixed respawn bug with some other plugins that respawns you on other places
+* Changed kit slot locations for blocks  
+* Fixed netherportals will teleport to nether
 * Added forcestart item
 >>> b1
 * Fixed NPE on disable - Do not attempt to teleport players twice
