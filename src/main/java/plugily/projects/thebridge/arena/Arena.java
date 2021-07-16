@@ -195,7 +195,7 @@ public class Arena extends BukkitRunnable {
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
-            setTimer(plugin.getConfig().getInt("Time-Manager.Gameplay-Time", 500));
+            setTimer(plugin.getConfig().getInt("Time-Manager.Gameplay", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             // get base with min players
             Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
