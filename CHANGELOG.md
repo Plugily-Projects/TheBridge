@@ -1,5 +1,6 @@
 ### 1.1.4 Release (19.07.2021 - XX.XX.2021)
 * Fixed all Time-Manager values on config.yml do not work
+* Reuse XMaterial for specialitems
 
 ### 1.1.3 Release (09.07.2021)
 * Fixed golden apple insta heal does not work on lower 1.15 servers
