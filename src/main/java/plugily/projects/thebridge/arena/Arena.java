@@ -136,22 +136,22 @@ public class Arena extends BukkitRunnable {
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
-          setTimer(plugin.getConfig().getInt("Waiting-Time-Lobby", 60));
+          setTimer(plugin.getConfig().getInt("Time-Manager.Waiting-Time-Lobby", 60));
           this.showPlayers();
         }
         setTimer(getTimer() - 1);
         break;
       case STARTING:
-        if(getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
-          setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
+        if(getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Time-Manager.Start-On-Full-Lobby", 15) && !forceStart) {
+          setTimer(plugin.getConfig().getInt("Time-Manager.Start-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }
         if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
-          gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Waiting-Time-Lobby", 60));
+          gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Time-Manager.Waiting-Time-Lobby", 60));
         }
         for(Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Waiting-Time-Lobby", 60)));
+          player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Time-Manager.Waiting-Time-Lobby", 60)));
           player.setLevel(getTimer());
         }
         if(getPlayers().size() < getMinimumPlayers() && !forceStart) {
@@ -195,7 +195,7 @@ public class Arena extends BukkitRunnable {
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
-            setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
+            setTimer(plugin.getConfig().getInt("Time-Manager.Gameplay-Time", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             // get base with min players
             Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
