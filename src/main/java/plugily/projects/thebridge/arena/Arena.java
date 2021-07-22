@@ -42,6 +42,8 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.game.TBGameStartEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStateChangeEvent;
+import plugily.projects.thebridge.api.events.game.TBRoundResetEvent;
+import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.arena.options.ArenaOption;
@@ -210,6 +212,7 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
             plugin.getUserManager().addExperience(player, 10);
+            Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(this));
           }
           //check if not only one base got players
           Base maxPlayers = getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
@@ -266,6 +269,7 @@ public class Arena extends BukkitRunnable {
             }
           }
           if(resetRound == 1) {
+            Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(this));
             for(Base base : bases) {
               base.removeCageFloor();
             }
@@ -670,6 +674,7 @@ public class Arena extends BukkitRunnable {
       plugin.getUserManager().addExperience(player, 2);
     }
     plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
+    Bukkit.getPluginManager().callEvent(new TBRoundResetEvent(this, round));
   }
 
   public int getRound() {
