@@ -1,0 +1,67 @@
+# Custom in-game lobby items.
+# Probably you will only translate displayname and lore so don't mess with it.
+#
+# Please don't modify 'Kit-Menu', 'Leave-Lobby', 'Base-Selector', 'Leave-Spectator', 'Player-List' and 'Spectator-Options', 'Forcestart'
+# nodes as they are hardcoded in code!
+
+Kit-Menu:
+  displayname: "&a&lKit Menu &7(Right Click)"
+  lore:
+    - "&7Right-click to select in-game kit"
+  material-name: NETHER_STAR
+  slot: 0
+  # stage can be: 'lobby' or 'spectator'
+  stage: lobby
+
+Leave-Lobby:
+  displayname: "&c&lReturn to Lobby &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: lobby
+
+Base-Selector:
+  displayname: "&b&lSelect Base"
+  lore:
+    "&7Right-click to select your team"
+  material-name: WOOL
+  slot: 1
+  stage: lobby
+
+Leave-Spectator:
+  displayname: "&c&lLeave the Game &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: spectator
+
+Player-List:
+  displayname: "&a&lAlive Players &7(Right Click)"
+  lore:
+    - "&7Right-click to see alive players list"
+  material-name: PLAYER_HEAD
+  slot: 0
+  stage: spectator
+
+Spectator-Options:
+  displayname: "&b&lSpectator Settings &7(Right Click)"
+  lore:
+    - "&7Right-click to adjust spectator settings"
+  material-name: COMPARATOR
+  slot: 4
+  stage: spectator
+
+Forcestart:
+  displayname: "&c&lClick to start the game &7(Right Click)"
+  lore:
+    - "&7You need the following permission for it"
+    - "&7thebridge.admin.forcestart"
+  material-name: EMERALD
+  slot: 0
+  stage: lobby
+
+
+# Don't touch this
+Version: 2
