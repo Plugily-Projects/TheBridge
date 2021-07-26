@@ -170,9 +170,6 @@ public class ArenaManager {
     }
 
     arena.addPlayer(player);
-    if(partyBase != null) {
-      partyBase.addPlayer(player);
-    }
     player.setLevel(0);
     player.setExp(1);
     player.setHealth(VersionUtils.getHealth(player));
@@ -210,6 +207,9 @@ public class ArenaManager {
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
       Debugger.debug("[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
       return;
+    }
+    if(partyBase != null) {
+      partyBase.addPlayer(player);
     }
     arena.teleportToLobby(player);
     player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
