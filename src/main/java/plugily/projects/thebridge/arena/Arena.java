@@ -133,7 +133,7 @@ public class Arena extends BukkitRunnable {
             break;
           }
         } else {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
@@ -148,7 +148,7 @@ public class Arena extends BukkitRunnable {
           setTimer(plugin.getConfig().getInt("Time-Manager.Start-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
           gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Time-Manager.Waiting-Time-Lobby", 60));
         }
@@ -157,7 +157,7 @@ public class Arena extends BukkitRunnable {
           player.setLevel(getTimer());
         }
         if(getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
@@ -178,7 +178,7 @@ public class Arena extends BukkitRunnable {
           TBGameStartEvent gameStartEvent = new TBGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
@@ -228,7 +228,7 @@ public class Arena extends BukkitRunnable {
           for(Base base : bases) {
             base.removeCageFloor();
           }
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
         }
@@ -320,7 +320,7 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(false);
         }
         if(getTimer() <= 0) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
@@ -353,7 +353,7 @@ public class Arena extends BukkitRunnable {
 
           cleanUpArena();
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-            && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+              && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             plugin.getServer().shutdown();
           }
           setArenaState(ArenaState.RESTARTING);
@@ -372,7 +372,7 @@ public class Arena extends BukkitRunnable {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
         break;
@@ -767,7 +767,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportAllToEndLocation() {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+        && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
@@ -787,7 +787,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportToEndLocation(Player player) {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+        && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
