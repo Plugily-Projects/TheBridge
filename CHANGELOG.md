@@ -1,6 +1,6 @@
-### 1.1.4 Release (19.07.2021 - XX.XX.2021)
-* Fixed all Time-Manager values on config.yml do not work
+### 1.1.4 Release (19.07.2021 - 01.08.2021)
 * Reuse XMaterial for specialitems
+* Fixed all Time-Manager values on config.yml do not work
 * Fixed DEAD_TAG message not found
 * Fixed death chat format not found
 * Fixed maxplayers <teamsize> join
