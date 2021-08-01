@@ -37,7 +37,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 4;
-  public static final int LANGUAGE_FILE_VERSION = 5;
+  public static final int LANGUAGE_FILE_VERSION = 6;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -151,10 +151,15 @@ public class LanguageMigrator {
               "    Playing: \"&lPlaying\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
+          break;
         case 4:
           MigratorUtils.insertAfterLine(file, "    Portal:", "      Scored:\r\n" +
               "        Title: \"&7%base% %player%\"\r\n" +
               "        Subtitle: \"jumped into %base_jumped%\"\r\n");
+          break;
+        case 5:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Game-Death-Format: \"&7[&4☠&7] &r\"\r\n");
+          break;
         default:
           break;
       }

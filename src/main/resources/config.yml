@@ -50,7 +50,6 @@ Time-Manager:
   Waiting-Time-Lobby: 60
   # No one wins after that time amount
   Gameplay: 500
-  Round-Reset: 5
 
 # Should we enable short commands such as /start and /leave
 Enable-Short-Commands: false

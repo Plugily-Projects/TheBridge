@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -425,6 +426,9 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(false);
       return;
     }
+    if(arena.getBase(player) == null) {
+      return;
+    }
     //if mode hearts and they are out it should set spec mode for them
     if(arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
       User user = plugin.getUserManager().getUser(player);
@@ -521,7 +525,9 @@ public class ArenaEvents implements Listener {
     if(e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
       if(ArenaRegistry.getArena(((Player) e.getWhoClicked())).getArenaState() != ArenaState.IN_GAME) {
         if(e.getClickedInventory() == e.getWhoClicked().getInventory()) {
-          e.setResult(Event.Result.DENY);
+          if(e.getView().getType() == InventoryType.CRAFTING || e.getView().getType() == InventoryType.PLAYER) {
+            e.setResult(Event.Result.DENY);
+          }
         }
       }
     }

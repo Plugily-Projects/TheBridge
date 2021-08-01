@@ -42,6 +42,8 @@ import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.StatsStorage;
 import plugily.projects.thebridge.api.events.game.TBGameStartEvent;
 import plugily.projects.thebridge.api.events.game.TBGameStateChangeEvent;
+import plugily.projects.thebridge.api.events.game.TBRoundResetEvent;
+import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.arena.options.ArenaOption;
@@ -131,31 +133,31 @@ public class Arena extends BukkitRunnable {
             break;
           }
         } else {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
-          setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
+          setTimer(plugin.getConfig().getInt("Time-Manager.Waiting-Time-Lobby", 60));
           this.showPlayers();
         }
         setTimer(getTimer() - 1);
         break;
       case STARTING:
-        if(getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
-          setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
+        if(getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Time-Manager.Start-On-Full-Lobby", 15) && !forceStart) {
+          setTimer(plugin.getConfig().getInt("Time-Manager.Start-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
-          gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
+          gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Time-Manager.Waiting-Time-Lobby", 60));
         }
         for(Player player : getPlayers()) {
-          player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
+          player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Time-Manager.Waiting-Time-Lobby", 60)));
           player.setLevel(getTimer());
         }
         if(getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
@@ -176,7 +178,7 @@ public class Arena extends BukkitRunnable {
           TBGameStartEvent gameStartEvent = new TBGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
@@ -195,7 +197,7 @@ public class Arena extends BukkitRunnable {
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             plugin.getUserManager().addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
-            setTimer(plugin.getConfig().getInt("Gameplay-Time", 500));
+            setTimer(plugin.getConfig().getInt("Time-Manager.Gameplay", 500));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             // get base with min players
             Base minPlayers = getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
@@ -210,6 +212,7 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
             plugin.getUserManager().addExperience(player, 10);
+            Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(this));
           }
           //check if not only one base got players
           Base maxPlayers = getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
@@ -225,7 +228,7 @@ public class Arena extends BukkitRunnable {
           for(Base base : bases) {
             base.removeCageFloor();
           }
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
         }
@@ -266,6 +269,7 @@ public class Arena extends BukkitRunnable {
             }
           }
           if(resetRound == 1) {
+            Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(this));
             for(Base base : bases) {
               base.removeCageFloor();
             }
@@ -316,7 +320,7 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(false);
         }
         if(getTimer() <= 0) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
@@ -349,7 +353,7 @@ public class Arena extends BukkitRunnable {
 
           cleanUpArena();
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-            && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+              && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             plugin.getServer().shutdown();
           }
           setArenaState(ArenaState.RESTARTING);
@@ -368,7 +372,7 @@ public class Arena extends BukkitRunnable {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)&& ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
         break;
@@ -670,6 +674,7 @@ public class Arena extends BukkitRunnable {
       plugin.getUserManager().addExperience(player, 2);
     }
     plugin.getRewardsHandler().performReward(this, Reward.RewardType.RESET_ROUND);
+    Bukkit.getPluginManager().callEvent(new TBRoundResetEvent(this, round));
   }
 
   public int getRound() {
@@ -762,7 +767,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportAllToEndLocation() {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+        && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
@@ -782,7 +787,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportToEndLocation(Player player) {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+        && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }

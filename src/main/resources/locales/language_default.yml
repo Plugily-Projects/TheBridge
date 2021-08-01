@@ -197,6 +197,7 @@ In-Game:
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
   Dead-Tag-On-Death: "&8Dead"
   Game-Chat-Format: "&6[&5%base%&6]&6[%kit%&6] %player%: &f%message%"
+  Game-Death-Format: "&7[&4☠&7] &r"
   Death-Screen: "&cYou died!"
   Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
   Bow-Damage-Format: "%victim%  &c♥ %hearts%"

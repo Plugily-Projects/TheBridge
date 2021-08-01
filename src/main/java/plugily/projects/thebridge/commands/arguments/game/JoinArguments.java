@@ -62,15 +62,15 @@ public class JoinArguments {
           for(Arena arena : ArenaRegistry.getArenas()) {
             arenas.put(arena, arena.getPlayers().size());
           }
-          if(args.length == 2) {
-            if(!Utils.isInteger(args[1])) {
+          if(args.length == 3) {
+            if(!Utils.isInteger(args[2])) {
               sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + registry.getPlugin().getChatManager().colorMessage("Commands.Wrong-Usage")
-                  .replace("%correct%", "/tb randomjoin <teamSize>"));
+                  .replace("%correct%", "/tb join maxplayers <teamSize>"));
               return;
             }
             arenas.clear();
             for(Arena arena : ArenaRegistry.getArenas()) {
-              if(arena.getBases().get(0).getMaximumSize() == Integer.parseInt(args[1])) {
+              if(arena.getBases().get(0).getMaximumSize() == Integer.parseInt(args[2])) {
                 arenas.put(arena, arena.getPlayers().size());
                 arenaList.add(arena);
               }
