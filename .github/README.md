@@ -1,4 +1,7 @@
 ![](https://images.plugily.xyz/banner/display.php?id=TheBridge)
+
+# TheBridge [![](https://img.shields.io/badge/javadocs-latest-red.svg)](https://jd.plugily.xyz/apidocs/minecraft/thebridge/) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plugily.xyz/thebridge/) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plugily-Projects_TheBridge&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plugily-Projects_TheBridge) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
+
 TheBridge - Defend your base and try to wipe out the others
 
 TheBridge is a Minecraft minigame designed for small and big servers. This minigame is unique 
