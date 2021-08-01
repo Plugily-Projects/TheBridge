@@ -426,6 +426,9 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(false);
       return;
     }
+    if(arena.getBase(player) == null) {
+      return;
+    }
     //if mode hearts and they are out it should set spec mode for them
     if(arena.getMode() == Arena.Mode.HEARTS && arena.getBase(player).getPoints() >= arena.getOption(ArenaOption.MODE_VALUE)) {
       User user = plugin.getUserManager().getUser(player);
