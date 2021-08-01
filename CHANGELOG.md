@@ -3,6 +3,7 @@
 * Reuse XMaterial for specialitems
 * Fixed DEAD_TAG message not found
 * Fixed death chat format not found
+* Fixed maxplayers <teamsize> join
 
 ### 1.1.3 Release (09.07.2021)
 * Fixed golden apple insta heal does not work on lower 1.15 servers
