@@ -53,6 +53,7 @@ import plugily.projects.thebridge.user.User;
 import plugily.projects.thebridge.utils.Debugger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -492,9 +493,13 @@ public class Arena extends BukkitRunnable {
   }
 
   public List<Player> getTeammates(Player player) {
-    List<Player> mates = new ArrayList<>(getBase(player).getPlayers());
-    mates.remove(player);
-    return mates;
+    Base base = getBase(player);
+    if(base != null) {
+      List<Player> mates = new ArrayList<>(base.getPlayers());
+      mates.remove(player);
+      return mates;
+    }
+    return Collections.emptyList();
   }
 
   public boolean isTeammate(Player player, Player check) {
