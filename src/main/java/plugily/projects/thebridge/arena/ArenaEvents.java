@@ -133,7 +133,7 @@ public class ArenaEvents implements Listener {
   }
 
   public boolean canBuild(Arena arena, Player player, Location location) {
-    if(!arena.getArenaBorder().isIn(player)) {
+    if(!arena.getArenaBorder().isIn(location)) {
       player.sendMessage(plugin.getChatManager().colorMessage("In-Game.Messages.Build-Break"));
       return false;
     }
