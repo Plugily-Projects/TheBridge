@@ -60,6 +60,7 @@ public class JoinArguments {
           List<Arena> arenaList = new ArrayList<>();
           Map<Arena, Integer> arenas = new HashMap<>();
           for(Arena arena : ArenaRegistry.getArenas()) {
+            if(!(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)) continue;
             arenas.put(arena, arena.getPlayers().size());
           }
           if(args.length == 3) {
@@ -70,6 +71,7 @@ public class JoinArguments {
             }
             arenas.clear();
             for(Arena arena : ArenaRegistry.getArenas()) {
+              if(!(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)) continue;
               if(arena.getBases().get(0).getMaximumSize() == Integer.parseInt(args[2])) {
                 arenas.put(arena, arena.getPlayers().size());
                 arenaList.add(arena);
