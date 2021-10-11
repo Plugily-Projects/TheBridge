@@ -88,7 +88,7 @@ public class JoinEvent implements Listener {
       return;
     }
     //we want to be the first :)
-    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 87320).requestUpdateCheck().whenComplete((result, exception) -> {
       if(!result.requiresUpdate()) {
         return;
       }
