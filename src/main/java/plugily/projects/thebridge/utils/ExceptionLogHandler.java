@@ -64,7 +64,7 @@ public class ExceptionLogHandler extends Handler {
         : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.TheBridge")) {
       return;
     }*/
-    if(throwable.getStackTrace().length <= 0 || (throwable.getCause() != null &&
+    if(throwable.getStackTrace().length <= 0 || (throwable.getCause() != null && throwable.getCause().getStackTrace() != null && throwable.getCause().getStackTrace().length <= 0 &&
       !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.thebridge"))) {
       return;
     }

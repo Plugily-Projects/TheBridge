@@ -86,9 +86,10 @@ public class Base {
     switch(color.toLowerCase()) {
       case "dark_blue":
       case "dark_aqua":
+        return "cyan";
       case "aqua":
         return "light_blue";
-      case  "dark_green":
+      case "dark_green":
         return "green";
       case "green":
         return "lime";
@@ -100,9 +101,12 @@ public class Base {
         return "gray";
       case "light_purple":
         return "magenta";
-        //not used? BROWN, PINK, ORANGE
+      case "gold":
+        return "orange";
+      //not used? BROWN, PINK
+      default:
+        return color;
     }
-    return color;
   }
 
   public String getFormattedColor() {
