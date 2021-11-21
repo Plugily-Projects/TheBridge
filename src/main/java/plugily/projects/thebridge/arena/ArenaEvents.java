@@ -241,6 +241,9 @@ public class ArenaEvents implements Listener {
           return;
         }
         cooldownPortal.put(player, System.currentTimeMillis());
+        if(base.getAlivePlayersSize() == 0) {
+          continue;
+        }
         arena.resetRound();
         player.teleport(arena.getBase(player).getPlayerSpawnPoint());
         if(arena.getMode() == Arena.Mode.HEARTS) {

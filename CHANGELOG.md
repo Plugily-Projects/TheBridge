@@ -1,6 +1,7 @@
 ### 1.1.5 Release (26.08.2021 - XX)
 * Fixed build check outside of arena border was checking for player and not for block location
 * Fixed maxplayers command not checking if arena was already in-game
+* Fixed bases without players can be used to get scores
 
 ### 1.1.4 Release (19.07.2021 - 01.08.2021)
 * Reuse XMaterial for specialitems
