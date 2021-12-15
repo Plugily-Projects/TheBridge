@@ -29,7 +29,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -192,14 +191,6 @@ public class Events implements Listener {
     if(event.getItem().getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
       player.setFoodLevel(20);
       player.setHealth(VersionUtils.getMaxHealth(player));
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protect our game
-  public void onBlockBreakEvent(BlockBreakEvent event) {
-    if(ArenaRegistry.isInArena(event.getPlayer()) && ArenaRegistry.getArena(event.getPlayer()).getArenaState() != ArenaState.IN_GAME) {
-      event.setCancelled(true);
     }
   }
 
