@@ -24,7 +24,7 @@ Leave-Lobby:
 Base-Selector:
   displayname: "&b&lSelect Base"
   lore:
-    "&7Right-click to select your team"
+    - "&7Right-click to select your team"
   material-name: WOOL
   slot: 1
   stage: lobby
