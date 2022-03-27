@@ -64,10 +64,20 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.3-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Spigot APIs -->
         <dependency>
@@ -141,24 +151,16 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>plugily.projects.inventoryframework</pattern>
-                                    <shadedPattern>plugily.projects.thebridge.utils.inventoryframework</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
                                     <shadedPattern>plugily.projects.thebridge.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>me.tigerhix.lib.scoreboard</pattern>
-                                    <shadedPattern>plugily.projects.thebridge.utils.scoreboard</shadedPattern>
+                                    <pattern>plugily.projects.minigamesbox</pattern>
+                                    <shadedPattern>plugily.projects.thebridge.minigamesbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>plugily.projects.commonsbox</pattern>
                                     <shadedPattern>plugily.projects.thebridge.commonsbox</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>plugily.projects.thebridge.utils</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -181,20 +183,20 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>3.4.3</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.1</version>
             </extension>
         </extensions>
     </build>
     <distributionManagement>
         <repository>
-            <id>plugily-projects-repo</id>
-            <url>ftp://81.19.211.8</url>
+            <id>plugily-projects-releases-repository</id>
+            <url>https://maven.plugily.xyz/releases</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>thebridge</name>
-            <url>ftp://81.19.211.8</url>
+            <name>TheBridge</name>
+            <url>sftp://91.229.245.16/var/www/jd</url>
         </site>
     </distributionManagement>
 
