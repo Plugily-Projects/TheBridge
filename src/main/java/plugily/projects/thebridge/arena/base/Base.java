@@ -26,18 +26,16 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.commonsbox.minecraft.dimensional.Cuboid;
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.handlers.language.LanguageManager;
-import plugily.projects.thebridge.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Tigerpanzer_02, 2Wild4You
+ * @author Tigerpanzer_02
  * <p>
  * Created at 07.11.2020
  */
@@ -63,7 +61,7 @@ public class Base {
 
   private ArmorStandHologram armorStandHologram;
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public Base(String color, Location baseLocation1, Location baseLocation2, Location playerSpawnPoint, Location playerRespawnPoint, Location portalLocation1, Location portalLocation2, Integer maximumSize) {
     this.color = color;
@@ -110,7 +108,7 @@ public class Base {
   }
 
   public String getFormattedColor() {
-    return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage("Bases.Colors." + getColor()) + "&r");
+    return ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getLanguageMessage("Bases.Colors." + getColor()) + "&r");
   }
 
   public Location getBaseLocation1() {
@@ -147,15 +145,15 @@ public class Base {
 
   public boolean addPlayer(Player player) {
     if(players.contains(player)) {
-      player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Member"));
+      new MessageBuilder("BASES_TEAM_MEMBER").asKey().player(player).sendPlayer();
       return false;
     }
     if(players.size() >= maximumSize) {
-      player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Full"));
+      new MessageBuilder("BASES_TEAM_FULL").asKey().player(player).sendPlayer();
       return false;
     }
-    if(ArenaRegistry.getArena(player).inBase(player)) {
-      ArenaRegistry.getArena(player).getBase(player).removePlayer(player);
+    if(plugin.getArenaRegistry().getArena(player).inBase(player)) {
+      plugin.getArenaRegistry().getArena(player).getBase(player).removePlayer(player);
     }
     this.players.add(player);
     return true;
@@ -259,7 +257,7 @@ public class Base {
       return false;
     }
     if(cageBlock == Material.AIR) {
-      Debugger.sendConsoleMsg("[The Bridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
+      plugin.getDebugger().sendConsoleMsg("[The Bridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
       return false;
     }
     return true;

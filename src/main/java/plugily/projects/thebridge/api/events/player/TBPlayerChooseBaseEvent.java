@@ -22,17 +22,16 @@ package plugily.projects.thebridge.api.events.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import plugily.projects.thebridge.api.events.TheBridgeEvent;
+import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 
 /**
  * @author TomTheDeveloper, Plajer
  * @since 2.0.0
- * <p>
- * Called when player chose kit in game.
+ *     <p>Called when player chose kit in game.
  */
-public class TBPlayerChooseBaseEvent extends TheBridgeEvent implements Cancellable {
+public class TBPlayerChooseBaseEvent extends PlugilyEvent implements Cancellable {
 
   private static final HandlerList handlers = new HandlerList();
   private final Player player;

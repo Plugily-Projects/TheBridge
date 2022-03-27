@@ -1,7 +1,14 @@
 instances:
   default:
     lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
+    #startlocation: world,364.0,63.0,-72.0,0.0,0.0
     endlocation: world,364.0,63.0,-72.0,0.0,0.0
+    minimumplayers: 2
+    maximumplayers: 10
+    mapname: mapname
+    world: worldname
+    signs: [ ]
+    isdone: false
     spectatorlocation: world,364.0,63.0,-72.0,0.0,0.0
     midlocation: world,364.0,63.0,-72.0,0.0,0.0
     arenalocation1: world,364.0,63.0,-72.0,0.0,0.0
@@ -16,12 +23,14 @@ instances:
         portallocation2: world,364.0,63.0,-72.0,0.0,0.0
         color: GREEN
         isdone: true
-    minimumplayers: 2
     maximumsize: 2
-    mapname: mapname
     # HEARTS -> LAST TEAM STANDING
     # POINTS -> FIRST TEAM WHO REACH THE POINTS WIN
     mode: POINTS
-    modevalue: 5
-    signs: []
-    isdone: false
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

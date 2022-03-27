@@ -1,14 +1,35 @@
 name: ${project.name}
 main: plugily.projects.thebridge.Main
-authors: [ Tigerpanzer, 2Wild4You ]
+authors: [ PlugilyProjects, Tigerpanzer_02 ]
 version: ${project.version}
+softdepend: [ PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport ]
 api-version: 1.13
-softdepend: [ PlaceholderAPI ]
 
 commands:
-  thebridge:
-    description: thebridge commands
+  TheBridge:
+    description: TheBridge Commands
+    usage: "\u00A76Correct usage: /PlugilyProjects [option]"
     aliases: [ tb, bridge ]
-  thebridgeAdmin:
-    description: thebridge admin commands
+  TheBridgeAdmin:
+    description: TheBridge Admin Commands
+    usage: "\u00A76Correct usage: /PlugilyProjectsa [option]"
     aliases: [ tba, bridgeadmin ]
+
+permissions:
+  thebridge.admin.*:
+    default: op
+    children:
+      thebridge.updatenotify: true
+      thebridge.admin: true
+      thebridge.admin.setup: true
+      thebridge.admin.delete: true
+      thebridge.admin.list: true
+      thebridge.admin.spychat: true
+      thebridge.admin.stopgame: true
+      thebridge.admin.forcestart: true
+      thebridge.admin.addsign: true
+      thebridge.admin.clear: true
+      thebridge.admin.sign.create: true
+      thebridge.admin.sign.break: true
+      thebridge.admin.reload: true
+      thebridge.command.override: true

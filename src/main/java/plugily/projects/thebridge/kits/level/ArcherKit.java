@@ -24,19 +24,18 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
-import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.LevelKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 14/08/2014.
@@ -44,16 +43,16 @@ import java.util.List;
 public class ArcherKit extends LevelKit {
 
   public ArcherKit() {
-    this.setLevel(getKitsConfig().getInt("Required-Level.Archer"));
-    setName(getPlugin().getChatManager().colorMessage("Kits.Archer.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Archer.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
-    KitRegistry.registerKit(this);
+    setLevel(getKitsConfig().getInt("Required-Level.Archer"));
+    setName(new MessageBuilder("KIT_CONTENT_ARCHER_NAME").asKey().build());
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_ARCHER_DESCRIPTION");
+    setDescription(description);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("thebridge.kit.archer");
+    return getPlugin().getUserManager().getUser(player).getStatistic("LEVEL") >= this.getLevel() || player.hasPermission("thebridge.kit.archer");
   }
 
   @Override
@@ -65,7 +64,7 @@ public class ArcherKit extends LevelKit {
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
 
     player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -81,7 +80,7 @@ public class ArcherKit extends LevelKit {
 
   @Override
   public void reStock(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }

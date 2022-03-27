@@ -1,10 +1,10 @@
 package plugily.projects.thebridge.api.events.game;
 
 import org.bukkit.event.HandlerList;
-import plugily.projects.thebridge.api.events.TheBridgeEvent;
+import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
 import plugily.projects.thebridge.arena.Arena;
 
-public class TBRoundResetEvent extends TheBridgeEvent {
+public class TBRoundResetEvent extends PlugilyEvent {
 
   private static final HandlerList handlers = new HandlerList();
   private final int actualRound;

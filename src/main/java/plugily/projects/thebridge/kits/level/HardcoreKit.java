@@ -25,20 +25,19 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
-import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.LevelKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 28/07/2015.
@@ -46,16 +45,16 @@ import java.util.List;
 public class HardcoreKit extends LevelKit {
 
   public HardcoreKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Hardcore.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Hardcore.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
+    setName(new MessageBuilder("KIT_CONTENT_HARDCORE_NAME").asKey().build());
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_HARDCORE_DESCRIPTION");
+    setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.Hardcore"));
-    KitRegistry.registerKit(this);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("thebridge.kit.hardcore");
+    return getPlugin().getUserManager().getUser(player).getStatistic("LEVEL") >= this.getLevel() || player.hasPermission("thebridge.kit.hardcore");
   }
 
   @Override
@@ -63,10 +62,10 @@ public class HardcoreKit extends LevelKit {
     player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 2, true));
+    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 2, true));
     player.getInventory().addItem(new ItemStack(Material.COOKIE, 10));
     VersionUtils.setMaxHealth(player, 10.0);
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -81,8 +80,8 @@ public class HardcoreKit extends LevelKit {
 
   @Override
   public void reStock(Player player) {
-    player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 2, true));
-    Arena arena = ArenaRegistry.getArena(player);
+    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 2, true));
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }

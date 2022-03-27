@@ -1,11 +1,14 @@
-#     The Bridge configuration file
+### Initial config.yml for all plugily projects
+## Thanks for using our plugins! ~Tigerpanzer_02 from Plugily Projects
+#      PlugilyProjects configuration file
 #
-#    You can edit here the basic things of MM
+#    You can edit here the basic things of PlugilyProjects
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
 
-# Select locale of The Bridge, default it's English.
+
+# Select locale of PlugilyProjects, default it's English.
 # Available locales:
 #    default - English language. Uses 'language.yml'.
 #    de - Deutsche sprache          pl - Język polski
@@ -18,76 +21,93 @@
 #    nl - Dutch
 locale: default
 
-# Enable bossbar support?
-Bossbar-Enabled: true
 
-# Should we hook into bungee cord? (If you wanna use arena per server option)
+# Should we display a boss bar with additional arena information?
+Bossbar:
+  Display: true
+  # Interval in seconds between messages
+  Interval: 10
+
+
+# Should we hook into bungeecord? (If you wanna use arena per server option)
+# This option will let you access bungee.yml and its options.
 # You STILL need to use external addon for HUB server game signs
-# thebridge doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/thebridge/support/servertips#bungeecord-lobby-signs
-BungeeActivated: false
+# Check here for more info: https://wiki.plugily.xyz/
+Bungee-Mode: false
+
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
+Inventory-Manager: true
+
+
+Commands:
+  # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
+  Whitelist:
+    - me
+    - help
+  # Enable and Disable predefined shortened commands or add your own
+  Shorter:
+    '1':
+      Short: "start"
+      Executes: "plugilyprojectsadmin forcestart"
+      Enabled: true
+    '2':
+      Short: "leave"
+      Executes: "plugilyprojects leave"
+      Enabled: true
+    '3':
+      Short: "kit"
+      Executes: "plugilyprojects selectkit"
+      Enabled: false
+    '4':
+      Short: "stats"
+      Executes: "plugilyprojects stats"
+      Enabled: false
+    '5':
+      Short: "top"
+      Executes: "plugilyprojects top"
+      Enabled: true
+
+
+# Block some functions of your players
+Block:
+  In-Game:
+    # Should we block every not plugin associated commands in game?
+    Commands: true
+    # Should the leave command be blocked inside arena?
+    Leave: false
+    # Cancels Item Movement into player crafting, enchantment tables, anvils ...
+    Item-Move: true
+
 
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is NO migrator between
 # flat file and MySQL for player stats.
-DatabaseActivated: false
+# If this option is disabled it means all stats will be saved as flat file!
+Database: false
 
-# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
-# This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
-InventoryManager: true
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/thebridge/setup/cmdsandperms#basic-permissions
-Basic-Permissions:
-  Full-Games-Permission: "thebridge.fullgames"
-  # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.AC02'
-  # use 'thebridge.join.*' to enable access to all arenas
-  Join-Permission: "thebridge.join.<arena>"
-  Kits-Permission: "thebridge.kits"
+# Should we enable in game rewards? See rewards.yml for more...
+# You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
+Rewards: true
 
-Time-Manager:
-  Start-On-Full-Lobby: 15
-  Waiting-Time-Lobby: 60
-  # No one wins after that time amount
-  Gameplay: 500
 
-# Should we enable short commands such as /start and /leave
-Enable-Short-Commands: false
-
-# Should /ac leave command be blocked?
-Disable-Leave-Command: false
-
-# Should players get no fall damage?
-Disable-Fall-Damage: false
-
-# Commands which can be used in game, remove all of them to disable
-Whitelisted-Commands:
-  - me
-  - help
-
-# Enable in game rewards? See rewards.yml for more...
-Rewards-Enabled: false
-
-# Should we block every not thebridge associated commands in game?
-Block-Commands-In-Game: true
-
-# Enable in game (eg. '[KIT][BASE][LEVEL] Plugily: hey') special formatting?
+# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
 # Formatting is configurable in language.yml
 # You can use PlaceholderAPI placeholders in chat format!
-ChatFormat-Enabled: true
+Plugin-Chat-Format: true
 
-# Should we disable all chat related stuff?
-# It will disable the separated chat, for example
-Disable-Separate-Chat: false
 
-#Disable Party features of external party plugins (such as PAF, Parties ...)
-Disable-Parties: true
+# Should we enable a separate arena chat for players inside a arena
+# Useful on multi arena servers that don't want the same chat for all players on the server
+Separate-Arena-Chat: true
 
-#Disable Food lose
-Disable-Food-Lose: true
 
-# Should we fire some cool fireworks at location of every player after the game ends?
-Firework-When-Game-Ends: true
+# Should we fire some cool fireworks at locations of every player at special events such as the game end?
+Firework: true
+
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
@@ -96,10 +116,78 @@ Firework-When-Game-Ends: true
 # - orange (in game) stained glass
 # - gray (ending) stained glass
 # - black (restarting) stained glass
-Signs-Block-States-Enabled: true
+# or define your own at signs.yml!
+Sign-Block-States: true
+
+
+# Should holiday events for the plugin be enabled?
+# Eg. 4 days before and 4 days after Halloween special effects
+# for death, spooky! There are more holiday events! Check wiki!
+# Wiki: -
+Holidays: true
+
+
+# Should the plugin enable special powerups which can be found in powerups.yml
+Powerups: false
+
+
+# Should the plugin enable kits which can be found in kits.yml
+Kits: false
+
+
+# Should we create leaderboards out of the stats?
+Leaderboard: true
+
+
+Parties:
+  # Should we try to hook into your current party plugin? (Supports well know party plugins, see wiki!)
+  # It will group up all players with the party leader. The party leader can join with the whole party!
+  External: true
+  # Should we enable our own party system that can be only used for this plugin?
+  # Check the wiki for commands
+  Own: false
+
+
+Damage:
+  # Should players get fall damage?
+  Fall: false
+  # Should players get drowning damage?
+  Drowning: false
+  # Should players get fire damage?
+  Fire: false
+
+
+Cycle:
+  # Should we make permanent clear weather on all worlds where our arenas are?
+  Weather: false
+  # Should the time on the world your arenas are modified to stay at the same time?
+  Daylight:
+    Enable: false
+    Time: 10000
+
+
+# How many seconds game should take to start.
+Time-Manager:
+  Waiting: 20
+  Starting: 60
+  Shorten-Waiting-Full: 15
+  Shorten-Waiting-Force: 5
+  In-Game: 270
+  Ending: 10
+  Restarting: 5
+
+
+# Allow spectators on arena instances
+Spectators: true
+
+
+#Disable Food lose
+Food-Lose: true
+
 
 # Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
 Colored-Block-Material: "_TERRACOTTA"
+
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -109,16 +197,10 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
-Arena-Selector:
-  # Change items of arena selector
-  State-Item:
-    Waiting: LIME_wool
-    Starting: YELLOW_wool
-    In-Game: RED_wool
-    Ending: RED_wool
-    Restarting: RED_wool
 
-# Don't modify.
-Version: 4
-
-# No way! You've reached the end! But... where's the dragon!?
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

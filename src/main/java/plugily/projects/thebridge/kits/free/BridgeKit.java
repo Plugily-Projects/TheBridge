@@ -24,27 +24,28 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.FreeKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.FreeKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 public class BridgeKit extends FreeKit {
 
   public BridgeKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Bridge.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Bridge.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
-    KitRegistry.registerKit(this);
+    setName(new MessageBuilder("KIT_CONTENT_BRIDGE_NAME").asKey().build());
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_BRIDGE_DESCRIPTION");
+    setDescription(description);
+    getPlugin().getKitRegistry().registerKit(this);
+    getPlugin().getKitRegistry().setDefaultKit(this);
   }
 
   @Override
@@ -62,7 +63,7 @@ public class BridgeKit extends FreeKit {
     player.getInventory().addItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 5));
     VersionUtils.setMaxHealth(player, 20.0);
     player.setHealth(20.0);
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -77,7 +78,7 @@ public class BridgeKit extends FreeKit {
 
   @Override
   public void reStock(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }

@@ -24,16 +24,15 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.FreeKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.FreeKit;
-import plugily.projects.thebridge.utils.Utils;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
 
@@ -43,10 +42,10 @@ import java.util.List;
 public class KnightKit extends FreeKit {
 
   public KnightKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Knight.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Knight.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
-    KitRegistry.registerKit(this);
+    setName(new MessageBuilder("KIT_CONTENT_KNIGHT_NAME").asKey().build());
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_KNIGHT_DESCRIPTION");
+    setDescription(description);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
@@ -60,12 +59,12 @@ public class KnightKit extends FreeKit {
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
+    KitUtil.addBuildBlocks(player, arena);
   }
 
   @Override
@@ -75,10 +74,10 @@ public class KnightKit extends FreeKit {
 
   @Override
   public void reStock(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    addBuildBlocks(player, arena);
+    KitUtil.addBuildBlocks(player, arena);
   }
 }

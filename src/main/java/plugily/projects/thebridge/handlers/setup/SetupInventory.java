@@ -1,186 +1,295 @@
-/*
- * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package plugily.projects.thebridge.handlers.setup;
 
-import plugily.projects.inventoryframework.gui.type.ChestGui;
-import plugily.projects.inventoryframework.pane.StaticPane;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Door;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import plugily.projects.minigamesbox.classic.PluginMain;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupUtilities;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.CountItem;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.LocationItem;
+import plugily.projects.minigamesbox.classic.handlers.setup.pages.PagesPage;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.utils.conversation.SimpleConversationBuilder;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.helper.MaterialUtils;
+import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
+import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.handlers.setup.components.ArenaRegisterComponent;
-import plugily.projects.thebridge.handlers.setup.components.BaseComponent;
-import plugily.projects.thebridge.handlers.setup.components.MiscComponents;
-import plugily.projects.thebridge.handlers.setup.components.ModeComponent;
-import plugily.projects.thebridge.handlers.setup.components.PlayerAmountComponents;
-import plugily.projects.thebridge.handlers.setup.components.SpawnComponents;
+import plugily.projects.thebridge.commands.arguments.admin.CuboidSelector;
+import plugily.projects.thebridge.handlers.setup.components.BasePage;
 
-import java.util.Random;
+import java.util.List;
 
-/**
- * Created by Tom on 15/06/2015.
- */
-public class SetupInventory {
+public class SetupInventory extends PluginSetupInventory {
 
-  public static final String VIDEO_LINK = "https://tutorial.plugily.xyz";
-  private static final Random random = new Random();
-  private static Main plugin;
-  private final FileConfiguration config;
-  private final Arena arena;
+
+  private final Main plugin;
+  private Arena arena;
   private final Player player;
-  private ChestGui gui;
-  private ChestGui bases;
-  private ChestGui modes;
-  private final SetupUtilities setupUtilities;
 
-  public SetupInventory(Arena arena, Player player) {
-    this.config = ConfigUtils.getConfig(plugin, "arenas");
-    this.arena = arena;
+
+  public SetupInventory(Main plugin, @Nullable PluginArena arena, Player player) {
+    super(plugin, arena, player);
+    this.plugin = plugin;
     this.player = player;
-    this.setupUtilities = new SetupUtilities(config, arena);
-    prepareGuis();
+    setArena(player, arena);
+    open();
   }
 
-  public static void init(Main plugin) {
-    SetupInventory.plugin = plugin;
+  public SetupInventory(Main plugin, @Nullable PluginArena arena, Player player, SetupUtilities.InventoryStage inventoryStage) {
+    super(plugin, arena, player, inventoryStage);
+    this.plugin = plugin;
+    this.player = player;
+    setArena(player, arena);
+    open();
   }
 
-  private void prepareGuis() {
-    this.gui = new ChestGui(2, "The Bridge Arena Setup");
-    this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-    StaticPane gui = new StaticPane(9, 4);
-    this.gui.addPane(gui);
-
-    this.bases = new ChestGui(2, "The Bridge Setup > Base");
-    this.bases.setOnGlobalClick(e -> e.setCancelled(true));
-    StaticPane bases = new StaticPane(9, 4);
-    this.bases.addPane(bases);
-
-    this.modes = new ChestGui(2, "The Bridge Setup > Mode");
-    this.modes.setOnGlobalClick(e -> e.setCancelled(true));
-    StaticPane modes = new StaticPane(9, 4);
-    this.modes.addPane(modes);
-
-    prepareComponentsGui(gui);
-    prepareComponentsBase(bases);
-    prepareComponentsMode(modes);
+  @Override
+  public void setArena(Player player, PluginArena arena) {
+    if(arena == null && plugin.getSetupUtilities().getArena(player) != null) {
+      this.arena = plugin.getArenaRegistry().getArena(plugin.getSetupUtilities().getArena(player).getId());
+      setInventoryStage(SetupUtilities.InventoryStage.PAGED_GUI);
+    } else if(arena != null) {
+      this.arena = plugin.getArenaRegistry().getArena(arena.getId());
+    } else {
+      this.arena = null;
+    }
+    setArena(this.arena);
   }
 
-  private void prepareComponentsGui(StaticPane pane) {
-    SpawnComponents spawnComponents = new SpawnComponents();
-    spawnComponents.prepare(this);
-    spawnComponents.injectComponents(pane);
-
-    PlayerAmountComponents playerAmountComponents = new PlayerAmountComponents();
-    playerAmountComponents.prepare(this);
-    playerAmountComponents.injectComponents(pane);
-
-    MiscComponents miscComponents = new MiscComponents();
-    miscComponents.prepare(this);
-    miscComponents.injectComponents(pane);
-
-    ArenaRegisterComponent arenaRegisterComponent = new ArenaRegisterComponent();
-    arenaRegisterComponent.prepare(this);
-    arenaRegisterComponent.injectComponents(pane);
-  }
-
-  private void prepareComponentsBase(StaticPane pane) {
-    BaseComponent baseComponent = new BaseComponent();
-    baseComponent.prepare(this);
-    baseComponent.injectComponents(pane);
-  }
-
-  private void prepareComponentsMode(StaticPane pane) {
-    ModeComponent modeComponent = new ModeComponent();
-    modeComponent.prepare(this);
-    modeComponent.injectComponents(pane);
-  }
-
-  private void sendProTip(Player p) {
-    int rand = random.nextInt(8 + 1);
-    switch(rand) {
-      case 2:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
+  @Override
+  public void addExternalItems(NormalFastInv inv) {
+    switch (getInventoryStage()) {
+      case SETUP_GUI:
         break;
-      case 3:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7PlaceholderApi plugin is supported with our plugin! Check here: https://wiki.plugily.xyz/thebridge/placeholders/placeholderapi"));
+      case ARENA_LIST:
         break;
-      case 4:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Achievements, custom kits and replay ability are things available in our paid addon for this minigame! https://wiki.plugily.xyz/thebridge/addon/overview"));
+      case PAGED_GUI:
+        inv.setItem(10, ClickableItem.of(new ItemBuilder(XMaterial.ORANGE_STAINED_GLASS_PANE.parseMaterial()).name("&e&lEdit Base").lore(ChatColor.GRAY + "Here you can add/edit a base")
+            .lore(ChatColor.GRAY + "Make sure to register the base before continuing!").build(), event -> openBaseMenu()));
         break;
-      case 5:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/TheBridge"));
+      case PAGED_VALUES:
+        inv.setItem(41, ClickableItem.of(new ItemBuilder(Material.APPLE)
+            .name(new MessageBuilder("&e&lSet Mode").build())
+            .lore(ChatColor.DARK_GRAY + "(Points: Base with the most points win")
+            .lore(ChatColor.DARK_GRAY + "(Hearts: Kinda Last Team Standing)")
+            .lore("", new MessageBuilder("&a&lCurrently: &e" + getPlugin().getSetupUtilities().getConfig().getString("instances." + getArena().getId() + ".mode", "none")).build())
+            .build(), event -> {
+          event.getWhoClicked().closeInventory();
+          new SimpleConversationBuilder(getPlugin()).withPrompt(new StringPrompt() {
+            @Override
+            public @NotNull
+            String getPromptText(ConversationContext context) {
+              return new MessageBuilder("&ePlease type in chat mode name! (HEARTS or POINTS)").prefix().build();
+            }
+
+            @Override
+            public Prompt acceptInput(ConversationContext context, String input) {
+              String name = new MessageBuilder(input).build();
+              Arena.Mode mode = Arena.Mode.valueOf(name);
+              getPlayer().sendRawMessage(new MessageBuilder("&e✔ Completed | &aMode of arena " + getArena().getId() + " set to " + mode).build());
+              arena.setMode(mode);
+              getPlugin().getSetupUtilities().getConfig().set("instances." + getArena().getId() + ".mode", mode);
+              ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+
+              open(SetupUtilities.InventoryStage.PAGED_VALUES);
+              return Prompt.END_OF_CONVERSATION;
+            }
+          }).buildFor(getPlayer());
+        }));
         break;
-      case 6:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check wiki &8https://wiki.plugily.xyz/thebridge &7or discord https://discord.plugily.xyz"));
+      case PAGED_BOOLEAN:
         break;
-      case 8:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/TheBridge"));
+      case PAGED_COUNTABLE:
+        inv.setItem(10, new CountItem(new ItemBuilder(Material.REDSTONE)
+            .amount(plugin.getSetupUtilities().getMinimumValueHigherThanZero("maximumsize", this))
+            .name(new MessageBuilder("&e&lSet Maximum Players Per Base Amount").build())
+            .lore(ChatColor.GRAY + "LEFT click to decrease")
+            .lore(ChatColor.GRAY + "RIGHT click to increase")
+            .lore(ChatColor.DARK_GRAY + "(how many players one base can hold)")
+            .lore("", plugin.getSetupUtilities().isOptionDone("maximumsize", this))
+            .build(), e -> {
+          ItemStack currentItem = e.getCurrentItem();
+          if(currentItem == null) {
+            return;
+          }
+          plugin.getSetupUtilities().getConfig().set("instances." + arena.getId() + ".maximumsize", e.getCurrentItem().getAmount());
+          arena.setArenaOption("BASE_PLAYER_SIZE", e.getCurrentItem().getAmount());
+          ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+          inv.refresh();
+        }));
+        inv.setItem(11, new CountItem(new ItemBuilder(Material.REDSTONE_TORCH)
+            .amount(plugin.getSetupUtilities().getMinimumValueHigherThanZero("modevalue", this))
+            .name(new MessageBuilder("&e&lSet Mode Value Amount").build())
+            .lore(ChatColor.GRAY + "LEFT click to decrease")
+            .lore(ChatColor.GRAY + "RIGHT click to increase")
+            .lore(ChatColor.DARK_GRAY + "(how many points until the mode choose winner)")
+            .lore("", plugin.getSetupUtilities().isOptionDone("modevalue", this))
+            .build(), e -> {
+          ItemStack currentItem = e.getCurrentItem();
+          if(currentItem == null) {
+            return;
+          }
+          plugin.getSetupUtilities().getConfig().set("instances." + arena.getId() + ".modevalue", e.getCurrentItem().getAmount());
+          arena.setArenaOption("MODE_VALUE", e.getCurrentItem().getAmount());
+          ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+          inv.refresh();
+        }));
+        inv.setItem(12, new CountItem(new ItemBuilder(Material.REDSTONE_LAMP)
+            .amount(plugin.getSetupUtilities().getMinimumValueHigherThanZero("resetblocks", this))
+            .name(new MessageBuilder("&e&lSet reset blocks round").build())
+            .lore(ChatColor.GRAY + "LEFT click to decrease")
+            .lore(ChatColor.GRAY + "RIGHT click to increase")
+            .lore(ChatColor.DARK_GRAY + "(After how many rounds should we reset blocks?)")
+            .lore(ChatColor.DARK_GRAY + "(SHIFT LEFT CLICK to disable reset)")
+            .lore("", plugin.getSetupUtilities().isOptionDone("resetblocks", this))
+            .build(), e -> {
+          ItemStack currentItem = e.getCurrentItem();
+          if(currentItem == null) {
+            return;
+          }
+          int amount = e.getCurrentItem().getAmount();
+          if(e.getClick().isShiftClick() && e.getClick().isLeftClick()) {
+            amount = 0;
+          }
+          plugin.getSetupUtilities().getConfig().set("instances." + arena.getId() + ".resetblocks", amount);
+          arena.setArenaOption("RESET_BLOCKS", amount);
+          ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+          inv.refresh();
+        }));
+
+
+        break;
+      case PAGED_LOCATIONS:
+        inv.setItem(22, new LocationItem(new ItemBuilder(XMaterial.BEACON.parseMaterial())
+            .name(new MessageBuilder("&e&lSet Mid Location").build())
+            .lore(ChatColor.GRAY + "Click to set the mid location")
+            .lore(ChatColor.GRAY + "on the place where you are standing.")
+            .lore(ChatColor.DARK_GRAY + "(location where all lines will be")
+            .lore(ChatColor.DARK_GRAY + "crossed from each base)")
+            .lore("", plugin.getSetupUtilities().isOptionDoneBool("midlocation", this))
+            .build(), e -> {
+          String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
+              + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
+
+          plugin.getSetupUtilities().getConfig().set("instances." + arena.getId() + ".midlocation", serializedLocation);
+          arena.setMidLocation(player.getLocation());
+          new MessageBuilder("&e✔ Completed | &aMid location for arena " + arena.getId() + " set at your location!").player(player).sendPlayer();
+          ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+        }, event -> {
+          new MessageBuilder("&cNot supported!").prefix().player(player).sendPlayer();
+        }, false, false, true));
+
+        inv.setItem(21, new LocationItem(new ItemBuilder(XMaterial.BEDROCK.parseMaterial())
+            .name(new MessageBuilder("&e&lSet Arena Location").build())
+            .lore(ChatColor.GRAY + "Click to set the arena location")
+            .lore(ChatColor.GRAY + "after you selected it with the location wand")
+            .lore(ChatColor.DARK_GRAY + "[location where all bases and lines")
+            .lore(ChatColor.DARK_GRAY + "are in (+ players can build inside)]")
+            .lore("", plugin.getSetupUtilities().isOptionDoneBool("arenalocation1", this))
+            .build(), e -> {
+          CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+          if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
+            new MessageBuilder("&cPlease select both corners before adding an arena location!").prefix().player(player).sendPlayer();
+            return;
+          }
+          LocationSerializer.saveLoc(plugin, plugin.getSetupUtilities().getConfig(), "arenas", "instances." + arena.getId() + ".arenalocation1", selection.getFirstPos());
+          LocationSerializer.saveLoc(plugin, plugin.getSetupUtilities().getConfig(), "arenas", "instances." + arena.getId() + ".arenalocation2", selection.getSecondPos());
+          arena.setArenaBorder(new Cuboid(selection.getFirstPos(), selection.getSecondPos()));
+          new MessageBuilder("&e✔ Completed | &aArena location for arena " + arena.getId() + " set at your location!").player(player).sendPlayer();
+          ConfigUtils.saveConfig(plugin, plugin.getSetupUtilities().getConfig(), "arenas");
+        }, event -> {
+          new MessageBuilder("&cNot supported!").prefix().player(player).sendPlayer();
+        }, false, false, true));
         break;
       default:
         break;
     }
+    inv.refresh();
+}
+
+  public void openBaseMenu() {
+    NormalFastInv pagedGui = new BasePage(54, plugin.getPluginMessagePrefix() + "Base Editor Menu", this);
+    pagedGui.open(player);
   }
 
-  public void openInventory() {
-    //check does not work because of prepared guis
-    if(BaseUtilities.isEditing(player)) {
-      openBases();
+
+  @Override
+  public boolean addAdditionalArenaValidateValues(InventoryClickEvent event, PluginArena arena, PluginMain plugin, FileConfiguration config) {
+    if(config.getConfigurationSection("instances." + arena.getId() + ".bases") == null || config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false).size() < 1) {
+      new MessageBuilder("&c&l✘ &cArena validation failed! Please configure bases properly!").send(event.getWhoClicked());
+      return false;
+    }
+    int basesDone = 0;
+    if(config.isConfigurationSection("instances." + arena.getId() + ".bases")) {
+      for(String baseID : config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false)) {
+        if(config.isSet("instances." + arena.getId() + ".bases." + baseID + ".isdone")) {
+          basesDone++;
+        }
+      }
+    }
+    if(basesDone < 2) {
+      new MessageBuilder("&c&l✘ &cArena validation failed! Please configure bases properly!").send(event.getWhoClicked());
+      return false;
+    }
+
+
+    if(!config.isSet("instances." + arena.getId() + ".maximumsize")) {
+      new MessageBuilder("&c&l✘ &cArena validation failed! Please configure maximumsize properly!").send(event.getWhoClicked());
+      return false;
+    }
+    if(!config.isSet("instances." + arena.getId() + ".mode")) {
+      new MessageBuilder("&c&l✘ &cArena validation failed! Please configure mode properly!").send(event.getWhoClicked());
+      return false;
+    }
+    if(!config.isSet("instances." + arena.getId() + ".resetblocks")) {
+      new MessageBuilder("&c&l✘ &cArena validation failed! Please configure resetblocks properly!").send(event.getWhoClicked());
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public void addAdditionalArenaSetValues(PluginArena arena, FileConfiguration config) {
+    Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
+    if(pluginArena == null) {
       return;
     }
-    sendProTip(player);
-    gui.show(player);
-  }
-
-  public void openBases() {
-    sendProTip(player);
-    bases.show(player);
-  }
-
-  public void openModes() {
-    sendProTip(player);
-    modes.show(player);
-  }
-
-  public Main getPlugin() {
-    return plugin;
-  }
-
-  public FileConfiguration getConfig() {
-    return config;
-  }
-
-  public Arena getArena() {
-    return arena;
-  }
-
-  public Player getPlayer() {
-    return player;
-  }
-
-  public ChestGui getGui() {
-    return gui;
-  }
-
-  public SetupUtilities getSetupUtilities() {
-    return setupUtilities;
+    int basesDone = 0;
+    if(config.isConfigurationSection("instances." + arena.getId() + ".bases")) {
+      for(String baseID : config.getConfigurationSection("instances." + arena.getId() + ".bases").getKeys(false)) {
+        if(config.isSet("instances." + arena.getId() + ".bases." + baseID + ".isdone")) {
+          basesDone++;
+        }
+      }
+    }
+    pluginArena.setArenaOption("BASE_PLAYER_SIZE", config.getInt("instances." + arena.getId() + ".maximumsize", 3));
+    pluginArena.setMaximumPlayers(basesDone * arena.getArenaOption("BASE_PLAYER_SIZE"));
+    pluginArena.setArenaOption("RESET_TIME", config.getInt("instances." + arena.getId() + ".resettime", 5));
   }
 }

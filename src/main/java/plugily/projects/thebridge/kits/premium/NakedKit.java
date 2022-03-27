@@ -27,23 +27,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
+import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.handlers.PermissionsManager;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.PremiumKit;
-import plugily.projects.thebridge.user.User;
-import plugily.projects.thebridge.utils.Utils;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 8/02/2015.
@@ -53,11 +54,11 @@ public class NakedKit extends PremiumKit implements Listener {
   private final List<Material> armorTypes = new ArrayList<>();
 
   public NakedKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
+    setName(new MessageBuilder("KIT_CONTENT_WILD_NAKED_NAME").asKey().build());
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_WILD_NAKED_DESCRIPTION");
+    setDescription(description);
     getPlugin().getServer().getPluginManager().registerEvents(this, getPlugin());
-    KitRegistry.registerKit(this);
+    getPlugin().getKitRegistry().registerKit(this);
     setupArmorTypes();
   }
 
@@ -72,7 +73,7 @@ public class NakedKit extends PremiumKit implements Listener {
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return player.hasPermission("thebridge.kit.naked") || PermissionsManager.gotKitsPerm(player);
+    return player.hasPermission("thebridge.kit.naked") || getPlugin().getPermissionsManager().hasPermissionString("KIT_PREMIUM_UNLOCK", player);
   }
 
   @Override
@@ -84,7 +85,7 @@ public class NakedKit extends PremiumKit implements Listener {
     player.getInventory().addItem(itemStack);
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}));
-    Arena arena = ArenaRegistry.getArena(player);
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -98,8 +99,8 @@ public class NakedKit extends PremiumKit implements Listener {
 
   @Override
   public void reStock(Player player) {
-    player.getInventory().addItem(Utils.getPotion(PotionType.INSTANT_HEAL, 1, true));
-    Arena arena = ArenaRegistry.getArena(player);
+    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 1, true));
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
@@ -112,7 +113,7 @@ public class NakedKit extends PremiumKit implements Listener {
       return;
     }
     User user = getPlugin().getUserManager().getUser((Player) event.getWhoClicked());
-    if(!ArenaRegistry.isInArena((Player) event.getWhoClicked())) {
+    if(!getPlugin().getArenaRegistry().isInArena((Player) event.getWhoClicked())) {
       return;
     }
     if(!(user.getKit() instanceof NakedKit)) {
@@ -127,7 +128,7 @@ public class NakedKit extends PremiumKit implements Listener {
           continue;
         }
         //we cannot cancel event using scheduler, we must remove all armor contents from inventory manually
-        event.getWhoClicked().sendMessage(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Cannot-Wear-Armor"));
+        new MessageBuilder("KIT_CONTENT_WILD_NAKED_CANNOT_WEAR_ARMOR").asKey().send(user.getPlayer());
         event.getWhoClicked().getInventory().setHelmet(new ItemStack(Material.AIR, 1));
         event.getWhoClicked().getInventory().setChestplate(new ItemStack(Material.AIR, 1));
         event.getWhoClicked().getInventory().setLeggings(new ItemStack(Material.AIR, 1));
@@ -136,19 +137,17 @@ public class NakedKit extends PremiumKit implements Listener {
       }
     }, 1);
   }
-
   @EventHandler
-  public void onArmorClick(PlayerInteractEvent event) {
-    if(!ArenaRegistry.isInArena(event.getPlayer())) {
+  public void onArmorClick(PlugilyPlayerInteractEvent event) {
+    if(!getPlugin().getArenaRegistry().isInArena(event.getPlayer())) {
       return;
     }
-    User user = getPlugin().getUserManager().getUser(event.getPlayer());
-    if(!(user.getKit() instanceof NakedKit) || !event.hasItem()) {
+    if(!(getPlugin().getUserManager().getUser(event.getPlayer()).getKit() instanceof NakedKit) || !event.hasItem()) {
       return;
     }
     if(armorTypes.contains(event.getItem().getType())) {
       event.setCancelled(true);
-      event.getPlayer().sendMessage(getPlugin().getChatManager().colorMessage("Kits.Wild-Naked.Cannot-Wear-Armor"));
+      new MessageBuilder("KIT_CONTENT_WILD_NAKED_CANNOT_WEAR_ARMOR").asKey().player(event.getPlayer()).sendPlayer();
     }
   }
 }

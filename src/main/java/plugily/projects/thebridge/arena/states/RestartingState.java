@@ -16,21 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package plugily.projects.thebridge.arena;
+package plugily.projects.thebridge.arena.states;
 
-import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
+import org.bukkit.entity.Entity;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.arena.states.PluginRestartingState;
+import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.arena.base.Base;
+
+import java.util.Objects;
 
 /**
  * @author Plajer
- *     <p>Created at 13.03.2018
+ * <p>
+ * Created at 03.06.2019
  */
-public class ArenaUtils extends PluginArenaUtils {
+public class RestartingState extends PluginRestartingState {
 
-  private ArenaUtils() {
-    super();
-  }
+  @Override
+  public void handleCall(PluginArena arena) {
+    super.handleCall(arena);
+    Arena pluginArena = (Arena) getPlugin().getArenaRegistry().getArena(arena.getId());
+    if(pluginArena == null) {
+      return;
+    }
+    if(arena.getTimer() <= 0) {
 
-  public static int emptyBases(Arena arena) {
-    return (int) arena.getBases().stream().filter(base -> base.getPlayersSize() == 0).count();
+
+
+    }
   }
 }

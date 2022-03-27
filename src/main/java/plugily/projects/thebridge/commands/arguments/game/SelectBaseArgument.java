@@ -21,32 +21,34 @@ package plugily.projects.thebridge.commands.arguments.game;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
-import plugily.projects.thebridge.commands.arguments.data.CommandArgument;
-import plugily.projects.thebridge.utils.Utils;
 
 /**
  * @author Tigerpanzer_02
- * <p>
- * Created at 27.12.2020
+ *     <p>Created at 27.12.2020
  */
 public class SelectBaseArgument {
 
   public SelectBaseArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("thebridge", new CommandArgument("selectbase", "thebridge.command.selectbase", CommandArgument.ExecutorType.PLAYER) {
-      @Override
-      public void execute(CommandSender sender, String[] args) {
-        if(!Utils.checkIsInGameInstance((Player) sender)) {
-          return;
-        }
-        Arena arena = ArenaRegistry.getArena((Player) sender);
-        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-          registry.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
-      }
-    });
+    registry.mapArgument(
+        "thebridge",
+        new CommandArgument(
+            "selectbase", "thebridge.command.selectbase", CommandArgument.ExecutorType.PLAYER) {
+          @Override
+          public void execute(CommandSender sender, String[] args) {
+            if (!registry.getPlugin().getBukkitHelper().checkIsInGameInstance((Player) sender)) {
+              return;
+            }
+            Arena arena = (Arena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
+            if(arena != null) {
+            if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
+                || arena.getArenaState() == ArenaState.STARTING)
+              arena.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
+          }
+          }
+        });
   }
-
 }
