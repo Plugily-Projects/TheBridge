@@ -65,8 +65,6 @@ public class BaseMenuHandler implements Listener {
         new NormalFastInv(
             plugin.getBukkitHelper().serializeInt(plugin.getKitRegistry().getKits().size()) / 9,
             new MessageBuilder("BASES_TEAM_MENU").asKey().build());
-    int x = 0;
-    int y = 0;
     for (Base base : arena.getBases()) {
       ItemStack itemStack =
           XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL")
