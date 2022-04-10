@@ -177,6 +177,9 @@ Time-Manager:
   Restarting: 5
 
 
+# Change the Bow Cooldown
+Bow-Cooldown: 5
+
 # Allow spectators on arena instances
 Spectators: true
 
