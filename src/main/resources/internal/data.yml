@@ -9,7 +9,7 @@
 ###############################[IMPORTANT]###############################
 Plugin:
   Name:
-    Shot: tb
+    Short: tb
     Long: ${project.name}
   Id:
     Spigot: 87320
