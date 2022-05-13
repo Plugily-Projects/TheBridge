@@ -11,6 +11,7 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
 import plugily.projects.minigamesbox.classic.handlers.language.Message;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.handlers.permissions.Permission;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
@@ -153,15 +154,18 @@ public class Main extends PluginMain {
     getStatsStorage().registerStatistic("LOCAL_DEATHS", new StatisticType("local_deaths", false, "int(11) NOT NULL DEFAULT '0'"));
 
 //    getPermissionsManager().registerPermissionCategory("CHANCES_BOOSTER", new PermissionCategory("Chances-Boost", null));
+    getPermissionsManager().registerPermission("KIT_PREMIUM_UNLOCK", new Permission("Basic.Premium-Kits", "thebridge.kits.premium"));
 
     getRewardsHandler().registerRewardType("WIN", new RewardType("win"));
     getRewardsHandler().registerRewardType("LOSE", new RewardType("lose"));
     getRewardsHandler().registerRewardType("PLAYER_DEATH", new RewardType("player-death"));
     getRewardsHandler().registerRewardType("KILL", new RewardType("kill"));
+    getRewardsHandler().registerRewardType("DEATH", new RewardType("death"));
     getRewardsHandler().registerRewardType("POINT", new RewardType("point"));
     getRewardsHandler().registerRewardType("RESET_ROUND", new RewardType("reset-round"));
 
     getSpecialItemManager().registerSpecialItem("BASE_SELECTOR", "Base-Selector");
+    getSpecialItemManager().registerSpecialItem("KIT_SELECTOR_MENU", "Kit-Menu");
   }
 
 
@@ -171,7 +175,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_POINTS", new Message("In-Game.Messages.Game-End.Placeholders.Base.POINTS", ""));
     getMessageManager().registerMessage("SCOREBOARD_BASES_FORMAT", new Message("Scoreboard.Bases.Format", ""));
     getMessageManager().registerMessage("SCOREBOARD_BASES_NOT_INSIDE", new Message("Scoreboard.Bases.Not-Inside", ""));
-    getMessageManager().registerMessage("SCOREBOARD_BASES_INSIDE", new Message("Scoreboard.Base.Inside", ""));
+    getMessageManager().registerMessage("SCOREBOARD_BASES_INSIDE", new Message("Scoreboard.Bases.Inside", ""));
 
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_COOLDOWN", new Message("In-Game.Messages.Arena.Cooldown", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_BOW_DAMAGE", new Message("In-Game.Messages.Arena.Bow-Damage", ""));

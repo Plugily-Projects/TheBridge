@@ -54,10 +54,12 @@ rewards:
     - b
   kill:
     - c
-  point:
+  death:
     - d
-  reset-round:
+  point:
     - e
+  reset-round:
+    - f
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
