@@ -179,9 +179,8 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("SCOREBOARD_BASES_INSIDE", new Message("Scoreboard.Bases.Inside", ""));
 
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_COOLDOWN", new Message("In-Game.Messages.Arena.Cooldown", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_BOW_DAMAGE", new Message("In-Game.Messages.Arena.Bow-Damage", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_DAMAGE", new Message("In-Game.Messages.Arena.Damage", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_DEATH", new Message("In-Game.Messages.Arena.Death", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_DEATH_OWN", new Message("In-Game.Messages.Arena.Death-Own", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_KILLED", new Message("In-Game.Messages.Arena.Killed", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_BUILD_BREAK", new Message("In-Game.Messages.Arena.Build-Break", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_TIME_LEFT", new Message("In-Game.Messages.Arena.Time-Left", ""));
@@ -323,7 +322,7 @@ public class Main extends PluginMain {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_summary_winner_base", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_winner_base", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena);
@@ -347,7 +346,7 @@ public class Main extends PluginMain {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_summary_winner_base_players", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_winner_base_players", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena);
@@ -383,7 +382,7 @@ public class Main extends PluginMain {
 
       }
     });
-    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_summary_base_scored", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+    getPlaceholderManager().registerPlaceholder(new Placeholder("summary_base_scored", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getSummary(arena);
@@ -442,6 +441,22 @@ public class Main extends PluginMain {
       }
     });
 
+    getPlaceholderManager().registerPlaceholder(new Placeholder("option_reset_blocks_in", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(PluginArena arena) {
+        Arena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        return String.valueOf(arena.getArenaOption("RESET_BLOCKS") - pluginArena.getRound());
+      }
+
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        return getValue(arena);
+      }
+    });
+
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
@@ -462,7 +477,8 @@ public class Main extends PluginMain {
         if(pluginArena.getWinner() == null) {
           return "";
         }
-        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_"+pluginArena.getMode().toString()).asKey().arena(pluginArena).build();
+        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_"+pluginArena.getMode()).asKey().arena(pluginArena).build();
+        return summary;
       }
     });
   }
