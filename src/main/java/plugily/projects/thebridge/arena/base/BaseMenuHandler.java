@@ -93,15 +93,15 @@ public class BaseMenuHandler implements Listener {
       gui.addItem(
           new SimpleClickableItem(
               itemStack,
-              e -> {
-                e.setCancelled(true);
-                if(!(e.getWhoClicked() instanceof Player)
-                    || !(e.isLeftClick() || e.isRightClick())) {
+              event -> {
+                event.setCancelled(true);
+                if(!(event.getWhoClicked() instanceof Player)
+                    || !(event.isLeftClick() || event.isRightClick())) {
                   return;
                 }
-                TBPlayerChooseBaseEvent event = new TBPlayerChooseBaseEvent(player, base, arena);
-                Bukkit.getPluginManager().callEvent(event);
-                if(event.isCancelled()) {
+                TBPlayerChooseBaseEvent chooseBaseEvent = new TBPlayerChooseBaseEvent(player, base, arena);
+                Bukkit.getPluginManager().callEvent(chooseBaseEvent);
+                if(chooseBaseEvent.isCancelled()) {
                   return;
                 }
                 if(!base.addPlayer(player)) {
@@ -109,7 +109,7 @@ public class BaseMenuHandler implements Listener {
                 }
 
                 player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build().replace("%base%", base.getFormattedColor()));
-                e.getWhoClicked().closeInventory();
+                event.getWhoClicked().closeInventory();
               }));
     }
     gui.refresh();
@@ -117,19 +117,19 @@ public class BaseMenuHandler implements Listener {
   }
 
   @EventHandler
-  public void onBaseMenuItemClick(PlayerInteractEvent e) {
-    if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+  public void onBaseMenuItemClick(PlayerInteractEvent event) {
+    if(!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
-    ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
+    ItemStack stack = VersionUtils.getItemInHand(event.getPlayer());
     if(!stack.equals(baseItem.getItemStack())) {
       return;
     }
-    Arena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    e.setCancelled(true);
-    createMenu(e.getPlayer(), arena);
+    event.setCancelled(true);
+    createMenu(event.getPlayer(), arena);
   }
 }
