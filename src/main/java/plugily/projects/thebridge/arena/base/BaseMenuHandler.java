@@ -65,25 +65,25 @@ public class BaseMenuHandler implements Listener {
         new NormalFastInv(
             plugin.getBukkitHelper().serializeInt(plugin.getKitRegistry().getKits().size()) / 9,
             new MessageBuilder("BASES_TEAM_MENU").asKey().build());
-    for (Base base : arena.getBases()) {
+    for(Base base : arena.getBases()) {
       ItemStack itemStack =
           XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL")
               .get()
               .parseItem();
       itemStack.setAmount(base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
-      if (base.getPlayers().size() >= base.getMaximumSize()) {
+      if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
       } else {
         itemStack = new ItemBuilder(itemStack).lore(emptyTeam).build();
       }
-      if (base.getPlayers().size() > 0) {
+      if(base.getPlayers().size() > 0) {
         List<String> players = new ArrayList<>();
-        for (Player inside : base.getPlayers()) {
+        for(Player inside : base.getPlayers()) {
           players.add("- " + inside.getName());
         }
         itemStack = new ItemBuilder(itemStack).lore(players).build();
       }
-      if (base.getPlayers().contains(player)) {
+      if(base.getPlayers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
       itemStack =
@@ -95,37 +95,38 @@ public class BaseMenuHandler implements Listener {
               itemStack,
               e -> {
                 e.setCancelled(true);
-                if (!(e.getWhoClicked() instanceof Player)
+                if(!(e.getWhoClicked() instanceof Player)
                     || !(e.isLeftClick() || e.isRightClick())) {
                   return;
                 }
                 TBPlayerChooseBaseEvent event = new TBPlayerChooseBaseEvent(player, base, arena);
                 Bukkit.getPluginManager().callEvent(event);
-                if (event.isCancelled()) {
+                if(event.isCancelled()) {
                   return;
                 }
-                if (!base.addPlayer(player)) {
+                if(!base.addPlayer(player)) {
                   return;
                 }
 
-                player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build());
+                player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build().replace("%base%", base.getFormattedColor()));
                 e.getWhoClicked().closeInventory();
               }));
     }
+    gui.refresh();
     gui.open(player);
   }
 
   @EventHandler
   public void onBaseMenuItemClick(PlayerInteractEvent e) {
-    if (!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+    if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
     ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
-    if (!stack.equals(baseItem.getItemStack())) {
+    if(!stack.equals(baseItem.getItemStack())) {
       return;
     }
     Arena arena = plugin.getArenaRegistry().getArena(e.getPlayer());
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
     e.setCancelled(true);
