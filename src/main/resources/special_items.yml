@@ -109,7 +109,7 @@ Forcestart:
 Arena-Selector:
   permission: ""
   execute:
-    - "p:plugilyprojects arenas"
+    - "p:tb arenas"
   displayname: "&c&lArena selector &7(Right Click)"
   lore:
     - "&7Right-click to see all arenas"
@@ -122,7 +122,7 @@ Arena-Selector:
 Stats:
   permission: ""
   execute:
-    - "p:plugilyprojects stats"
+    - "p:tb stats"
   displayname: "&c&lStats &7(Right Click)"
   lore:
     - "&7Right-click to see your Stats"
