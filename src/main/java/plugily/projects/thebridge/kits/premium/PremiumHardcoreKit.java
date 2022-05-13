@@ -60,7 +60,7 @@ public class PremiumHardcoreKit extends PremiumKit {
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 5}));
     VersionUtils.setMaxHealth(player, 6);
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -75,7 +75,7 @@ public class PremiumHardcoreKit extends PremiumKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

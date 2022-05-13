@@ -86,7 +86,7 @@ public class NakedKit extends PremiumKit implements Listener {
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}));
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -101,7 +101,7 @@ public class NakedKit extends PremiumKit implements Listener {
   public void reStock(Player player) {
     player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 1, true));
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

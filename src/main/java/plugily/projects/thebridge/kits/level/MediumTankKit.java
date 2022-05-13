@@ -64,7 +64,7 @@ public class MediumTankKit extends LevelKit {
     VersionUtils.setMaxHealth(player, 32.0);
     player.setHealth(32.0);
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -79,7 +79,7 @@ public class MediumTankKit extends LevelKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

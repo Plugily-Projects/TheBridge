@@ -64,7 +64,7 @@ public class BridgeKit extends FreeKit {
     VersionUtils.setMaxHealth(player, 20.0);
     player.setHealth(20.0);
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
@@ -79,7 +79,7 @@ public class BridgeKit extends FreeKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

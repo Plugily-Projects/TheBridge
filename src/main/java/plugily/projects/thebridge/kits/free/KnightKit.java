@@ -60,7 +60,7 @@ public class KnightKit extends FreeKit {
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
@@ -75,7 +75,7 @@ public class KnightKit extends FreeKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     KitUtil.addBuildBlocks(player, arena);

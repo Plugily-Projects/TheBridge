@@ -63,7 +63,7 @@ public class LightTankKit extends FreeKit {
     VersionUtils.setMaxHealth(player, 26.0);
     player.setHealth(26.0);
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -77,7 +77,7 @@ public class LightTankKit extends FreeKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

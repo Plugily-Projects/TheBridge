@@ -63,7 +63,7 @@ public class HeavyTankKit extends PremiumKit {
     player.setHealth(40.0);
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -78,7 +78,7 @@ public class HeavyTankKit extends PremiumKit {
   @Override
   public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

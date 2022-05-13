@@ -66,7 +66,7 @@ public class HealerKit extends LevelKit {
     player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 2, true));
     player.getInventory().addItem(VersionUtils.getPotion(PotionType.REGEN, 1, true));
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
@@ -88,7 +88,7 @@ public class HealerKit extends LevelKit {
       player.getInventory().addItem(VersionUtils.getPotion(PotionType.REGEN, 1, true));
     }
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
