@@ -39,7 +39,6 @@ import plugily.projects.thebridge.arena.states.RestartingState;
 import plugily.projects.thebridge.arena.states.StartingState;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -271,6 +270,7 @@ public class Arena extends PluginArena {
       plugin.getUserManager().addExperience(player, 2);
     }
     plugin.getRewardsHandler().performReward(this, plugin.getRewardsHandler().getRewardType("RESET_ROUND"));
+    plugin.getPowerupRegistry().spawnPowerup(getMidLocation(), this);
     Bukkit.getPluginManager().callEvent(new TBRoundResetEvent(this, round));
   }
 

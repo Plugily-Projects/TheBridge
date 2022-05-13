@@ -83,6 +83,7 @@ public class Main extends PluginMain {
   }
 
   public void initializePluginClasses() {
+    addFileName("powerups");
     addArenaOptions();
     Arena.init(this);
     ArenaUtils.init(this);
