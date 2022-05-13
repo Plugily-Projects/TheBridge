@@ -25,6 +25,7 @@ import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.Comparator;
 
@@ -36,7 +37,6 @@ public class StartingState extends PluginStartingState {
 
   @Override
   public void handleCall(PluginArena arena) {
-    super.handleCall(arena);
     Arena pluginArena = (Arena) getPlugin().getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
@@ -62,10 +62,7 @@ public class StartingState extends PluginStartingState {
         if (!pluginArena.inBase(player)) {
           pluginArena.getBases().get(0).addPlayer(player);
         }
-        getPlugin().getUserManager().getUser(player).getKit().giveKitItems(player);
-        player.updateInventory();
         getPlugin().getUserManager().addExperience(player, 10);
-        Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(pluginArena));
       }
       // check if not only one base got players
       Base maxPlayers =
@@ -84,5 +81,6 @@ public class StartingState extends PluginStartingState {
         base.removeCageFloor();
       }
     }
+    super.handleCall(arena);
   }
 }
