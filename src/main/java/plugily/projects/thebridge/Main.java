@@ -29,6 +29,8 @@ import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.commands.arguments.admin.CuboidSelector;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
+import plugily.projects.thebridge.kits.free.BridgeKit;
+import plugily.projects.thebridge.kits.free.KnightKit;
 import plugily.projects.thebridge.kits.free.LightTankKit;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 import plugily.projects.thebridge.kits.level.HardcoreKit;
@@ -101,7 +103,8 @@ public class Main extends PluginMain {
   public void addKits() {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
-    Class<?>[] classKitNames = new Class[]{LightTankKit.class, ArcherKit.class, HealerKit.class,
+    addFileName("kits");
+    Class<?>[] classKitNames = new Class[]{BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
         MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class};
     for(Class<?> kitClass : classKitNames) {
       try {
