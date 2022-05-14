@@ -19,10 +19,13 @@
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
@@ -262,16 +265,31 @@ public class Arena extends PluginArena {
     for(Player player : getPlayersLeft()) {
       player.teleport(getBase(player).getPlayerSpawnPoint());
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_BLOCKED_RESET").asKey().arena(this).player(player).sendPlayer();
-      player.setHealth(VersionUtils.getMaxHealth(player));
-      player.getInventory().clear();
-      player.setFireTicks(0);
+      plugin.getUserManager().addExperience(player, 2);
+      resetPlayer(player);
       plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
       player.updateInventory();
-      plugin.getUserManager().addExperience(player, 2);
     }
     plugin.getRewardsHandler().performReward(this, plugin.getRewardsHandler().getRewardType("RESET_ROUND"));
     plugin.getPowerupRegistry().spawnPowerup(getMidLocation(), this);
     Bukkit.getPluginManager().callEvent(new TBRoundResetEvent(this, round));
+  }
+
+  public void resetPlayer(Player player) {
+    player.getInventory().clear();
+    player.getInventory().setArmorContents(null);
+    for(PotionEffect pe : player.getActivePotionEffects()) {
+      player.removePotionEffect(pe.getType());
+    }
+    player.setExp(0);
+    player.setFireTicks(0);
+    player.setGameMode(GameMode.SURVIVAL);
+    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 10));
+    VersionUtils.setMaxHealth(player, VersionUtils.getMaxHealth(player));
+    player.setHealth(VersionUtils.getMaxHealth(player));
+    player.setAllowFlight(false);
+    player.setFlying(false);
+    player.updateInventory();
   }
 
   public int getRound() {

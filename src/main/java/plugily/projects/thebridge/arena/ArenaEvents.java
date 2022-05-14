@@ -267,7 +267,6 @@ public class ArenaEvents extends PluginArenaEvents {
 
   private void portalScored(Player player, Arena arena, Base base) {
     arena.resetRound();
-    player.teleport(arena.getBase(player).getPlayerSpawnPoint());
     if(arena.getMode() == Arena.Mode.HEARTS) {
       base.addPoint();
     } else if(arena.getMode() == Arena.Mode.POINTS) {
@@ -366,20 +365,10 @@ public class ArenaEvents extends PluginArenaEvents {
     playerDeath(player, arena);
   }
 
+
   private void playerDeath(Player player, Arena arena) {
     User user = plugin.getUserManager().getUser(player);
-    player.getInventory().clear();
-    player.getInventory().setArmorContents(null);
-    for(PotionEffect pe : player.getActivePotionEffects()) {
-      player.removePotionEffect(pe.getType());
-    }
-    player.setExp(0);
-    player.setGameMode(GameMode.SURVIVAL);
-    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 10));
-    VersionUtils.setMaxHealth(player, VersionUtils.getMaxHealth(player));
-    player.setHealth(VersionUtils.getMaxHealth(player));
-    player.setAllowFlight(false);
-    player.setFlying(false);
+    arena.resetPlayer(player);
     switch(arena.getArenaState()) {
       case STARTING:
       case WAITING_FOR_PLAYERS:
@@ -503,9 +492,9 @@ public class ArenaEvents extends PluginArenaEvents {
           .getBukkitHelper()
           .applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
       VersionUtils.setDurability(e.getBow(), (short) 0);
-    } else {
-      e.setCancelled(true);
+      return;
     }
+    e.setCancelled(true);
   }
 
   @EventHandler
