@@ -477,7 +477,7 @@ public class Main extends PluginMain {
         if(pluginArena.getWinner() == null) {
           return "";
         }
-        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_"+pluginArena.getMode()).asKey().arena(pluginArena).build();
+        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_"+pluginArena.getMode()).asKey().build();
         return summary;
       }
     });
