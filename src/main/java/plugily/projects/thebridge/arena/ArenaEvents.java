@@ -99,6 +99,9 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
     if(!canBuild(arena, player, event.getBlock().getLocation())) {
       event.setCancelled(true);
       return;
@@ -118,6 +121,9 @@ public class ArenaEvents extends PluginArenaEvents {
     Player player = event.getPlayer();
     Arena arena = plugin.getArenaRegistry().getArena(player);
     if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     if(!canBuild(arena, player, event.getBlock().getLocation())) {
