@@ -25,20 +25,18 @@ import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.kits.basekits.KitUtil;
-
 import java.util.Comparator;
 
 /**
  * @author Plajer
- *     <p>Created at 03.06.2019
+ * <p>Created at 03.06.2019
  */
 public class StartingState extends PluginStartingState {
 
   @Override
   public void handleCall(PluginArena arena) {
     Arena pluginArena = (Arena) getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
     /*
@@ -48,18 +46,19 @@ public class StartingState extends PluginStartingState {
            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORED_POINTS, 0);
            //
     */
-    if (arena.getTimer() == 0 || arena.isForceStart()) {
-
-      for (Player player : arena.getPlayers()) {
+    boolean arenaStart = false;
+    if(arena.getTimer() == 0 || arena.isForceStart()) {
+      arenaStart = true;
+      for(Player player : arena.getPlayers()) {
         // get base with min players
         Base minPlayers =
             pluginArena.getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
         // add player to min base if he got no base
-        if (!pluginArena.inBase(player)) {
+        if(!pluginArena.inBase(player)) {
           minPlayers.addPlayer(player);
         }
         // fallback
-        if (!pluginArena.inBase(player)) {
+        if(!pluginArena.inBase(player)) {
           pluginArena.getBases().get(0).addPlayer(player);
         }
         getPlugin().getUserManager().addExperience(player, 10);
@@ -69,19 +68,22 @@ public class StartingState extends PluginStartingState {
           pluginArena.getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
       Base minPlayers =
           pluginArena.getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
-      if (maxPlayers.getPlayersSize() == pluginArena.getPlayers().size()) {
-        for (int i = 0; i < maxPlayers.getPlayersSize() / 2; i++) {
+      if(maxPlayers.getPlayersSize() == pluginArena.getPlayers().size()) {
+        for(int i = 0; i < maxPlayers.getPlayersSize() / 2; i++) {
           Player move = maxPlayers.getPlayers().get(i);
           minPlayers.addPlayer(move);
           maxPlayers.removePlayer(move);
         }
       }
-      pluginArena.teleportAllToBaseLocation();
       Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(pluginArena));
-      for (Base base : pluginArena.getBases()) {
+      for(Base base : pluginArena.getBases()) {
         base.removeCageFloor();
       }
     }
     super.handleCall(arena);
+    if(arenaStart) {
+      //needs to be executed after handle call as start location does not exists on thebridge
+      pluginArena.teleportAllToBaseLocation();
+    }
   }
 }
