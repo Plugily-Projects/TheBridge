@@ -1,21 +1,14 @@
 package plugily.projects.thebridge.handlers.setup;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Door;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.classic.PluginMain;
@@ -25,24 +18,18 @@ import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupUtilities;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.CountItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.LocationItem;
-import plugily.projects.minigamesbox.classic.handlers.setup.pages.PagesPage;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.conversation.SimpleConversationBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.dimensional.CuboidSelector;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.helper.MaterialUtils;
-import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
-import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.commands.arguments.admin.CuboidSelector;
 import plugily.projects.thebridge.handlers.setup.components.BasePage;
-
-import java.util.List;
 
 public class SetupInventory extends PluginSetupInventory {
 

@@ -27,7 +27,6 @@ import plugily.projects.thebridge.arena.ArenaRegistry;
 import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
-import plugily.projects.thebridge.commands.arguments.admin.CuboidSelector;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupInventory;
 import plugily.projects.thebridge.kits.free.BridgeKit;
@@ -54,7 +53,6 @@ public class Main extends PluginMain {
   private ArenaRegistry arenaRegistry;
   private ArenaManager arenaManager;
   private ArgumentsRegistry argumentsRegistry;
-  private CuboidSelector cuboidSelector;
   private BaseMenuHandler baseMenuHandler;
 
   @TestOnly
@@ -94,7 +92,6 @@ public class Main extends PluginMain {
     getSignManager().loadSigns();
     getSignManager().updateSigns();
     argumentsRegistry = new ArgumentsRegistry(this);
-    cuboidSelector = new CuboidSelector(this);
     baseMenuHandler = new BaseMenuHandler(this);
 
     new PluginEvents(this);
@@ -534,10 +531,6 @@ public class Main extends PluginMain {
 
   public BaseMenuHandler getBaseMenuHandler() {
     return baseMenuHandler;
-  }
-
-  public CuboidSelector getCuboidSelector() {
-    return cuboidSelector;
   }
 
 

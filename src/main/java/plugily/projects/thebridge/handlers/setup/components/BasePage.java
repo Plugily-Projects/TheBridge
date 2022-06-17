@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import plugily.projects.minigamesbox.classic.commonsbox.number.NumberUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
-import plugily.projects.minigamesbox.classic.handlers.setup.SetupUtilities;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.LocationItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.pages.SetupPage;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
@@ -26,8 +25,8 @@ import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.commands.arguments.admin.CuboidSelector;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
+import plugily.projects.minigamesbox.classic.utils.dimensional.CuboidSelector;
 
 import java.util.HashMap;
 
@@ -210,41 +209,41 @@ public class BasePage extends NormalFastInv implements SetupPage {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure base location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".portallocation1") == null) {
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".portallocation1") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portal location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".spawnpoint") == null) {
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".spawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure spawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".respawnpoint") == null) {
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".respawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure respawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".color") == null) {
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".color") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure color properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".portalhologram") == null) {
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".portalhologram") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portalhologram properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      new MessageBuilder("&a&l✔ &aValidation succeeded! Registering new base: "+getId(setupInventory.getPlayer())).prefix().player(setupInventory.getPlayer()).sendPlayer();
-      setupInventory.getPlugin().getSetupUtilities().getConfig().set(path  + ".isdone", true);
+      new MessageBuilder("&a&l✔ &aValidation succeeded! Registering new base: " + getId(setupInventory.getPlayer())).prefix().player(setupInventory.getPlayer()).sendPlayer();
+      setupInventory.getPlugin().getSetupUtilities().getConfig().set(path + ".isdone", true);
       Base base = new Base(
           setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".color"),
-          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path  + ".baselocation1")),
-          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path  + ".baselocation2")),
+          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".baselocation1")),
+          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".baselocation2")),
           LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".spawnpoint")),
-          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path  + ".respawnpoint")),
+          LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".respawnpoint")),
           LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".portallocation1")),
           LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".portallocation2")),
           setupInventory.getPlugin().getSetupUtilities().getConfig().getInt(path + ".maximumsize")
       );
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path  + ".cagelocation1") != null)
-        base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path  + ".cagelocation1")), LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".cagelocation2"))));
-      ((Arena)setupInventory.getArena()).addBase(base);
+      if(setupInventory.getPlugin().getSetupUtilities().getConfig().get(path + ".cagelocation1") != null)
+        base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".cagelocation1")), LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".cagelocation2"))));
+      ((Arena) setupInventory.getArena()).addBase(base);
       ArmorStandHologram portal = new ArmorStandHologram(setupInventory.getPlugin().getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(setupInventory.getPlugin().getSetupUtilities().getConfig().getString(path + ".portalhologram"))));
       for(String str : setupInventory.getPlugin().getLanguageManager().getLanguageMessage(setupInventory.getPlugin().getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
         portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
