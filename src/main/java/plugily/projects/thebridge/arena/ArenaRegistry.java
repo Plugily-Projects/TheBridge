@@ -57,11 +57,6 @@ public class ArenaRegistry extends PluginArenaRegistry {
     boolean checks = super.additionalValidatorChecks(section, arena, id);
     if(!checks) return false;
 
-    if(!section.getBoolean(id + ".isdone")) {
-      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
-      return false;
-    }
-
     ((Arena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
     ((Arena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
     int bases = 0;
