@@ -20,7 +20,6 @@ package plugily.projects.thebridge.commands.arguments;
 
 import plugily.projects.minigamesbox.classic.commands.arguments.PluginArgumentsRegistry;
 import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.commands.arguments.admin.LocationWandArgument;
 import plugily.projects.thebridge.commands.arguments.game.SelectBaseArgument;
 
 /**
@@ -31,8 +30,6 @@ public class ArgumentsRegistry extends PluginArgumentsRegistry {
 
   public ArgumentsRegistry(Main plugin) {
     super(plugin);
-
-    new LocationWandArgument(this);
     new SelectBaseArgument(this);
   }
 }
