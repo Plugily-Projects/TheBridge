@@ -91,7 +91,13 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>13.0</version>
+            <version>23.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.7</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -111,7 +117,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <goals>
                     <goal>compile</goal>
                 </goals>
@@ -123,7 +129,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.0</version>
                 <configuration>
                     <windowtitle>The Bridge API docs for v${project.version}</windowtitle>
                     <description>Minecraft competitive minigame.
@@ -136,12 +142,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -178,7 +184,7 @@
                     <changelogFile>${project.basedir}/CHANGELOG.md</changelogFile>
                 </configuration>
             </plugin>
-            <!-- External beta versions discord deployer plugin -->
+             <!-- External beta versions discord deployer plugin -->
         </plugins>
         <extensions>
             <extension>

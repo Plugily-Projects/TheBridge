@@ -18,6 +18,7 @@
 
 package plugily.projects.thebridge.arena;
 
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -379,16 +380,14 @@ public class ArenaEvents extends PluginArenaEvents {
       case STARTING:
       case WAITING_FOR_PLAYERS:
       case FULL_GAME:
-        Location lobbyLocation = arena.getLobbyLocation();
-        player.teleport(lobbyLocation);
+        PaperLib.teleportAsync(player, arena.getLobbyLocation());
         break;
       case IN_GAME:
         if(!user.isSpectator()) {
           user.adjustStatistic("DEATHS", 1);
           user.adjustStatistic("LOCAL_DEATHS", 1);
           if(arena.inBase(player)) {
-            Location respawnPoint = arena.getBase(player).getPlayerRespawnPoint();
-            player.teleport(respawnPoint);
+            PaperLib.teleportAsync(player, arena.getBase(player).getPlayerRespawnPoint());
             modeDeathHandle(player, arena, user);
             cooldownOutside.put(player, System.currentTimeMillis());
             plugin
@@ -399,8 +398,7 @@ public class ArenaEvents extends PluginArenaEvents {
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
             player.updateInventory();
           } else {
-            Location spectatorLocation = arena.getSpectatorLocation();
-            player.teleport(spectatorLocation);
+            PaperLib.teleportAsync(player, arena.getSpectatorLocation());
             player.setAllowFlight(true);
             player.setFlying(true);
             user.setSpectator(true);
@@ -409,14 +407,12 @@ public class ArenaEvents extends PluginArenaEvents {
             plugin.getSpecialItemManager().addSpecialItemsOfStage(player, SpecialItem.DisplayStage.SPECTATOR);
           }
         } else {
-          Location spectatorLocation = arena.getSpectatorLocation();
-          player.teleport(spectatorLocation);
+          PaperLib.teleportAsync(player, arena.getSpectatorLocation());
         }
         break;
       case ENDING:
       case RESTARTING:
-        Location location = arena.getSpectatorLocation();
-        player.teleport(location);
+        PaperLib.teleportAsync(player, arena.getSpectatorLocation());
         break;
       default:
         return;

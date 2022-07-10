@@ -18,6 +18,7 @@
 
 package plugily.projects.thebridge.arena;
 
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -263,7 +264,7 @@ public class Arena extends PluginArena {
     }
     resetHits();
     for(Player player : getPlayersLeft()) {
-      player.teleport(getBase(player).getPlayerSpawnPoint());
+      PaperLib.teleportAsync(player, getBase(player).getPlayerSpawnPoint());
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_BLOCKED_RESET").asKey().arena(this).player(player).sendPlayer();
       plugin.getUserManager().addExperience(player, 2);
       resetPlayer(player);
@@ -337,7 +338,7 @@ public class Arena extends PluginArena {
   }
   public void teleportAllToBaseLocation() {
     for(Player player : getPlayers()) {
-      player.teleport(getBase(player).getPlayerSpawnPoint());
+      PaperLib.teleportAsync(player, getBase(player).getPlayerSpawnPoint());
     }
   }
 
