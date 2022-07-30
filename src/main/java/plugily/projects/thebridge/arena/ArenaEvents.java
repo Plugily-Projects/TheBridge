@@ -380,7 +380,7 @@ public class ArenaEvents extends PluginArenaEvents {
       case WAITING_FOR_PLAYERS:
       case FULL_GAME:
         Location lobbyLocation = arena.getLobbyLocation();
-        player.teleport(lobbyLocation);
+        VersionUtils.teleport(player, lobbyLocation);
         break;
       case IN_GAME:
         if(!user.isSpectator()) {
@@ -388,7 +388,7 @@ public class ArenaEvents extends PluginArenaEvents {
           user.adjustStatistic("LOCAL_DEATHS", 1);
           if(arena.inBase(player)) {
             Location respawnPoint = arena.getBase(player).getPlayerRespawnPoint();
-            player.teleport(respawnPoint);
+            VersionUtils.teleport(player, respawnPoint);
             modeDeathHandle(player, arena, user);
             cooldownOutside.put(player, System.currentTimeMillis());
             plugin
@@ -400,7 +400,7 @@ public class ArenaEvents extends PluginArenaEvents {
             player.updateInventory();
           } else {
             Location spectatorLocation = arena.getSpectatorLocation();
-            player.teleport(spectatorLocation);
+            VersionUtils.teleport(player, spectatorLocation);
             player.setAllowFlight(true);
             player.setFlying(true);
             user.setSpectator(true);
@@ -410,16 +410,15 @@ public class ArenaEvents extends PluginArenaEvents {
           }
         } else {
           Location spectatorLocation = arena.getSpectatorLocation();
-          player.teleport(spectatorLocation);
+          VersionUtils.teleport(player, spectatorLocation);
         }
         break;
       case ENDING:
       case RESTARTING:
         Location location = arena.getSpectatorLocation();
-        player.teleport(location);
+        VersionUtils.teleport(player, location);
         break;
       default:
-        return;
     }
   }
 
