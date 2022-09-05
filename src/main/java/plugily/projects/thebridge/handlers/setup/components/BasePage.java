@@ -1,6 +1,7 @@
 package plugily.projects.thebridge.handlers.setup.components;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -11,7 +12,11 @@ import org.jetbrains.annotations.NotNull;
 import plugily.projects.minigamesbox.classic.commonsbox.number.NumberUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.inventories.InventoryHandler;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.LocationItem;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationItem;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationSelectorItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.pages.SetupPage;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.conversation.SimpleConversationBuilder;
@@ -30,11 +35,11 @@ import plugily.projects.minigamesbox.classic.utils.dimensional.CuboidSelector;
 
 import java.util.HashMap;
 
-public class BasePage extends NormalFastInv implements SetupPage {
+public class BasePage extends NormalFastInv implements InventoryHandler {
 
-  private final PluginSetupInventory setupInventory;
+  private final SetupInventory setupInventory;
 
-  public BasePage(int size, String title, PluginSetupInventory pluginSetupInventory) {
+  public BasePage(int size, String title, SetupInventory pluginSetupInventory) {
     super(size, title);
     this.setupInventory = pluginSetupInventory;
     prepare();
@@ -50,10 +55,12 @@ public class BasePage extends NormalFastInv implements SetupPage {
 
   @Override
   public void injectItems() {
+
+
     setItem(5, ClickableItem.of(new ItemBuilder(Material.APPLE)
         .name(new MessageBuilder("&e&lSet Color").build())
         .lore(ChatColor.GRAY + "Click to set base color name")
-        .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.getPlugin().getSetupUtilities().getConfig().getString("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".color", "none")).build())
+        .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.getPlugin().getConfig().getString("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".color", "none")).build())
         .build(), event -> {
       event.getWhoClicked().closeInventory();
       new SimpleConversationBuilder(setupInventory.getPlugin()).withPrompt(new StringPrompt() {
@@ -79,127 +86,30 @@ public class BasePage extends NormalFastInv implements SetupPage {
         }
       }).buildFor(setupInventory.getPlayer());
     }));
-    setItem(6, new LocationItem(new ItemBuilder(XMaterial.BEDROCK.parseMaterial())
-        .name(new MessageBuilder("&e&lSet Base Location").build())
-        .lore(ChatColor.GRAY + "Click to set the base location")
-        .lore(ChatColor.GRAY + "after you selected it with the location wand")
-        .lore(ChatColor.DARK_GRAY + "(corners of one base)")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".baselocation1", setupInventory))
-        .build(), e -> {
-      CuboidSelector.Selection selection = ((Main) setupInventory.getArena().getPlugin()).getCuboidSelector().getSelection(setupInventory.getPlayer());
-      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-        new MessageBuilder("&cPlease select both corners before adding an base location!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-        return;
-      }
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".baselocation1", selection.getFirstPos());
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".baselocation2", selection.getSecondPos());
-      new MessageBuilder("&e✔ Completed | &aBase location for arena " + setupInventory.getArena().getId() + " set with your selection!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
 
-    setItem(7, new LocationItem(new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-        .name(new MessageBuilder("&e&lSet Portal Location").build())
-        .lore(ChatColor.GRAY + "Click to set the portal location")
-        .lore(ChatColor.GRAY + "after you selected it with the location wand")
-        .lore(ChatColor.DARK_GRAY + "(corners of the portal on the base)")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".portallocation1", setupInventory))
-        .build(), e -> {
-      CuboidSelector.Selection selection = ((Main) setupInventory.getArena().getPlugin()).getCuboidSelector().getSelection(setupInventory.getPlayer());
-      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-        new MessageBuilder("&cPlease select both corners before adding an portal location!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-        return;
-      }
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".portallocation1", selection.getFirstPos());
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".portallocation2", selection.getSecondPos());
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
-      new MessageBuilder("&e✔ Completed | &aPortal location for arena " + setupInventory.getArena().getId() + " set with your selection!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
+    LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base", "baselocation");
+    setItem(6, baseCorners);
 
-    setItem(8, new LocationItem(new ItemBuilder(XMaterial.GLASS.parseMaterial())
-        .name(new MessageBuilder("&e&lSet Cage Location (Only floor)").build())
-        .lore(ChatColor.GRAY + "Click to set the cage location (only floor needed)")
-        .lore(ChatColor.GRAY + "after you selected it with the location wand")
-        .lore(ChatColor.DARK_GRAY + "(Please just select the blocks that should be removed/set)")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".cagelocation1", setupInventory))
-        .build(), e -> {
-      CuboidSelector.Selection selection = ((Main) setupInventory.getArena().getPlugin()).getCuboidSelector().getSelection(setupInventory.getPlayer());
-      if(selection == null || selection.getFirstPos() == null || selection.getSecondPos() == null) {
-        new MessageBuilder("&cPlease select both corners before adding an cage location!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-        return;
-      }
-      if(new Cuboid(selection.getFirstPos(), selection.getSecondPos()).contains(XMaterial.AIR.parseMaterial())) {
-        new MessageBuilder("&cPlease select only the floor of the cage! Make sure that it is not air!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-        return;
-      }
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".cagelocation1", selection.getFirstPos());
-      LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".cagelocation2", selection.getSecondPos());
-      new MessageBuilder("&e✔ Completed | &aCage location for arena " + setupInventory.getArena().getId() + " set with your selection!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
+    //portal in mid function? LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas", "instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
+    LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Base", "Set the corners of the portal on the base", "portallocation");
+    setItem(7, portalCorners);
 
-    setItem(9, new LocationItem(new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial())
-        .name(new MessageBuilder("&e&lSet SpawnPoint Location").build())
-        .lore(ChatColor.GRAY + "Click to set the spawn point location")
-        .lore(ChatColor.GRAY + "on the place where you are standing.")
-        .lore(ChatColor.DARK_GRAY + "(location where players spawns first time")
-        .lore(ChatColor.DARK_GRAY + "and on every round reset)")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".spawnpoint", setupInventory))
-        .build(), e -> {
-      String serializedLocation = setupInventory.getPlayer().getLocation().getWorld().getName() + "," + setupInventory.getPlayer().getLocation().getX() + "," + setupInventory.getPlayer().getLocation().getY() + ","
-          + setupInventory.getPlayer().getLocation().getZ() + "," + setupInventory.getPlayer().getLocation().getYaw() + ",0.0";
-      setupInventory.getPlugin().getSetupUtilities().getConfig().set("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".spawnpoint", serializedLocation);
-      new MessageBuilder("&e✔ Completed | &aSpawnPoint location for base " + setupInventory.getArena().getId() + " set at your location!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
-    setItem(10, new LocationItem(new ItemBuilder(XMaterial.LAPIS_BLOCK.parseMaterial())
-        .name(new MessageBuilder("&e&lSet ReSpawnPoint Location").build())
-        .lore(ChatColor.GRAY + "Click to set the respawn point location")
-        .lore(ChatColor.GRAY + "on the place where you are standing.")
-        .lore(ChatColor.DARK_GRAY + "(location where players respawns every")
-        .lore(ChatColor.DARK_GRAY + "time after death)")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".respawnpoint", setupInventory))
-        .build(), e -> {
-      String serializedLocation = setupInventory.getPlayer().getLocation().getWorld().getName() + "," + setupInventory.getPlayer().getLocation().getX() + "," + setupInventory.getPlayer().getLocation().getY() + ","
-          + setupInventory.getPlayer().getLocation().getZ() + "," + setupInventory.getPlayer().getLocation().getYaw() + ",0.0";
-      setupInventory.getPlugin().getSetupUtilities().getConfig().set("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".respawnpoint", serializedLocation);
-      new MessageBuilder("&e✔ Completed | &aReSpawnPoint location for base " + setupInventory.getArena().getId() + " set at your location!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
-    setItem(11, new LocationItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial())
-        .name(new MessageBuilder("&e&lSet Portal Hologram Location").build())
-        .lore(ChatColor.GRAY + "Click to set the portal hologram location")
-        .lore(ChatColor.GRAY + "on the place where you are standing.")
-        .lore("", setupInventory.getPlugin().getSetupUtilities().isOptionDoneBool("bases." + getId(setupInventory.getPlayer()) + ".portalhologram", setupInventory))
-        .build(), e -> {
-      String serializedLocation = setupInventory.getPlayer().getLocation().getWorld().getName() + "," + setupInventory.getPlayer().getLocation().getX() + "," + setupInventory.getPlayer().getLocation().getY() + ","
-          + setupInventory.getPlayer().getLocation().getZ() + "," + setupInventory.getPlayer().getLocation().getYaw() + ",0.0";
-      setupInventory.getPlugin().getSetupUtilities().getConfig().set("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", serializedLocation);
-      if(setupInventory.getPlugin().getSetupUtilities().getConfig().getBoolean("instances." + setupInventory.getArena().getId() + ".bases." + getId(setupInventory.getPlayer()) + ".isdone", false)) {
-        new MessageBuilder("&cLocation changes take affect after restart!").player(setupInventory.getPlayer()).sendPlayer();
-      }
-      new MessageBuilder("&e✔ Completed | &aPortalHologram location for base " + setupInventory.getArena().getId() + " set at your location!").player(setupInventory.getPlayer()).sendPlayer();
-      BaseUtilities.addEditing(setupInventory.getPlayer());
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getPlugin().getSetupUtilities().getConfig(), "arenas");
-    }, event -> {
-      new MessageBuilder("&cNot supported!").prefix().player(setupInventory.getPlayer()).sendPlayer();
-    }, false, false, true));
+    LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed", "cagelocation");
+    setItem(8, cageCorners);
 
+
+    LocationItem spawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "SpawnPoint", "Position where players spawn the first time and on round reset", "spawnpoint");
+    setItem(9, spawnPoint);
+
+    LocationItem respawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "ReSpawnPoint", "Position where players spawn on respawn (death)", "respawnpoint");
+    setItem(10, respawnPoint);
+
+    //todo base isDone
+    LocationItem hologramLocation = new LocationItem(setupInventory, new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial()), "Portal Hologram", "The hologram postion for the portal. Best is to set it with player position!", "portalhologram");
+    setItem(11, hologramLocation);
+
+
+    //todo finish base design
     setItem(12, ClickableItem.of(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
         .name(new MessageBuilder("&e&lFinish Base").build())
         .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")

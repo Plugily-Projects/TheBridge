@@ -15,7 +15,9 @@ import plugily.projects.minigamesbox.classic.handlers.permissions.Permission;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupUtilities;
+import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
 import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
 import plugily.projects.minigamesbox.classic.utils.services.locale.LocaleRegistry;
@@ -28,7 +30,7 @@ import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.PluginEvents;
-import plugily.projects.thebridge.handlers.setup.SetupInventory;
+import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
 import plugily.projects.thebridge.kits.free.BridgeKit;
 import plugily.projects.thebridge.kits.free.KnightKit;
 import plugily.projects.thebridge.kits.free.LightTankKit;
@@ -140,6 +142,7 @@ public class Main extends PluginMain {
             new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
         .forEach(LocaleRegistry::registerLocale);
   }
+
   public void addAdditionalValues() {
     getConfigPreferences().registerOption("FOOD_LOSE", new ConfigOption("Food-Lose", true));
 
@@ -253,10 +256,9 @@ public class Main extends PluginMain {
   }
 
 
-
   public void registerPlaceholders() {
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("option_mode", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL){
+    getPlaceholderManager().registerPlaceholder(new Placeholder("option_mode", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getMode(arena);
@@ -277,7 +279,7 @@ public class Main extends PluginMain {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("base_color", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL){
+    getPlaceholderManager().registerPlaceholder(new Placeholder("base_color", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getBaseValue(arena, player);
@@ -298,7 +300,7 @@ public class Main extends PluginMain {
       }
     });
 
-    getPlaceholderManager().registerPlaceholder(new Placeholder("base_color_formatted", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL){
+    getPlaceholderManager().registerPlaceholder(new Placeholder("base_color_formatted", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, PluginArena arena) {
         return getBaseValue(arena, player);
@@ -474,7 +476,7 @@ public class Main extends PluginMain {
         if(pluginArena.getWinner() == null) {
           return "";
         }
-        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_"+pluginArena.getMode()).asKey().build();
+        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_" + pluginArena.getMode()).asKey().build();
         return summary;
       }
     });
@@ -533,14 +535,9 @@ public class Main extends PluginMain {
     return baseMenuHandler;
   }
 
-
   @Override
-  public PluginSetupInventory openSetupInventory(PluginArena arena, Player player) {
-    return new SetupInventory(this, arena, player);
+  public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
+    return new SetupCategoryManager(setupInventory);
   }
 
-  @Override
-  public PluginSetupInventory openSetupInventory(PluginArena arena, Player player, SetupUtilities.InventoryStage inventoryStage) {
-    return new SetupInventory(this, arena, player, inventoryStage);
-  }
 }
