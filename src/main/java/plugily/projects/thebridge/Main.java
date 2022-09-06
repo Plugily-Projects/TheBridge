@@ -273,6 +273,9 @@ public class Main extends PluginMain {
         if(pluginArena == null) {
           return null;
         }
+        if(pluginArena.getMode() == null) {
+          return null;
+        }
         return pluginArena.getMode().toString();
       }
     });
@@ -294,6 +297,9 @@ public class Main extends PluginMain {
         if(pluginArena == null) {
           return null;
         }
+        if(pluginArena.getBase(player) == null) {
+          return null;
+        }
         return pluginArena.getBase(player).getColor();
       }
     });
@@ -313,6 +319,9 @@ public class Main extends PluginMain {
       private String getBaseValue(PluginArena arena, Player player) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getBase(player) == null) {
           return null;
         }
         return pluginArena.getBase(player).getFormattedColor();
