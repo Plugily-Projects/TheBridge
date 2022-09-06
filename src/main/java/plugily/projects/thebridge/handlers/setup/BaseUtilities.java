@@ -36,11 +36,11 @@ public class BaseUtilities {
 
   private static final List<Player> editing = new ArrayList<>();
 
-  public static boolean check(Arena arena, Player player) {
+  public static boolean check(String arenaKey, Player player) {
     if(!baseId.containsKey(player)) {
       return false;
     }
-    return baseId.get(player).containsKey(arena.getId());
+    return baseId.get(player).containsKey(arenaKey);
   }
 
   public static boolean isEditing(Player player) {
