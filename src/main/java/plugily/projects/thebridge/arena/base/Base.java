@@ -23,12 +23,13 @@ package plugily.projects.thebridge.arena.base;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 
 import java.util.ArrayList;
@@ -56,7 +57,9 @@ public class Base {
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
-  private Material cageBlock;
+  private List<Block> cageBlocks;
+
+  private List<Block> cageFloorBlocks;
   private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
@@ -218,49 +221,41 @@ public class Base {
     return cageCuboid;
   }
 
-  public Material getCageFloorMaterial() {
-    return cageBlock;
-  }
-
-  public void setCageFloorMaterial(Material cageBlock) {
-    this.cageBlock = cageBlock;
-  }
 
   public void setCageCuboid(Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
-    setCageFloorMaterial(cageCuboid.getCenter().getBlock().getType());
+    this.cageBlocks = cageCuboid.blockList();
+    this.cageFloorBlocks = cageCuboid.floorBlockList();
   }
 
-  public void removeCageFloor() {
-    if(!checkCageFloor(cageBlock)) {
+  public void removeCage() {
+    if(checkCage()) {
       return;
     }
-    cageCuboid.fill(Material.AIR);
+    if(plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR")) {
+      cageCuboid.fillFloor(XMaterial.AIR.parseMaterial());
+    } else {
+      cageCuboid.fill(XMaterial.AIR.parseMaterial());
+    }
     damageCooldown = true;
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      damageCooldown = false;
-    }, 20 * 4);
+    Bukkit.getScheduler().runTaskLater(plugin, () -> damageCooldown = false, 20 * 4L);
   }
 
-  public void addCageFloor() {
-    if(!checkCageFloor(cageBlock)) {
+  public void addCage() {
+    if(checkCage()) {
       return;
     }
-    cageCuboid.fill(cageBlock);
+    List<Block> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
+    for(Block block : blocks) {
+      block.getWorld().getBlockAt(block.getLocation()).setBlockData(block.getBlockData());
+    }
   }
 
-  private boolean checkCageFloor(Material cageBlock) {
-    if(cageCuboid == null) {
-      return false;
+  private boolean checkCage() {
+    if(cageCuboid == null || cageFloorBlocks == null || cageBlocks == null) {
+      return true;
     }
-    if(cageBlock == null) {
-      return false;
-    }
-    if(cageBlock == Material.AIR) {
-      plugin.getDebugger().sendConsoleMsg("[The Bridge] &cARENA SETUP PROBLEM | Please only select your floor of the cage to setup it proper! We found Material Air on the selected area!");
-      return false;
-    }
-    return true;
+    return false;
   }
 
   public boolean isDamageCooldown() {
@@ -270,6 +265,6 @@ public class Base {
   public void reset() {
     this.points = 0;
     resetPlayers();
-    addCageFloor();
+    addCage();
   }
 }

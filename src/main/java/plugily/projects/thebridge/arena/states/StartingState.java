@@ -77,7 +77,7 @@ public class StartingState extends PluginStartingState {
       }
       Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(pluginArena));
       for(Base base : pluginArena.getBases()) {
-        base.removeCageFloor();
+        base.removeCage();
       }
     }
     super.handleCall(arena);

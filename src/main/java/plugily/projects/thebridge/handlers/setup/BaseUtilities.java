@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.handlers.setup;
 
 import org.bukkit.entity.Player;
-import plugily.projects.thebridge.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.HashMap;

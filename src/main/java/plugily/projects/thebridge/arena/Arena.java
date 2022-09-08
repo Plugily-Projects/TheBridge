@@ -252,7 +252,7 @@ public class Arena extends PluginArena {
 
   public void resetRound() {
     for(Base base : bases) {
-      base.addCageFloor();
+      base.addCage();
     }
     resetRound = getArenaOption("RESET_TIME");
     round++;

@@ -72,7 +72,7 @@ public class InGameState extends PluginInGameState {
             .sendArena();
         Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(pluginArena));
         for (Base base : pluginArena.getBases()) {
-          base.removeCageFloor();
+          base.removeCage();
         }
         pluginArena.setResetRound(-999);
       }

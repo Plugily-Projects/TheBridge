@@ -143,6 +143,7 @@ public class Main extends PluginMain {
 
   public void addAdditionalValues() {
     getConfigPreferences().registerOption("FOOD_LOSE", new ConfigOption("Food-Lose", true));
+    getConfigPreferences().registerOption("CAGE_ONLY_FLOOR", new ConfigOption("Cage.Only-Floor", false));
 
     getStatsStorage().registerStatistic("KILLS", new StatisticType("kills", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("DEATHS", new StatisticType("deaths", true, "int(11) NOT NULL DEFAULT '0'"));
