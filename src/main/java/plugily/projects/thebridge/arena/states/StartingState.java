@@ -25,6 +25,7 @@ import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
+
 import java.util.Comparator;
 
 /**
@@ -75,10 +76,7 @@ public class StartingState extends PluginStartingState {
           maxPlayers.removePlayer(move);
         }
       }
-      Bukkit.getPluginManager().callEvent(new TBRoundStartEvent(pluginArena));
-      for(Base base : pluginArena.getBases()) {
-        base.removeCage();
-      }
+      pluginArena.setResetRound(pluginArena.getArenaOption("RESET_TIME"));
     }
     super.handleCall(arena);
     if(arenaStart) {

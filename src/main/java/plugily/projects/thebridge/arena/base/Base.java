@@ -232,12 +232,12 @@ public class Base {
     if(checkCage()) {
       return;
     }
+    damageCooldown = true;
     if(plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR")) {
       cageCuboid.fillFloor(XMaterial.AIR.parseMaterial());
     } else {
       cageCuboid.fill(XMaterial.AIR.parseMaterial());
     }
-    damageCooldown = true;
     Bukkit.getScheduler().runTaskLater(plugin, () -> damageCooldown = false, 20 * 4L);
   }
 
