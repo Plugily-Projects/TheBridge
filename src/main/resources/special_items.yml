@@ -107,6 +107,7 @@ Forcestart:
   move: false
 
 Arena-Selector:
+  disabled: true # disabled by default
   permission: ""
   execute:
     - "p:tb arenas"
@@ -120,6 +121,7 @@ Arena-Selector:
   move: false
 
 Stats:
+  disabled: true # disabled by default
   permission: ""
   execute:
     - "p:tb stats"
@@ -134,6 +136,7 @@ Stats:
 
 # Uses bungee.yml configuration - if enabled it tries to connect to your hub
 Back-To-Hub:
+  disabled: true # disabled by default
   permission: ""
   execute:
     - "p:hub"
