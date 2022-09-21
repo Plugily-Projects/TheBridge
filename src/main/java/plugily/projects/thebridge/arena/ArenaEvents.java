@@ -19,9 +19,7 @@
 package plugily.projects.thebridge.arena;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -36,9 +34,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.spigotmc.event.entity.EntityDismountEvent;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
@@ -74,22 +69,6 @@ public class ArenaEvents extends PluginArenaEvents {
     super(plugin);
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
-
-  @EventHandler
-  public void onArmorStandEject(EntityDismountEvent e) {
-    if(!(e.getEntity() instanceof ArmorStand)
-        || !"TheBridgeArmorStand".equals(e.getEntity().getCustomName())) {
-      return;
-    }
-    if(!(e.getDismounted() instanceof Player)) {
-      return;
-    }
-    if(e.getDismounted().isDead()) {
-      e.getEntity().remove();
-    }
-    // we could use setCancelled here but for 1.12 support we cannot (no api)
-    e.getDismounted().addPassenger(e.getEntity());
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -136,19 +115,19 @@ public class ArenaEvents extends PluginArenaEvents {
   public boolean canBuild(Arena arena, Player player, Location location) {
     if(!arena.getArenaBorder().isIn(location)) {
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
-          .asKey()
-          .player(player)
-          .arena(arena)
-          .sendPlayer();
+        .asKey()
+        .player(player)
+        .arena(arena)
+        .sendPlayer();
       return false;
     }
     for(Base base : arena.getBases()) {
       if(base.getBaseCuboid().isIn(location)) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
-            .asKey()
-            .player(player)
-            .arena(arena)
-            .sendPlayer();
+          .asKey()
+          .player(player)
+          .arena(arena)
+          .sendPlayer();
         return false;
       }
     }
@@ -162,22 +141,22 @@ public class ArenaEvents extends PluginArenaEvents {
       Player attacker = arena.getHits().get(victim);
       arena.removeHits(victim);
       plugin
-          .getRewardsHandler()
-          .performReward(attacker, plugin.getRewardsHandler().getRewardType("KILL"));
+        .getRewardsHandler()
+        .performReward(attacker, plugin.getRewardsHandler().getRewardType("KILL"));
       plugin.getUserManager().addStat(attacker, plugin.getStatsStorage().getStatisticType("KILLS"));
       plugin.getUserManager().addExperience(attacker, 2);
       plugin.getUserManager().getUser(attacker).adjustStatistic("LOCAL_KILLS", 1);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_KILLED")
-          .asKey()
-          .player(victim)
-          .arena(arena)
-          .send(attacker);
+        .asKey()
+        .player(victim)
+        .arena(arena)
+        .send(attacker);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_DEATH")
-          .asKey()
-          .player(victim)
-          .value(attacker.getName())
-          .arena(arena)
-          .sendArena();
+        .asKey()
+        .player(victim)
+        .value(attacker.getName())
+        .arena(arena)
+        .sendArena();
     }
   }
 
@@ -208,10 +187,10 @@ public class ArenaEvents extends PluginArenaEvents {
       }
       DecimalFormat df = new DecimalFormat("##.##");
       VersionUtils.sendActionBar(attacker, new MessageBuilder("IN_GAME_MESSAGES_ARENA_DAMAGE")
-          .asKey()
-          .player(victim)
-          .value(df.format(victim.getHealth() - event.getDamage()))
-          .build());
+        .asKey()
+        .player(victim)
+        .value(df.format(victim.getHealth() - event.getDamage()))
+        .build());
     }
   }
 
@@ -266,7 +245,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     if(event.getFrom().getZ() != event.getTo().getZ()
-        && event.getFrom().getX() != event.getTo().getX()) {
+      && event.getFrom().getX() != event.getTo().getX()) {
       event.setCancelled(true);
     }
   }
@@ -279,32 +258,32 @@ public class ArenaEvents extends PluginArenaEvents {
       arena.getBase(player).addPoint();
     }
     new TitleBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_SCORED_TITLE")
-        .asKey()
-        .arena(arena)
-        .player(player)
-        .value(base.getFormattedColor())
-        .sendArena();
+      .asKey()
+      .arena(arena)
+      .player(player)
+      .value(base.getFormattedColor())
+      .sendArena();
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OPPONENT")
-        .asKey()
-        .player(player)
-        .arena(arena)
-        .value(base.getFormattedColor())
-        .sendArena();
+      .asKey()
+      .player(player)
+      .arena(arena)
+      .value(base.getFormattedColor())
+      .sendArena();
     ((ScoreboardManager) arena.getScoreboardManager()).resetBaseCache();
     plugin
-        .getUserManager()
-        .addStat(player, plugin.getStatsStorage().getStatisticType("SCORED_POINTS"));
+      .getUserManager()
+      .addStat(player, plugin.getStatsStorage().getStatisticType("SCORED_POINTS"));
     plugin.getUserManager().addExperience(player, 10);
     plugin
-        .getUserManager()
-        .addStat(player, plugin.getStatsStorage().getStatisticType("LOCAL_SCORED_POINTS"));
+      .getUserManager()
+      .addStat(player, plugin.getStatsStorage().getStatisticType("LOCAL_SCORED_POINTS"));
   }
 
   private void portalOut(Player player, Arena arena) {
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OUT")
-        .asKey()
-        .player(player)
-        .sendPlayer();
+      .asKey()
+      .player(player)
+      .sendPlayer();
     playerDeath(player, arena);
   }
 
@@ -313,49 +292,47 @@ public class ArenaEvents extends PluginArenaEvents {
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PORTAL_OWN").asKey().player(player).sendPlayer();
     // prevent players being stuck on portal location
     Bukkit.getScheduler()
-        .runTaskLater(
-            plugin,
-            () -> {
-              if(player != null) {
-                if(arena
-                    .getBase(player)
-                    .getPortalCuboid()
-                    .isInWithMarge(player.getLocation(), 1)) {
-                  playerDeath(player, arena);
-                  plugin
-                      .getDebugger()
-                      .debug(
-                          Level.INFO,
-                          "Killed "
-                              + player.getName()
-                              + " because he is more than 3 seconds on own portal (seems to stuck)");
-                }
-              }
-            },
-            20 * 3 /* 3 seconds as cooldown to prevent instant respawning */);
+      .runTaskLater(
+        plugin,
+        () -> {
+          if(player != null && arena
+            .getBase(player)
+            .getPortalCuboid()
+            .isInWithMarge(player.getLocation(), 1)) {
+            playerDeath(player, arena);
+            plugin
+              .getDebugger()
+              .debug(
+                Level.INFO,
+                "Killed "
+                  + player.getName()
+                  + " because he is more than 3 seconds on own portal (seems to stuck)");
+          }
+        },
+        20 * 3 /* 3 seconds as cooldown to prevent instant respawning */);
   }
 
   private void outsideArenaBorder(Player player, Arena arena) {
     if(cooldownOutside.containsKey(player)
-        && cooldownOutside.get(player) <= System.currentTimeMillis() - 1500) {
+      && cooldownOutside.get(player) <= System.currentTimeMillis() - 1500) {
       cooldownOutside.remove(player);
       return;
     }
     playerDeath(player, arena);
     plugin
-        .getDebugger()
-        .debug(
-            Level.INFO,
-            "Killed "
-                + player.getName()
-                + " because he is more than 5 blocks outside arena location, Location: "
-                + player.getLocation()
-                + "; ArenaBorder: "
-                + arena.getArenaBorder().getMinPoint()
-                + ";"
-                + arena.getArenaBorder().getMaxPoint()
-                + ";"
-                + arena.getArenaBorder().getCenter());
+      .getDebugger()
+      .debug(
+        Level.INFO,
+        "Killed "
+          + player.getName()
+          + " because he is more than 5 blocks outside arena location, Location: "
+          + player.getLocation()
+          + "; ArenaBorder: "
+          + arena.getArenaBorder().getMinPoint()
+          + ";"
+          + arena.getArenaBorder().getMaxPoint()
+          + ";"
+          + arena.getArenaBorder().getCenter());
   }
 
   @EventHandler //fallback
@@ -392,8 +369,8 @@ public class ArenaEvents extends PluginArenaEvents {
             modeDeathHandle(player, arena, user);
             cooldownOutside.put(player, System.currentTimeMillis());
             plugin
-                .getRewardsHandler()
-                .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH"));
+              .getRewardsHandler()
+              .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH"));
 
             rewardLastAttacker(arena, player);
             plugin.getUserManager().getUser(player).getKit().giveKitItems(player);
@@ -431,7 +408,7 @@ public class ArenaEvents extends PluginArenaEvents {
           ArenaUtils.hidePlayer(player, arena);
           player.getInventory().clear();
           if(arena.getArenaState() != ArenaState.ENDING
-              && arena.getArenaState() != ArenaState.RESTARTING) {
+            && arena.getArenaState() != ArenaState.RESTARTING) {
             arena.addDeathPlayer(player);
           }
           List<Player> players = arena.getBase(player).getPlayers();
@@ -448,16 +425,14 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @Override
   public boolean additionalFallDamageRules(
-      Player victim, PluginArena arena, EntityDamageEvent event) {
+    Player victim, PluginArena arena, EntityDamageEvent event) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return false;
     }
-    if(pluginArena.getBase(victim) != null) {
-      if(pluginArena.getBase(victim).isDamageCooldown()) {
-        event.setCancelled(true);
-        return true;
-      }
+    if(pluginArena.getBase(victim) != null && pluginArena.getBase(victim).isDamageCooldown()) {
+      event.setCancelled(true);
+      return true;
     }
     return false;
   }
@@ -473,54 +448,54 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   @EventHandler
-  public void onBowShot(EntityShootBowEvent e) {
-    if(!(e.getEntity() instanceof Player)) {
+  public void onBowShot(EntityShootBowEvent event) {
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
-    User user = plugin.getUserManager().getUser((Player) e.getEntity());
+    User user = plugin.getUserManager().getUser((Player) event.getEntity());
     Arena pluginArena = plugin.getArenaRegistry().getArena(user.getPlayer());
     if(pluginArena == null) {
       return;
     }
     if(pluginArena.isResetRound()) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
     if(user.getCooldown("bow_shot") == 0) {
-      int cooldown = 5;
+      int cooldown = plugin.getConfig().getInt("Bow-Cooldown", 5);
       if((user.getKit() instanceof ArcherKit)) {
-        cooldown = 3;
+        cooldown = Math.max(0, Math.min(cooldown, cooldown - 2));
       }
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      Player player = (Player) e.getEntity();
+      user.setCooldown("bow_shot", cooldown);
+      Player player = (Player) event.getEntity();
       plugin
-          .getBukkitHelper()
-          .applyActionBarCooldown(player, plugin.getConfig().getInt("Bow-Cooldown", cooldown));
-      VersionUtils.setDurability(e.getBow(), (short) 0);
+        .getBukkitHelper()
+        .applyActionBarCooldown(player, cooldown);
+      VersionUtils.setDurability(event.getBow(), (short) 0);
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
   }
 
   @EventHandler
-  public void onArrowPickup(PlugilyPlayerPickupArrow e) {
-    if(plugin.getArenaRegistry().isInArena(e.getPlayer())) {
-      e.getItem().remove();
-      e.setCancelled(true);
+  public void onArrowPickup(PlugilyPlayerPickupArrow event) {
+    if(plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+      event.getItem().remove();
+      event.setCancelled(true);
     }
   }
 
   @EventHandler
-  public void onItemPickup(PlugilyEntityPickupItemEvent e) {
-    if(!(e.getEntity() instanceof Player)) {
+  public void onItemPickup(PlugilyEntityPickupItemEvent event) {
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
-    Player player = (Player) e.getEntity();
+    Player player = (Player) event.getEntity();
     Arena pluginArena = plugin.getArenaRegistry().getArena(player);
     if(pluginArena == null) {
       return;
     }
-    e.setCancelled(true);
+    event.setCancelled(true);
 
     // User user = plugin.getUserManager().getUser(player);
     // if(user.isSpectator() || pluginArena.getArenaState() != ArenaState.IN_GAME) {
@@ -530,60 +505,60 @@ public class ArenaEvents extends PluginArenaEvents {
 
 
   @EventHandler
-  public void onArrowDamage(EntityDamageByEntityEvent e) {
-    if(!(e.getDamager() instanceof Arrow)) {
+  public void onArrowDamage(EntityDamageByEntityEvent event) {
+    if(!(event.getDamager() instanceof Arrow)) {
       return;
     }
-    if(!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
+    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
       return;
     }
-    Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
-    if(!(e.getEntity() instanceof Player)) {
+    Player attacker = (Player) ((Arrow) event.getDamager()).getShooter();
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
-    Player victim = (Player) e.getEntity();
+    Player victim = (Player) event.getEntity();
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
     // we won't allow to suicide
     if(attacker == victim) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
     Arena arena = plugin.getArenaRegistry().getArena(attacker);
     if(plugin.getUserManager().getUser(attacker).isSpectator()) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
     if(arena.isTeammate(attacker, victim)) {
-      e.setCancelled(true);
+      event.setCancelled(true);
       return;
     }
     arena.addHits(victim, attacker);
 
     XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
 
-    if(victim.getHealth() - e.getDamage() <= 0) {
+    if(victim.getHealth() - event.getDamage() <= 0) {
       return;
     }
     DecimalFormat df = new DecimalFormat("##.##");
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_DAMAGE")
-        .asKey()
-        .player(victim)
-        .value(df.format(victim.getHealth() - e.getDamage()))
-        .send(attacker);
+      .asKey()
+      .player(victim)
+      .value(df.format(victim.getHealth() - event.getDamage()))
+      .send(attacker);
   }
 
   @EventHandler
-  public void onItemMove(InventoryClickEvent e) {
-    if(e.getWhoClicked() instanceof Player
-        && plugin.getArenaRegistry().isInArena((Player) e.getWhoClicked())) {
-      if(plugin.getArenaRegistry().getArena(((Player) e.getWhoClicked())).getArenaState()
-          != ArenaState.IN_GAME) {
-        if(e.getClickedInventory() == e.getWhoClicked().getInventory()) {
-          if(e.getView().getType() == InventoryType.CRAFTING
-              || e.getView().getType() == InventoryType.PLAYER) {
-            e.setResult(Event.Result.DENY);
+  public void onItemMove(InventoryClickEvent event) {
+    if(event.getWhoClicked() instanceof Player
+      && plugin.getArenaRegistry().isInArena((Player) event.getWhoClicked())) {
+      if(plugin.getArenaRegistry().getArena(((Player) event.getWhoClicked())).getArenaState()
+        != ArenaState.IN_GAME) {
+        if(event.getClickedInventory() == event.getWhoClicked().getInventory()) {
+          if(event.getView().getType() == InventoryType.CRAFTING
+            || event.getView().getType() == InventoryType.PLAYER) {
+            event.setResult(Event.Result.DENY);
           }
         }
       }
