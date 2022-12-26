@@ -61,15 +61,19 @@ public class BaseMenuHandler implements Listener {
   }
 
   public void createMenu(Player player, Arena arena) {
+    if(!plugin.getBukkitHelper().hasPermission(player, "thebridge.command.selectbase")) {
+      return;
+    }
+
     NormalFastInv gui =
-        new NormalFastInv(
-            plugin.getBukkitHelper().serializeInt(plugin.getKitRegistry().getKits().size()) / 9,
-            new MessageBuilder("BASES_TEAM_MENU").asKey().build());
+      new NormalFastInv(
+        plugin.getBukkitHelper().serializeInt(plugin.getKitRegistry().getKits().size()) / 9,
+        new MessageBuilder("BASES_TEAM_MENU").asKey().build());
     for(Base base : arena.getBases()) {
       ItemStack itemStack =
-          XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL")
-              .get()
-              .parseItem();
+        XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL")
+          .get()
+          .parseItem();
       itemStack.setAmount(base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
       if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
@@ -87,30 +91,30 @@ public class BaseMenuHandler implements Listener {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
       itemStack =
-          new ItemBuilder(itemStack)
-              .name(teamName.replace("%base%", base.getFormattedColor()))
-              .build();
+        new ItemBuilder(itemStack)
+          .name(teamName.replace("%base%", base.getFormattedColor()))
+          .build();
       gui.addItem(
-          new SimpleClickableItem(
-              itemStack,
-              event -> {
-                event.setCancelled(true);
-                if(!(event.getWhoClicked() instanceof Player)
-                    || !(event.isLeftClick() || event.isRightClick())) {
-                  return;
-                }
-                TBPlayerChooseBaseEvent chooseBaseEvent = new TBPlayerChooseBaseEvent(player, base, arena);
-                Bukkit.getPluginManager().callEvent(chooseBaseEvent);
-                if(chooseBaseEvent.isCancelled()) {
-                  return;
-                }
-                if(!base.addPlayer(player)) {
-                  return;
-                }
+        new SimpleClickableItem(
+          itemStack,
+          event -> {
+            event.setCancelled(true);
+            if(!(event.getWhoClicked() instanceof Player)
+              || !(event.isLeftClick() || event.isRightClick())) {
+              return;
+            }
+            TBPlayerChooseBaseEvent chooseBaseEvent = new TBPlayerChooseBaseEvent(player, base, arena);
+            Bukkit.getPluginManager().callEvent(chooseBaseEvent);
+            if(chooseBaseEvent.isCancelled()) {
+              return;
+            }
+            if(!base.addPlayer(player)) {
+              return;
+            }
 
-                player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build().replace("%base%", base.getFormattedColor()));
-                event.getWhoClicked().closeInventory();
-              }));
+            player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build().replace("%base%", base.getFormattedColor()));
+            event.getWhoClicked().closeInventory();
+          }));
     }
     gui.refresh();
     gui.open(player);
