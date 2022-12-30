@@ -81,8 +81,8 @@ processResources {
 
 shadowJar {
     archiveClassifier.set('')
-    relocate 'plugily.projects.minigamesbox', 'plugily.projects.buildbattle.minigamesbox'
-    relocate 'com.zaxxer.hikari', 'plugily.projects.buildbattle.database.hikari'
+    relocate 'plugily.projects.minigamesbox', 'plugily.projects.thebridge.minigamesbox'
+    relocate 'com.zaxxer.hikari', 'plugily.projects.thebridge.database.hikari'
     minimize()
 }
 
