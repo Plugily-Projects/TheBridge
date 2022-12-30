@@ -342,7 +342,6 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    event.setCancelled(true);
     event.setDroppedExp(0);
     event.getDrops().clear();
     playerDeath(player, arena);
