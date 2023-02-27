@@ -108,8 +108,12 @@ public abstract class Kit {
   public void addBuildBlocks(Player player, Arena arena) {
     ItemStack itemStack = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + getPlugin().getConfigPreferences().getColoredBlockMaterial()).get().parseItem();
     itemStack.setAmount(64);
-    if(player.getInventory().getItem(8) == null) {
-      player.getInventory().setItem(8, itemStack);
+    if(player.getInventory().getItem(3) == null) {
+      player.getInventory().setItem(3, itemStack);
+      return;
+    }
+    if(player.getInventory().getItem(4) == null) {
+      player.getInventory().setItem(4, itemStack);
       return;
     }
     player.getInventory().addItem(itemStack);
