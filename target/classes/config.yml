@@ -1,0 +1,124 @@
+#     The Bridge configuration file
+#
+#    You can edit here the basic things of MM
+#      Please read everything CAREFULLY!
+#   You don't want to break anything, do you?
+#
+
+# Select locale of The Bridge, default it's English.
+# Available locales:
+#    default - English language. Uses 'language.yml'.
+#    de - Deutsche sprache          pl - Język polski
+#    es - Idioma español
+#    fr - Langue française
+#    hu - Magyar nyelv
+#    cs - Český jazyk
+#    pt_br - Português Brasileiro
+#    it - Lingua italiana           ru - Русский язык
+#    nl - Dutch
+locale: default
+
+# Enable bossbar support?
+Bossbar-Enabled: true
+
+# Should we hook into bungee cord? (If you wanna use arena per server option)
+# You STILL need to use external addon for HUB server game signs
+# thebridge doesn't offer that addon.
+# Check here for more info: https://wiki.plugily.xyz/thebridge/support/servertips#bungeecord-lobby-signs
+BungeeActivated: false
+
+# Enable this option when you're using MySQL, otherwise it won't work.
+# Be careful when changing this because there is NO migrator between
+# flat file and MySQL for player stats.
+DatabaseActivated: false
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
+InventoryManager: true
+
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/thebridge/setup/cmdsandperms#basic-permissions
+Basic-Permissions:
+  Full-Games-Permission: "thebridge.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.AC02'
+  # use 'thebridge.join.*' to enable access to all arenas
+  Join-Permission: "thebridge.join.<arena>"
+  Kits-Permission: "thebridge.kits"
+
+Time-Manager:
+  Start-On-Full-Lobby: 15
+  Waiting-Time-Lobby: 60
+  # No one wins after that time amount
+  Gameplay: 500
+
+# Should we enable short commands such as /start and /leave
+Enable-Short-Commands: false
+
+# Should /ac leave command be blocked?
+Disable-Leave-Command: false
+
+# Should players get no fall damage?
+Disable-Fall-Damage: false
+
+# Commands which can be used in game, remove all of them to disable
+Whitelisted-Commands:
+  - me
+  - help
+
+# Enable in game rewards? See rewards.yml for more...
+Rewards-Enabled: false
+
+# Should we block every not thebridge associated commands in game?
+Block-Commands-In-Game: true
+
+# Enable in game (eg. '[KIT][BASE][LEVEL] Plugily: hey') special formatting?
+# Formatting is configurable in language.yml
+# You can use PlaceholderAPI placeholders in chat format!
+ChatFormat-Enabled: true
+
+# Should we disable all chat related stuff?
+# It will disable the separated chat, for example
+Disable-Separate-Chat: false
+
+#Disable Party features of external party plugins (such as PAF, Parties ...)
+Disable-Parties: true
+
+#Disable Food lose
+Disable-Food-Lose: true
+
+# Should we fire some cool fireworks at location of every player after the game ends?
+Firework-When-Game-Ends: true
+
+# Should blocks behind game signs change their color based on game state?
+# They will change color to:
+# - white (waiting for players) stained glass
+# - yellow (starting) stained glass
+# - orange (in game) stained glass
+# - gray (ending) stained glass
+# - black (restarting) stained glass
+Signs-Block-States-Enabled: true
+
+# Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
+Colored-Block-Material: "_TERRACOTTA"
+
+Update-Notifier:
+  # Should we check for updates on plugin start/after admin join?
+  # You REALLY should have this true!
+  Enabled: true
+  # Should we inform you when beta version is out?
+  # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
+  Notify-Beta-Versions: true
+
+Arena-Selector:
+  # Change items of arena selector
+  State-Item:
+    Waiting: LIME_wool
+    Starting: YELLOW_wool
+    In-Game: RED_wool
+    Ending: RED_wool
+    Restarting: RED_wool
+
+# Don't modify.
+Version: 4
+
+# No way! You've reached the end! But... where's the dragon!?

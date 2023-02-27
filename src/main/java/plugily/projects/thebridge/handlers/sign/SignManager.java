@@ -19,7 +19,7 @@
 
 package plugily.projects.thebridge.handlers.sign;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;

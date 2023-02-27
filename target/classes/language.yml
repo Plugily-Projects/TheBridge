@@ -1,0 +1,351 @@
+#    You can translate TheBridge messages here.
+#             Color codes (&) supported.
+#
+#              Use \n to make new line
+#        Some messages like kit and kit items
+#        descriptions don't support new lines
+# they are wrapped every 40 characters automatically
+#
+#     Some messages support their own placeholders
+#            like %player%, %kit% etc.
+
+# TheBridge commands messages
+Commands:
+  Did-You-Mean: "&6Did you mean &e/%command%&6?"
+  Command-Executed: "&aCommand successfully executed!"
+  Teleported-To-The-Lobby: "Teleported to the lobby!"
+  Removed-Game-Instance: "&cSuccessfully removed game instance!"
+  No-Arena-Like-That: "&cNo arena with that ID!"
+  Look-Sign: "&cYou have to look at a sign to perform this command!"
+  Type-Arena-Name: "&cPlease type arena ID!"
+  Hold-Any-Item: "&cYou must hold any item!"
+  No-Free-Arenas: "&cThere are no free arenas!"
+  Statistics:
+    Type-Name: "&cPlease type statistic name to view!"
+    Invalid-Name: "&cName of statistic is invalid! Type: kills, deaths, gamesplayed, points, loses, wins"
+    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+    Format: "&e#%position% %name% - %value% &7%statistic%"
+  Only-By-Player: "&cYou can execute this command only as player!"
+  Not-Playing: "&cYou must play to execute this command!"
+  No-Permission: "&cYou don't have permission to use this command!"
+  Target-Player-Not-Found: "&cTarget player doesn't exist!"
+  Location-Teleport-Invalid: "&cLocation to teleport is invalid!"
+  Wrong-Usage: "&cWrong usage. Do %correct%"
+  Admin-Commands:
+    Teleported-To-Player: "&aTeleported to player!"
+    Player-Not-Found: "&cPlayer not found!"
+    Success-Reload: "&aArenas reloaded!"
+    List-Command:
+      Header: "&aTheBridge &6arenas:"
+      Format: "&a%arena% &e%status% &6%players%/%maxplayers%"
+      No-Arenas: "&cThere are no game instances!"
+    Spychat-Command:
+      Toggled: "&aGame spy chat toggled to&c %value%"
+  Stats-Command:
+    Header: "&l-----YOUR STATS-----"
+    Header-Other: "&l-----STATS FOR %player%-----"
+    Footer: "&l--------------------"
+    Kills: "&aKills: &e"
+    Deaths: "&aDeaths: &e"
+    Wins: "&aWins: &e"
+    Loses: "&aLoses: &e"
+    Games-Played: "&aGames played: &e"
+    Scored-Points: "&aScored points: &e"
+    Level: "&aLevel: &e"
+    Exp: "&aExp: &e"
+    Next-Level-Exp: "&aExp to Level Up &e"
+  Main-Command:
+    Header: "&6----------------{TheBridge commands}----------"
+    Description: "&aGame commands:\n
+    &b/tb stats: &7Shows your stats!\n
+    &b/tb leave: &7Quits current arena!\n
+    &b/tb join <arena>: &7Joins specified arena!\n
+    &b/tb arenas: &7List all arenas!\n
+    &b/tb top <statistic>: &7Shows top 10 players!\n
+    &b/tb selectkit: &7Select new game kit!\n
+    &b/tb selectbase: &7Select your base ingame!\n
+    &b/tb randomjoin: &7Join random arena!"
+    Admin-Bonus-Description: "\n&b/tba: &7Shows all the admin commands"
+    Footer: "&6-------------------------------------------------"
+
+# In-game scoreboard messages.
+# Please do not use more than 48 chars here (1.13-)! COLOR CODES INCLUDED.
+# Please do not use more than 144 chars here (1.13+)! COLOR CODES INCLUDED.
+# Placeholders:
+# %ARENA_NAME% - Returns arena name.
+# %ARENA_ID% - Returns arena id.
+# %PLAYERS_LEFT% - Returns amount of players that is still left.
+# %MIN_PLAYERS% - Returns back the amount of minimum players needed to start the game
+# %PLAYERS% - The amount of players in the arena currently (dead + alive players)
+# %TIME% - Returns the time back in seconds.
+# %FORMATTED_TIME% - Returns time formatted.
+# %BASES%- Returns all bases formatted
+# %BASE_COLOR% - Returns players base color
+# %BASE% - Returns base name (color name)
+# %BASE_FORMATTED% - Returns base name colored like you want (See Bases.Color)
+# %BASE_PLAYERS% - Returns players on team
+# %BASE_YOU% - Returns Scoreboard.Bases.Inside if you are on that base
+# %FORMATTED_POINTS% - It multiplies and set colors for the points (See Scoreboard.Mode)
+# %MODE_VALUE% - Returns the value player needs to win
+# %MODE% - Returns the mode that player plays
+# %RESET_BLOCKS% - Returns after how many rounds the blocks got reset
+# %ONLYIFRESETBLOCKS% - Hides the line if resetblocks is disabled
+# %LOCAL_KILLS% - Returns kills at that round
+# %LOCAL_SCORED_POINTS% - Returns mode points at that round
+# %LOCAL_DEATHS% - Returns deaths at that round
+Scoreboard:
+  Title: "&e&lTheBridge"
+  Bases:
+    Format: "%BASE_FORMATTED% &7(&f%BASE_PLAYERS%&7) &e%BASE_YOU% %FORMATTED_POINTS%"
+    Not-Inside: "--"
+    Inside: "(You)"
+  Mode:
+    POINTS:
+      Got: "&a●"
+      Missing: "&7●"
+    HEARTS:
+      Got: "&c♥"
+      Missing: "&7♥"
+  Content:
+    # Contents of scoreboard while game is running
+    Playing:
+      - "&fTime Left: &e%FORMATTED_TIME%"
+      - "&fTeams:"
+      - "%BASES%"
+      - ""
+      - "&fKills: &e%LOCAL_KILLS%"
+      - "&fDeaths: &e%LOCAL_DEATHS%"
+      - "&fScored: &e%LOCAL_SCORED_POINTS%"
+      - ""
+      - "&fMode: &e%MODE%"
+      - "&f%ONLYIFRESETBLOCKS%Block reset in %RESET_BLOCKS% rounds"
+      - ""
+      - "&ewww.plugily.xyz"
+    Waiting:
+      - "&fPlayers: &e%PLAYERS%"
+      - ""
+      - "&fMinimum Players: &e%MIN_PLAYERS%"
+      - ""
+      - "&ewww.plugily.xyz"
+    Starting:
+      - "&fStarting In: &e%TIME%"
+      - ""
+      - "&fPlayers: &e%PLAYERS%"
+      - ""
+      - "&fMinimum Players: &e%MIN_PLAYERS%"
+      - ""
+      - "&ewww.plugily.xyz"
+
+# Has usage only when bossbar is enabled in config.yml
+Bossbar:
+  Main-Title: "&e&lTheBridge &6- www.plugily.xyz"
+  Starting-In: "&f&lStarting in: &e&l%time%"
+  Waiting-For-Players: "&4&lWaiting for more players..."
+  In-Game-Wave: "&f&lCurrent base points %base_points%"
+  In-Game-Info: "&e&lPlaying &f&lTHEBRIDGE &e&lon &b&lPLUGILY.XYZ"
+  Game-Ended: "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
+
+
+Kits:
+  Kit-Menu:
+    Title: "Kit Menu"
+    Lores:
+      Locked: "&cLOCKED!"
+      Unlocked: "&aUNLOCKED!"
+      Unlock-At-Level: "&aUnlocks at level %NUMBER%"
+      Unlock-In-Store: "&bUnlock this in the store!"
+  Not-Unlocked-Message: "&cYou haven't unlocked &b%KIT%&c yet!"
+  Choose-Message: "&aYou have chosen: &b%KIT%&a!"
+  Open-Kit-Menu: "Open Kit Menu"
+  Ability-Still-On-Cooldown: "&cThis ability is on cooldown! Wait %COOLDOWN% more seconds!"
+  # Kit descriptions and kit items wraps their descriptions every 40 characters and don't support \n character
+  Bridge:
+    Name: "&2Bridge"
+    Description: "&7Basic bridge kit like the one you know!"
+  Knight:
+    Name: "&2Knight"
+    Description: "&7This is the one and only knight kit! Many people think this is the worst kit! I must admit they are totally wrong!"
+  Light-Tank:
+    Name: "&2Light Tank"
+    Description: "&7You are Junior tank!"
+  Archer:
+    Name: "&6Archer"
+    Description: "&7Start with a extra amount of arrows, leather armor and a wooden sword. Archers are loved by the villagers, know that!"
+  Hardcore:
+    Name: "&6Hardcore"
+    Description: "&7You'll see yourself why this is hardcore"
+  Healer:
+    Name: "&6Healer"
+    Description: "&7Being a healer is the same as being loved. You are able to heal your teammates."
+  Medium-Tank:
+    Name: "&6Medium Tank"
+    Description: "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
+  Terminator:
+    Name: "&6Terminator"
+    Description: "&7Easily kill other players with your strength powers!"
+  Heavy-Tank:
+    Name: "&bHeavy Tank"
+    Description: "&7Start off with iron armor and a double amount of hearts! Yup, that's right, you'll be the last man standing!"
+  Wild-Naked:
+    Name: "&bWild Naked"
+    Description: "&7You are the ultimate master! You start off with a better iron sword!"
+    Cannot-Wear-Armor: "&cYou can't wear armor with the Wild Naked kit!"
+  Premium-Hardcore:
+    Name: "&bPremium Hardcore Master"
+    Description: "&7One hit most players with your OP sword! However be careful. this kit is only for the pros! Do not use it if you aren't a pro!"
+
+In-Game:
+  Plugin-Prefix: "&e[The Bridge] "
+  Already-Playing: "&cYou are already queued for a game! You can leave a game with /tb leave."
+  Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
+  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
+  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
+  Dead-Tag-On-Death: "&8Dead"
+  Game-Chat-Format: "&6[&5%base%&6]&6[%kit%&6] %player%: &f%message%"
+  Game-Death-Format: "&7[&4☠&7] &r"
+  Death-Screen: "&cYou died!"
+  Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
+  Bow-Damage-Format: "%victim%  &c♥ %hearts%"
+  You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
+  You-Leveled-Up: "&7You leveled up! You're now level %NUMBER%!"
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /tb leave!"
+  # Join cancelled via external plugin that uses TheBridge API.
+  Join-Cancelled-Via-API: "&cYou can't join this game!"
+  Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
+  Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
+  Spectator:
+    Spectator-Menu-Name: "Alive players list"
+    Target-Player-Health: "&cHealth: &7%health%"
+    Settings-Menu:
+      Inventory-Name: "&7Spectator settings"
+      Speed-Name: "&aSpeed"
+  Messages:
+    Lobby-Messages:
+      Start-In: "&7The game starts in &b%TIME%&7 seconds!"
+      Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
+      Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
+      Game-Started: "&7The game has started! Get Points and defend your base!"
+      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
+      You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
+      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
+    Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
+    Death: "&b%PLAYER% &7died by %ATTACKER%!"
+    Death-Own: "&b%PLAYER% &7died!"
+    Killed: "&aYou killed %VICTIM%"
+    Build-Break: "&7You can not build and break here"
+    Seconds-Left-Title: "Time is running out!"
+    Seconds-Left-Subtitle: "%time% seconds left"
+    Portal:
+      Own: "&7That is your own portal"
+      Opponent: "&7%base% %player% jumped into %base_jumped%!"
+      Scored:
+        Title: "&7%base% %player%"
+        Subtitle: "jumped into %base_jumped%"
+      Hologram: "%base%;Jump into this portal!"
+      Out: "This base is already out!"
+    Blocked:
+      Reset: "Movement is disabled while round reset"
+      Run: "&7Get some points"
+      Title: "&7Round reset - You can not move!"
+      Subtitle: "%seconds%"
+    Game-End-Messages:
+      Summary-Message:
+        - "&a&m--------------------------------------------------"
+        - "&e&lTheBridge"
+        - ""
+        - "%summary%"
+        - ""
+        - "Base members"
+        - "%base_players% (%base_scored%)"
+        - ""
+        - "&a&m--------------------------------------------------"
+      Summary-Base-Hearts-Win: "&7%base% survived successfully!"
+      Summary-Base-Points-Win: "&7%base% got the most points!"
+      Titles:
+        Lose: "GAME OVER"
+        Win: "WINNER"
+      Subtitles:
+        Reached: "Points got reached by %base%"
+    Admin-Messages:
+      Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
+
+Signs:
+  Please-Type-Arena-Name: "&cPlease type arena name in second line!"
+  Arena-Doesnt-Exists: "&cArena with that name doesn't exists!"
+  Sign-Created: "&aSign created successfully!"
+  Sign-Removed: "&aSign successfully removed!"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+  Lines:
+    - "&e&lTheBridge"
+    - "%state%"
+    - "%mapname%"
+    - "&5[%playersize%/%maxplayers%]"
+
+Arena-Selector:
+  Inv-Title: "TheBridge > Arena selector"
+  Item:
+    Name: "&f%mapname%"
+    Lore:
+      - "&eTheBridge &f- &e%mapname%"
+      - " "
+      - " "
+      - "  &fOnline: %playersize%/%maxplayers%"
+      - "  &fState: %state%"
+      - " "
+      - " "
+      - "&eClick to join this arena"
+
+Bases:
+  Team:
+    Full: "Team is full"
+    Empty: "You can join this team"
+    Inside: "Your team"
+    Name: "Base - %base%"
+    Menu-Name: "Base Menu"
+    Base-Choose: "You are now on base %base%"
+    Member: "You are already member of it!"
+  Colors:
+    BLACK: "&0BLACK"
+    DARK_BLUE: "&1DARK_BLUE"
+    DARK_GREEN: "&2DARK_GREEN"
+    DARK_AQUA: "&3DARK_CYAN"
+    DARK_RED: "&4DARK_RED"
+    DARK_PURPLE: "&5DARK_PURPLE"
+    GOLD: "&6GOLD"
+    LIGHT_GRAY: "&7LIGHT_GRAY"
+    DARK_GRAY: "&8DARK_GRAY"
+    BLUE: "&9BLUE"
+    GREEN: "&aLIME_GREEN"
+    AQUA: "&bAQUA"
+    RED: "&cRED"
+    PINK: "&dPINK"
+    YELLOW: "&eYELLOW"
+    WHITE: "&fWHITE"
+    BOLD: "&lBOLD"
+    STRIKETHROUGH: "&mSTRIKETHROUGH"
+    UNDERLINED: "&nUNDERLINED"
+    ITALIC: "&oITALIC"
+
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    Playing: "&lPlaying"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
+Validator:
+  Invalid-Arena-Configuration: "[The Bridge] Arena %arena% has invalid configuration! Missing node: %error%"
+  Instance-Started: "[The Bridge] Arena %arena% instance successfully started!"
+  No-Instances-Created: "[The Bridge] There are no arena instances created in configuration!"
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+File-Version-Do-Not-Edit: 6

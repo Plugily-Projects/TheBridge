@@ -20,7 +20,7 @@
 package plugily.projects.thebridge.handlers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import plugily.projects.commonsbox.minecraft.compat.ServerVersion;

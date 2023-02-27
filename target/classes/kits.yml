@@ -1,0 +1,25 @@
+### Custom Kits soon with TBE
+
+# Only kits that inherits level kit feature will be available to modify here.
+# Filling here other kits won't change anything as they inherits premium or free kit.
+Required-Level:
+  Archer: 2
+  Healer: 6
+  MediumTank: 12
+  Terminator: 20
+  Hardcore: 100
+
+# Here you can disable TheBridges preconfigured kits.
+# Set 'false' to disable.
+Enabled-Game-Kits:
+  Archer: true
+  Hardcore: true
+  Healer: true
+  # Bridge is default kit, it cannot be disabled
+  # Bridge: true
+  Knight: true
+  LightTank: true
+  MediumTank: true
+  Naked: true
+  PremiumHardcore: true
+  Terminator: true
