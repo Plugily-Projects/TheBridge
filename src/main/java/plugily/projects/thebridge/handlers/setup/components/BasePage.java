@@ -29,6 +29,7 @@ import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class BasePage extends NormalFastInv implements InventoryHandler {
@@ -51,7 +52,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
 
   @Override
   public void injectItems() {
-    setItem(5, ClickableItem.of(new ItemBuilder(Material.APPLE)
+    setItem(0, ClickableItem.of(new ItemBuilder(Material.APPLE)
         .name(new MessageBuilder("&e&lSet Color").build())
         .lore(ChatColor.GRAY + "Click to set base color name")
         .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.getPlugin().getConfig().getString("instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".color", "none")).build())
@@ -61,48 +62,49 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
         @Override
         public @NotNull
         String getPromptText(ConversationContext context) {
-          return new MessageBuilder("&ePlease type in chat color name (USE UPPERCASE)!").prefix().build();
+          return new MessageBuilder("&ePlease type in chat color name (USE UPPERCASE)! " + Arrays.toString(ChatColor.values())).prefix().build();
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-          if(!ChatColor.valueOf(input).isColor()) {
+          try {
+            String color = ChatColor.valueOf(input).name();
+            context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aColor of base " + getId((Player) context.getForWhom()) + " set to " + color).build());
+            setupInventory.getConfig().set("instances." + setupInventory.getArenaKey() + ".bases." + getId((Player) context.getForWhom()) + ".color", color);
+            ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas");
+            BaseUtilities.addEditing((Player) context.getForWhom());
+            open((HumanEntity) context.getForWhom());
+            return Prompt.END_OF_CONVERSATION;
+          } catch(IllegalArgumentException ignored) {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. This is not an color!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
-          String color = ChatColor.valueOf(input).name();
-          context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aColor of base " + getId((Player) context.getForWhom()) + " set to " + color).build());
-          setupInventory.getConfig().set("instances." + setupInventory.getArenaKey() + ".bases." + getId((Player) context.getForWhom()) + ".color", color);
-          ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas");
-          BaseUtilities.addEditing((Player) context.getForWhom());
-          open((HumanEntity) context.getForWhom());
-          return Prompt.END_OF_CONVERSATION;
         }
       }).buildFor((Player) event.getWhoClicked());
     }));
 
     LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base", "baselocation");
-    setItem(6, baseCorners);
+    setItem(1, baseCorners);
 
     //portal in mid function? LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas", "instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
-    LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Base", "Set the corners of the portal on the base", "portallocation");
-    setItem(7, portalCorners);
+    LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Portal", "Set the corners of the portal on the base", "portallocation");
+    setItem(2, portalCorners);
 
     LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed (Make sure to select the full cage, not only the floor!)", "cagelocation");
-    setItem(8, cageCorners);
+    setItem(3, cageCorners);
 
 
     LocationItem spawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "SpawnPoint", "Position where players spawn the first time and on round reset", "spawnpoint");
-    setItem(9, spawnPoint);
+    setItem(4, spawnPoint);
 
     LocationItem respawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "ReSpawnPoint", "Position where players spawn on respawn (death)", "respawnpoint");
-    setItem(10, respawnPoint);
+    setItem(5, respawnPoint);
 
     LocationItem hologramLocation = new LocationItem(setupInventory, new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial()), "Portal Hologram", "The hologram postion for the portal. Best is to set it with player position!", "portalhologram");
-    setItem(11, hologramLocation);
+    setItem(6, hologramLocation);
 
 
-    setItem(12, ClickableItem.of(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
+    setItem(7, ClickableItem.of(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
         .name(new MessageBuilder("&e&lFinish Base").build())
         .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
         .build(), event -> {
@@ -157,7 +159,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
       BaseUtilities.removeEditing((Player) event.getWhoClicked());
       event.getWhoClicked().closeInventory();
     }));
-    setItem(13, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
+    setItem(8, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
         .name(new MessageBuilder("&e&lEdit a already created base").build())
         .lore(ChatColor.GRAY + "Click to enter base id (first created base = 0)")
         .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.isOptionDone("bases." + getId(setupInventory.getPlayer()) + ".color")).build())
