@@ -45,7 +45,7 @@ public class SpecificCategory extends PluginSpecificCategory {
 
   }
   public void openBaseMenu(HumanEntity player) {
-    NormalFastInv pagedGui = new BasePage(54, getSetupInventory().getPlugin().getPluginMessagePrefix() + "Base Editor Menu", getSetupInventory());
+    NormalFastInv pagedGui = new BasePage(9, getSetupInventory().getPlugin().getPluginMessagePrefix() + "Base Editor Menu", getSetupInventory());
     pagedGui.open(player);
   }
 }
