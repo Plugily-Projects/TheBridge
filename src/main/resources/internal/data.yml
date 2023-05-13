@@ -10,7 +10,7 @@
 Plugin:
   Name:
     Short: tb
-    Long: ${project.name}
+    Long: thebridge
   Id:
     Spigot: 87320
     BStats: 10838
