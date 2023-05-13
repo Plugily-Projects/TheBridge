@@ -157,8 +157,8 @@ Bossbar:
     In-Game:
       - "Playing %plugin_name_uppercase% on PLUGILY.XYZ"
       - "Check the plugin creator out on PLUGILY.XYZ"
-      - "Current base points %base_points%"
-      - "Your base %arena_base%"
+      - "Current base points %base_color_formatted%"
+      - "Your base %arena_base_color_formatted%"
     Ending:
       - "Game has ended! You were playing on PLUGILY.XYZ"
     Restarting:
@@ -246,21 +246,22 @@ In-Game:
     Arena:
       Cooldown: "[%value%&8&l] &6%number% seconds"
       Damage: "%player%  &c♥ %value%"
-      Death: "%plugin_prefix% &b%player% died by %value%!"
-      Killed: "&aYou killed %player%"
-      Build-Break: "&7You can not build and break here"
-      Time-Left: "5,20,5;Time is running out;%arena_time% seconds left"
+      Death: "%plugin_prefix% %player% died by %value%!"
+      Killed: "%plugin_prefix% &aYou killed %player%"
+      Build-Break: "%color_chat_issue%%plugin_prefix% You can not build and break here"
+      Time-Left: "5,20,5;%color_chat_issue%Time is running out;%arena_time% seconds left"
       Portal:
-        Own: "&7That is your own portal"
-        Opponent: "&7%arena_base_color_formatted% %player% jumped into %value%!"
+        Own: "%color_chat_issue%%plugin_prefix% That is your own portal"
+        Opponent: "%plugin_prefix% %arena_base_color_formatted% %player% jumped into %value%!"
         Scored:
-          Title: "5,20,5;&7%arena_base_color_formatted% %player%;jumped into %value%"
+          Title: "5,20,5;%arena_base_color_formatted% %player%;jumped into %value%"
         Hologram: "%arena_base_color_formatted%;Jump into this portal!"
-        Out: "This base is already out!"
+        Out: "%color_chat_issue%%plugin_prefix% This base is already out!"
       Blocked:
-        Reset: "Movement is disabled while round reset"
-        Run: "&7Get some points"
-        Title: "5,20,5;Round reset - You can't move;%number%"
+        Start: "%plugin_prefix% Prepare to jump into the opponents portal"
+        Reset: "%plugin_prefix% Movement is disabled while round reset"
+        Run: "%plugin_prefix% &aGO! &7Lets jump into the portals!!"
+        Title: "5,20,5;You can't move - Start in...;%number%"
 #
 # Sign messages
 #
