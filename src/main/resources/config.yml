@@ -1,24 +1,18 @@
 ### Initial config.yml for all plugily projects
 ## Thanks for using our plugins! ~Tigerpanzer_02 from Plugily Projects
-#      PlugilyProjects configuration file
+#      thebridge configuration file
 #
-#    You can edit here the basic things of PlugilyProjects
+#    You can edit here the basic things of thebridge
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
 
 
-# Select locale of PlugilyProjects, default it's English.
+# Select locale of thebridge, default it's English.
 # Available locales:
 #    default - English language. Uses 'language.yml'.
-#    de - Deutsche sprache          pl - Język polski
-#    es - Idioma español
-#    fr - Langue française
-#    hu - Magyar nyelv
-#    cs - Český jazyk
-#    pt_br - Português Brasileiro
-#    it - Lingua italiana           ru - Русский язык
-#    nl - Dutch
+#    See https://github.com/Plugily-Projects/locale_storage/tree/master/plugins/minecraft/thebridge
+#    Use filename of the language e.g. de_DE.yml -> locale: de_DE
 locale: default
 
 
@@ -51,23 +45,23 @@ Commands:
   Shorter:
     '1':
       Short: "start"
-      Executes: "plugilyprojectsadmin forcestart"
+      Executes: "thebridgeadmin forcestart"
       Enabled: true
     '2':
       Short: "leave"
-      Executes: "plugilyprojects leave"
+      Executes: "thebridge leave"
       Enabled: true
     '3':
       Short: "kit"
-      Executes: "plugilyprojects selectkit"
+      Executes: "thebridge selectkit"
       Enabled: false
     '4':
       Short: "stats"
-      Executes: "plugilyprojects stats"
+      Executes: "thebridge stats"
       Enabled: false
     '5':
       Short: "top"
-      Executes: "plugilyprojects top"
+      Executes: "thebridge top"
       Enabled: true
 
 
