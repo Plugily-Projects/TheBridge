@@ -42,6 +42,7 @@ public class BridgeKit extends FreeKit {
 
   public BridgeKit() {
     setName(new MessageBuilder("KIT_CONTENT_BRIDGE_NAME").asKey().build());
+    setKey("Bridge");
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_BRIDGE_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);

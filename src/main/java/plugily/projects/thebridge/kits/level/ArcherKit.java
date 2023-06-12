@@ -44,6 +44,7 @@ public class ArcherKit extends LevelKit {
 
   public ArcherKit() {
     setLevel(getKitsConfig().getInt("Required-Level.Archer"));
+    setKey("Archer");
     setName(new MessageBuilder("KIT_CONTENT_ARCHER_NAME").asKey().build());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_ARCHER_DESCRIPTION");
     setDescription(description);

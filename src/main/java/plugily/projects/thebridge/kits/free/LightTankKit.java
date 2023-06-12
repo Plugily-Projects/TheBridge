@@ -43,6 +43,7 @@ public class LightTankKit extends FreeKit {
 
   public LightTankKit() {
     setName(new MessageBuilder("KIT_CONTENT_LIGHT_TANK_NAME").asKey().build());
+    setKey("LightTank");
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_LIGHT_TANK_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);

@@ -17,17 +17,18 @@ Required-Level:
 # Here you can disable plugily projects preconfigured kits.
 # Set 'false' to disable.
 Enabled-Game-Kits:
-  Archer: true
-  Hardcore: true
-  Healer: true
   # Bridge is default kit, it cannot be disabled
   # Bridge: true
   Knight: true
   LightTank: true
+  Archer: true
+  Hardcore: true
+  Healer: true
   MediumTank: true
+  Terminator: true
+  HeavyTank: true
   Naked: true
   PremiumHardcore: true
-  Terminator: true
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
