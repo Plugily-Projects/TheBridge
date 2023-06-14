@@ -17,8 +17,7 @@ Required-Level:
 # Here you can disable plugily projects preconfigured kits.
 # Set 'false' to disable.
 Enabled-Game-Kits:
-  # Bridge is default kit, it cannot be disabled
-  # Bridge: true
+  Bridge: true
   Knight: true
   LightTank: true
   Archer: true

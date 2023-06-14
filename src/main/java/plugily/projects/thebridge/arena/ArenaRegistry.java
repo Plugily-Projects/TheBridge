@@ -58,7 +58,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
     if(!checks) return false;
 
     ((Arena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-    ((Arena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation2", "world,364.0,63.0,-72.0,0.0,0.0"))));
+    ((Arena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0"))));
     int bases = 0;
     if(section.contains(id + ".bases")) {
       if(section.isConfigurationSection(id + ".bases")) {
@@ -66,12 +66,12 @@ public class ArenaRegistry extends PluginArenaRegistry {
           if(section.isSet(id + ".bases." + baseID + ".isdone")) {
             Base base = new Base(
                 section.getString(id + ".bases." + baseID + ".color"),
-                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation1")),
-                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation2")),
+                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation.1")),
+                LocationSerializer.getLocation(section.getString(id+ ".bases." + baseID + ".baselocation.2")),
                 LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".spawnpoint")),
                 LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".respawnpoint")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation1")),
-                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation2")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation.1")),
+                LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portallocation.2")),
                 section.getInt(id + ".maximumsize")
             );
             ((Arena) arena).addBase(base);
@@ -111,7 +111,8 @@ public class ArenaRegistry extends PluginArenaRegistry {
     arena.setArenaOption("RESET_BLOCKS", section.getInt(id + ".resetblocks", 0));
     arena.setArenaOption("RESET_TIME", section.getInt(id + ".resettime", 5));
     for(Base base : ((Arena) arena).getBases()) {
-      if(!((Arena) arena).getArenaBorder().isIn(base.getBaseCuboid().getCenter())) {
+      if(!(((Arena) arena).getArenaBorder().isIn(base.getBaseCuboid().getMinPoint()) && ((Arena) arena).getArenaBorder().isIn(base.getBaseCuboid().getMaxPoint()))) {
+        plugin.getDebugger().debug("[CHECK BASE INSIDE ARENA] {0} Locations amin{1}amax{2}bmin{3}bma{4}", arena.getId() + base.getColor(),((Arena) arena).getArenaBorder().getMinPoint(), ((Arena) arena).getArenaBorder().getMaxPoint(), base.getBaseCuboid().getMinPoint(), base.getBaseCuboid().getMaxPoint());
         plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().arena(arena).value("YOUR BASE CUBOIDS ARE NOT INSIDE ARENA CUBOID").build());
         return false;
       }

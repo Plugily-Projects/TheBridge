@@ -11,22 +11,28 @@ instances:
     isdone: false
     spectatorlocation: world,364.0,63.0,-72.0,0.0,0.0
     midlocation: world,364.0,63.0,-72.0,0.0,0.0
-    arenalocation1: world,364.0,63.0,-72.0,0.0,0.0
-    arenalocation2: world,364.0,63.0,-72.0,0.0,0.0
+    arenalocation:
+      '1': world,-46.87,43.68,89.32,-156.31,3.3
+      '2': world,40.67,146.83,-91.03,35.99,38.85
     bases:
       '1':
-        baselocation1: world,364.0,63.0,-72.0,0.0,0.0
-        baselocation2: world,364.0,63.0,-72.0,0.0,0.0
-        spawnpoint: world,364.0,63.0,-72.0,0.0,0.0
-        respawnpoint: world,364.0,63.0,-72.0,0.0,0.0
-        portallocation1: world,364.0,63.0,-72.0,0.0,0.0
-        portallocation2: world,364.0,63.0,-72.0,0.0,0.0
-        color: GREEN
+        color: BLUE
+        baselocation:
+          '1': world,-27.92,94.69,-26.12,-127.05,15.0
+          '2': world,21.1,133.28,-64.05,22.95,6.3
+        spawnpoint: world,-13.382930631316102,103.0,41.90889398490813,205.1993,0.0
+        respawnpoint: world,-13.382930631316102,103.0,41.90889398490813,205.1993,0.0
+        portallocation:
+          '1': world,-7.0,101.0,45.0,0.0,0.0
+          '2': world,-1.0,101.0,39.0,0.0,0.0
+        portalhologram: world,-4.0,103.0,42.0,0.0,0.0
         isdone: true
     maximumsize: 2
     # HEARTS -> LAST TEAM STANDING
     # POINTS -> FIRST TEAM WHO REACH THE POINTS WIN
-    mode: POINTS
+    mode: HEARTS
+    modevalue: 4
+    resetblocks: 3
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p

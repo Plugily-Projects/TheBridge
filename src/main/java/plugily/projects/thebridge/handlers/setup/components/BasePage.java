@@ -48,34 +48,34 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
     setForceRefresh(true);
     setDefaultItem(ClickableItem.of(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()));
     refresh();
+    setupInventory.getPlugin().getDebugger().debug("[BASE EDITING] Open for {0} base {1}", setupInventory.getPlayer(), getId(setupInventory.getPlayer()));
   }
 
   @Override
   public void injectItems() {
     setItem(0, ClickableItem.of(new ItemBuilder(Material.APPLE)
-        .name(new MessageBuilder("&e&lSet Color").build())
-        .lore(ChatColor.GRAY + "Click to set base color name")
-        .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.getPlugin().getConfig().getString("instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".color", "none")).build())
-        .build(), event -> {
+      .name(new MessageBuilder("&e&lSet Color").build())
+      .lore(ChatColor.GRAY + "Click to set base color name")
+      .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.isOptionDone("bases." + getId(setupInventory.getPlayer()) + ".color")).build())
+      .build(), event -> {
       event.getWhoClicked().closeInventory();
       new SimpleConversationBuilder(setupInventory.getPlugin()).withPrompt(new StringPrompt() {
         @Override
         public @NotNull
         String getPromptText(ConversationContext context) {
-          return new MessageBuilder("&ePlease type in chat color name (USE UPPERCASE)! " + Arrays.toString(ChatColor.values())).prefix().build();
+          return new MessageBuilder("&ePlease type in chat color name! BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE").prefix().build();
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
           try {
-            String color = ChatColor.valueOf(input).name();
-            context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aColor of base " + getId((Player) context.getForWhom()) + " set to " + color).build());
-            setupInventory.getConfig().set("instances." + setupInventory.getArenaKey() + ".bases." + getId((Player) context.getForWhom()) + ".color", color);
-            ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas");
-            BaseUtilities.addEditing((Player) context.getForWhom());
-            open((HumanEntity) context.getForWhom());
+            String color = ChatColor.valueOf(input.toUpperCase()).name();
+            context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aColor of base " + getId(setupInventory.getPlayer()) + " set to " + color).build());
+            setupInventory.setConfig("bases." + getId((Player) context.getForWhom()) + ".color", color);
+            NormalFastInv pagedGui = new BasePage(9, setupInventory.getPlugin().getPluginMessagePrefix() + "Base Editor Menu", setupInventory);
+            pagedGui.open(setupInventory.getPlayer());
             return Prompt.END_OF_CONVERSATION;
-          } catch(IllegalArgumentException ignored) {
+          } catch (IllegalArgumentException ignored) {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. This is not an color!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
@@ -83,87 +83,86 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
       }).buildFor((Player) event.getWhoClicked());
     }));
 
-    LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base", "baselocation");
+    LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base",  "bases." + getId(setupInventory.getPlayer()) + ".baselocation");
     setItem(1, baseCorners);
 
     //portal in mid function? LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas", "instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
-    LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Portal", "Set the corners of the portal on the base", "portallocation");
+    LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Portal", "Set the corners of the portal on the base", "bases." + getId(setupInventory.getPlayer()) + ".portallocation");
     setItem(2, portalCorners);
 
-    LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed (Make sure to select the full cage, not only the floor!)", "cagelocation");
+    LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed (Make sure to select the full cage, not only the floor!) \n its optional!", ".cagelocation");
     setItem(3, cageCorners);
 
 
-    LocationItem spawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "SpawnPoint", "Position where players spawn the first time and on round reset", "spawnpoint");
+    LocationItem spawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "SpawnPoint", "Position where players spawn the first time and on round reset", "bases." + getId(setupInventory.getPlayer()) + ".spawnpoint");
     setItem(4, spawnPoint);
 
-    LocationItem respawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "ReSpawnPoint", "Position where players spawn on respawn (death)", "respawnpoint");
+    LocationItem respawnPoint = new LocationItem(setupInventory, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial()), "ReSpawnPoint", "Position where players spawn on respawn (death)", "bases." + getId(setupInventory.getPlayer()) + ".respawnpoint");
     setItem(5, respawnPoint);
 
-    LocationItem hologramLocation = new LocationItem(setupInventory, new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial()), "Portal Hologram", "The hologram postion for the portal. Best is to set it with player position!", "portalhologram");
+    LocationItem hologramLocation = new LocationItem(setupInventory, new ItemBuilder(XMaterial.ARMOR_STAND.parseMaterial()), "Portal Hologram", "The hologram postion for the portal. Best is to set it with player position!", "bases." + getId(setupInventory.getPlayer()) + ".portalhologram");
     setItem(6, hologramLocation);
 
 
     setItem(7, ClickableItem.of(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseMaterial())
-        .name(new MessageBuilder("&e&lFinish Base").build())
-        .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
-        .build(), event -> {
-      String path = "instances." + setupInventory.getArenaKey() + ".bases." + getId(event.getWhoClicked());
-      if(setupInventory.getConfig().get(path + ".baselocation.1") == null) {
+      .name(new MessageBuilder("&e&lFinish Base").build())
+      .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
+      .build(), event -> {
+      String path = "instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer());
+      if (setupInventory.getConfig().get(path + ".baselocation.1") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure base location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().get(path + ".portallocation.1") == null) {
+      if (setupInventory.getConfig().get(path + ".portallocation.1") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portal location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().get(path + ".spawnpoint") == null) {
+      if (setupInventory.getConfig().get(path + ".spawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure spawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().get(path + ".respawnpoint") == null) {
+      if (setupInventory.getConfig().get(path + ".respawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure respawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().get(path + ".color") == null) {
+      if (setupInventory.getConfig().get(path + ".color") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure color properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().get(path + ".portalhologram") == null) {
+      if (setupInventory.getConfig().get(path + ".portalhologram") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portalhologram properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
       new MessageBuilder("&a&l✔ &aValidation succeeded! Registering new base: " + getId(setupInventory.getPlayer())).prefix().player(setupInventory.getPlayer()).sendPlayer();
-      setupInventory.getConfig().set(path + ".isdone", true);
+      setupInventory.setConfig("bases." + getId(setupInventory.getPlayer()) + ".isdone", true);
       Base base = new Base(
-          setupInventory.getConfig().getString(path + ".color"),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation1")),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation2")),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".spawnpoint")),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".respawnpoint")),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation1")),
-          LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation2")),
-          setupInventory.getConfig().getInt(path + ".maximumsize")
+        setupInventory.getConfig().getString(path + ".color"),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.1")),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.2")),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".spawnpoint")),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".respawnpoint")),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation.1")),
+        LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation.2")),
+        setupInventory.getConfig().getInt(path + ".maximumsize")
       );
-      if(setupInventory.getConfig().get(path + ".cagelocation.1") != null)
+      if (setupInventory.getConfig().get(path + ".cagelocation.1") != null) {
         base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.1")), LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.2"))));
+      }
       Arena arena = (Arena) setupInventory.getPlugin().getArenaRegistry().getArena(setupInventory.getArenaKey());
       arena.addBase(base);
       ArmorStandHologram portal = new ArmorStandHologram(setupInventory.getPlugin().getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portalhologram"))));
-      for(String str : setupInventory.getPlugin().getLanguageManager().getLanguageMessage(setupInventory.getPlugin().getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
+      for (String str : setupInventory.getPlugin().getLanguageManager().getLanguageMessage(setupInventory.getPlugin().getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
         portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
       }
       base.setArmorStandHologram(portal);
-      ConfigUtils.saveConfig(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas");
       BaseUtilities.getBaseId().remove(event.getWhoClicked());
-      BaseUtilities.removeEditing((Player) event.getWhoClicked());
       event.getWhoClicked().closeInventory();
     }));
     setItem(8, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
-        .name(new MessageBuilder("&e&lEdit a already created base").build())
-        .lore(ChatColor.GRAY + "Click to enter base id (first created base = 0)")
-        .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.isOptionDone("bases." + getId(setupInventory.getPlayer()) + ".color")).build())
-        .build(), event -> {
+      .name(new MessageBuilder("&e&lEdit a already created base").build())
+      .lore(ChatColor.GRAY + "Click to enter base id (first created base = 0)")
+      .lore("", new MessageBuilder("&a&lCurrently: &e" + setupInventory.isOptionDone("bases." + getId(setupInventory.getPlayer()) + ".color")).build())
+      .build(), event -> {
       event.getWhoClicked().closeInventory();
       new SimpleConversationBuilder(setupInventory.getPlugin()).withPrompt(new StringPrompt() {
         @Override
@@ -174,14 +173,14 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-          if(!NumberUtils.isInteger(input)) {
+          if (!NumberUtils.isInteger(input)) {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. Its not a number!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
           int number = Integer.parseInt(input);
 
-          if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
-            if(number >= setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size()) {
+          if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
+            if (number >= setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size()) {
               context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. The number is higher than bases that you have!").prefix().build());
               return Prompt.END_OF_CONVERSATION;
             }
@@ -189,10 +188,10 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cYou do not have bases atm!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
-          setId((Player) context.getForWhom(), number);
-          BaseUtilities.addEditing((Player) context.getForWhom());
-          open((HumanEntity) context.getForWhom());
-          context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aNow editing base " + getId((HumanEntity) context.getForWhom()) + " with color " + setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".bases." + getId((HumanEntity) context.getForWhom()) + ".color")).build());
+          setId(setupInventory.getPlayer(), number);
+          NormalFastInv pagedGui = new BasePage(9, setupInventory.getPlugin().getPluginMessagePrefix() + "Base Editor Menu", setupInventory);
+          pagedGui.open(setupInventory.getPlayer());
+          context.getForWhom().sendRawMessage(new MessageBuilder("&e✔ Completed | &aNow editing base " + getId(setupInventory.getPlayer()) + " with color " + setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".color")).build());
           return Prompt.END_OF_CONVERSATION;
         }
       }).buildFor((Conversable) event.getWhoClicked());
@@ -200,30 +199,20 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
 
   }
 
-  @Override
-  protected void onClick(InventoryClickEvent event) {
-    injectItems();
-    refresh();
-  }
 
-
-  public int getId(HumanEntity player) {
-    if(!BaseUtilities.check(setupInventory.getArenaKey(), (Player) player)) {
+  public int getId(Player player) {
+    if (!BaseUtilities.check(player)) {
       int id = 0;
-      if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
+      if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
         id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size();
       }
-      HashMap<String, Integer> secondMap = new HashMap<>();
-      secondMap.put(setupInventory.getArenaKey(), id);
-      BaseUtilities.getBaseId().put((Player) player, secondMap);
+      BaseUtilities.getBaseId().put(player, id);
     }
-    return BaseUtilities.getBaseId().get(player).get(setupInventory.getArenaKey());
+    return BaseUtilities.getBaseId().get(player);
   }
 
   public void setId(Player player, int id) {
-    HashMap<String, Integer> secondMap = new HashMap<>();
-    secondMap.put(setupInventory.getArenaKey(), id);
     BaseUtilities.getBaseId().remove(player);
-    BaseUtilities.getBaseId().put(player, secondMap);
+    BaseUtilities.getBaseId().put(player, id);
   }
 }
