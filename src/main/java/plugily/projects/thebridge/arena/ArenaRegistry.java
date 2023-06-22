@@ -18,6 +18,7 @@
 
 package plugily.projects.thebridge.arena;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -75,8 +76,8 @@ public class ArenaRegistry extends PluginArenaRegistry {
                 section.getInt(id + ".maximumsize")
             );
             ((Arena) arena).addBase(base);
-            if(section.getString(id + ".bases." + baseID + ".cagelocation1") != null)
-              base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation1")), LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation2"))));
+            if(section.getString(id + ".bases." + baseID + ".cagelocation.1") != null && section.getString(id + ".bases." + baseID + ".cagelocation.2") != null)
+              base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation.1")), LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".cagelocation.2"))));
             ArmorStandHologram portal = new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(section.getString(id + ".bases." + baseID + ".portalhologram"))));
             for(String str : plugin.getLanguageManager().getLanguageMessage(plugin.getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
               portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
