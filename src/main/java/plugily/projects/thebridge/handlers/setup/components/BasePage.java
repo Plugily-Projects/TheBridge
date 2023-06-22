@@ -90,7 +90,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
     LocationSelectorItem portalCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial()), "Portal", "Set the corners of the portal on the base", "bases." + getId(setupInventory.getPlayer()) + ".portallocation");
     setItem(2, portalCorners);
 
-    LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed (Make sure to select the full cage, not only the floor!) \n its optional!", ".cagelocation");
+    LocationSelectorItem cageCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.GLASS.parseMaterial()), "Cage", "Set the corners of the cage, all inside will be removed (Make sure to select the full cage, not only the floor!) \n its optional!", "bases." + getId(setupInventory.getPlayer()) + ".cagelocation");
     setItem(3, cageCorners);
 
 
