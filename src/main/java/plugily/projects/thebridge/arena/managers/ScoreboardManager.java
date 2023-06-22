@@ -98,8 +98,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
       formattedLine.replaceAll(
         "%scoreboard_base_players_size%",
         String.valueOf(base.getPlayers().size()));
-    boolean baseYou = false;
-    if(formattedLine.contains("%scoreboard_base_yourself%")) baseYou = true;
+    boolean baseYou = formattedLine.contains("%scoreboard_base_yourself%");
     if(base.getPlayers().contains(user.getPlayer())) {
       formattedLine =
         formattedLine.replaceAll(
