@@ -145,7 +145,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
         LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation.2")),
         setupInventory.getConfig().getInt(path + ".maximumsize")
       );
-      if (setupInventory.getConfig().get(path + ".cagelocation.1") != null) {
+      if (setupInventory.getConfig().get(path + ".cagelocation.1") != null && setupInventory.getConfig().get(path + ".cagelocation.2") != null) {
         base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.1")), LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.2"))));
       }
       Arena arena = (Arena) setupInventory.getPlugin().getArenaRegistry().getArena(setupInventory.getArenaKey());
