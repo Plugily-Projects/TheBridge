@@ -162,9 +162,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent event) {
-    if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
-      Player victim = (Player) event.getEntity();
-      Player attacker = (Player) event.getDamager();
+    if(event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
       if(!ArenaUtils.areInSameArena(victim, attacker)) {
         return;
       }
