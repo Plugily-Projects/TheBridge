@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
@@ -222,7 +223,7 @@ public class Base {
   }
 
 
-  public void setCageCuboid(Cuboid cageCuboid) {
+  public void setCageCuboid(@NotNull Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
     this.cageBlocks = cageCuboid.blockList();
     this.cageFloorBlocks = cageCuboid.floorBlockList();
