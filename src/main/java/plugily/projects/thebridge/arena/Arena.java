@@ -63,7 +63,6 @@ public class Arena extends PluginArena {
   private List<Base> bases = new ArrayList<>();
   private Mode mode;
   private final ArrayList<Block> placedBlocks = new ArrayList<>();
-  private final ArrayList<Block> brokenBlocks = new ArrayList<>();
   private final HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
   private int out = 0;
@@ -227,7 +226,6 @@ public class Arena extends PluginArena {
   public void cleanUpArena() {
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
-    resetBrokenBlocks();
     resetHits();
     deaths.clear();
     spectators.clear();
@@ -261,7 +259,6 @@ public class Arena extends PluginArena {
     int resetBlocksOption = getArenaOption("RESET_BLOCKS");
     if(resetBlocksOption != 0 && resetBlocksOption - getRound() == 0) {
       resetPlacedBlocks();
-      resetBrokenBlocks();
       round = 0;
     }
     resetHits();
@@ -324,24 +321,12 @@ public class Arena extends PluginArena {
     return placedBlocks;
   }
 
-  public ArrayList<Block> getBrokenBlocks() {
-    return brokenBlocks;
-  }
-
   public void addPlacedBlock(Block placedBlock) {
     this.placedBlocks.add(placedBlock);
   }
 
-  public void addBrokenBlock(Block placedBlock) {
-    this.brokenBlocks.add(placedBlock);
-  }
-
   public void removePlacedBlock(Block removedblock) {
     this.placedBlocks.remove(removedblock);
-  }
-
-  public void removeBrokenBlock(Block removedblock) {
-    this.brokenBlocks.remove(removedblock);
   }
 
   public void resetPlacedBlocks() {
@@ -350,14 +335,6 @@ public class Arena extends PluginArena {
     }
     placedBlocks.clear();
   }
-
-  public void resetBrokenBlocks() {
-    for(Block block : brokenBlocks) {
-      block.setType(block.getType());
-    }
-    brokenBlocks.clear();
-  }
-
   public void teleportAllToBaseLocation() {
     for(Player player : getPlayers()) {
       VersionUtils.teleport(player, getBase(player).getPlayerSpawnPoint());

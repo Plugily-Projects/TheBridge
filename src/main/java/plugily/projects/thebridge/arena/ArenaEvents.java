@@ -20,7 +20,6 @@ package plugily.projects.thebridge.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -57,7 +56,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -66,7 +64,6 @@ import java.util.stream.Collectors;
 public class ArenaEvents extends PluginArenaEvents {
 
   private final Main plugin;
-
 
   public ArenaEvents(Main plugin) {
     super(plugin);
@@ -89,31 +86,13 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
-      // Check if block is placed where a block was broken, if it is, then the block is passed from the list
-      if (!arena.getBrokenBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) {
-        arena.removePlacedBlock(event.getBlock());
-      }
+      arena.removePlacedBlock(event.getBlock());
       // Does not work?
       event.getBlock().getDrops().clear();
       // Alternative
       event.getBlock().setType(XMaterial.AIR.parseMaterial());
     }
-    else {
-      // Block has name of terracotta but is not placed any time in the game
-      // These blocks should be restored after the game
-
-      // The suffix of blocks on the bridge/in the map able to be broken and to be restored.
-      String blockSuffix = "_TERRACOTTA";
-      if (event.getBlock().getType().toString().contains(blockSuffix)) {
-        arena.addBrokenBlock(event.getBlock());
-        // Does not work?
-        event.getBlock().getDrops().clear();
-        // Alternative
-        event.getBlock().setType(XMaterial.AIR.parseMaterial());
-      }
-    }
     event.setCancelled(true);
-
   }
 
   @EventHandler
@@ -130,10 +109,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    // Check if block is placed where a block was broken, if it is, then the block is passed from the list
-    if (!arena.getBrokenBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) {
-      arena.addPlacedBlock(event.getBlock());
-    }
+    arena.addPlacedBlock(event.getBlock());
   }
 
   public boolean canBuild(Arena arena, Player player, Location location) {
@@ -186,7 +162,9 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent event) {
-    if(event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
+    if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+      Player victim = (Player) event.getEntity();
+      Player attacker = (Player) event.getDamager();
       if(!ArenaUtils.areInSameArena(victim, attacker)) {
         return;
       }
