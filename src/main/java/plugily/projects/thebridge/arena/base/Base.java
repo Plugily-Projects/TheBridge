@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -33,6 +34,7 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,9 +59,9 @@ public class Base {
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
-  private List<Block> cageBlocks;
+  private HashMap<Location, BlockData> cageBlocks;
 
-  private List<Block> cageFloorBlocks;
+  private HashMap<Location, BlockData> cageFloorBlocks;
   private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
@@ -213,8 +215,12 @@ public class Base {
 
   public void setCageCuboid(Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
-    this.cageBlocks = cageCuboid.blockList();
-    this.cageFloorBlocks = cageCuboid.floorBlockList();
+    for (Block block : cageCuboid.blockList()) {
+      cageBlocks.put(block.getLocation(), block.getBlockData().clone());
+    }
+    for (Block block : cageCuboid.floorBlockList()) {
+      cageFloorBlocks.put(block.getLocation(), block.getBlockData().clone());
+    }
   }
 
   public void removeCage() {
@@ -234,10 +240,11 @@ public class Base {
     if(checkCage()) {
       return;
     }
-    List<Block> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
-    for(Block block : blocks) {
-      block.getWorld().getBlockAt(block.getLocation()).setBlockData(block.getBlockData());
-    }
+
+    HashMap<Location, BlockData> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
+    blocks.forEach((k, v) -> {
+      k.getBlock().setBlockData(v);
+    });
   }
 
   private boolean checkCage() {
