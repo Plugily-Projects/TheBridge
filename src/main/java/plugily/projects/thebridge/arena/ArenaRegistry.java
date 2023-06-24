@@ -18,7 +18,6 @@
 
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

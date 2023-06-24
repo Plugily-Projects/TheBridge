@@ -43,7 +43,7 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
-    Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
+    Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
     }
@@ -60,7 +60,7 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
-    Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
+    Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
     }
@@ -83,7 +83,7 @@ public class ArenaManager extends PluginArenaManager {
 
   @Override
   public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
-    Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
+    Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
     }

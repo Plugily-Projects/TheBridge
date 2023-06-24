@@ -23,9 +23,7 @@ package plugily.projects.thebridge.handlers.setup;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginLocationCategory;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationSelectorItem;
-import plugily.projects.minigamesbox.classic.handlers.setup.items.category.MultiLocationItem;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
-import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 

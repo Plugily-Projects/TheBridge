@@ -162,9 +162,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent event) {
-    if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
-      Player victim = (Player) event.getEntity();
-      Player attacker = (Player) event.getDamager();
+    if(event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
       if(!ArenaUtils.areInSameArena(victim, attacker)) {
         return;
       }
@@ -399,26 +397,23 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   private void modeDeathHandle(Player player, Arena arena, User user) {
-    switch(arena.getMode()) {
-      case HEARTS:
-        // if mode hearts and they are out it should set spec mode for them
-        if(arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
-          user.setSpectator(true);
-          ArenaUtils.hidePlayer(player, arena);
-          player.getInventory().clear();
-          if(arena.getArenaState() != ArenaState.ENDING
-            && arena.getArenaState() != ArenaState.RESTARTING) {
-            arena.addDeathPlayer(player);
-          }
-          List<Player> players = arena.getBase(player).getPlayers();
-          if(players.stream().allMatch(arena::isDeathPlayer)) {
-            arena.addOut();
-          }
+    if (arena.getMode() == Arena.Mode.HEARTS) {
+      // if mode hearts and they are out it should set spec mode for them
+      if (arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
+        user.setSpectator(true);
+        ArenaUtils.hidePlayer(player, arena);
+        player.getInventory().clear();
+        if (arena.getArenaState() != ArenaState.ENDING
+          && arena.getArenaState() != ArenaState.RESTARTING) {
+          arena.addDeathPlayer(player);
         }
-      default:
-        ArenaUtils.hidePlayersOutsideTheGame(player, arena);
-        break;
+        List<Player> players = arena.getBase(player).getPlayers();
+        if (players.stream().allMatch(arena::isDeathPlayer)) {
+          arena.addOut();
+        }
+      }
     }
+    ArenaUtils.hidePlayersOutsideTheGame(player, arena);
   }
 
 
@@ -470,7 +465,9 @@ public class ArenaEvents extends PluginArenaEvents {
       plugin
         .getBukkitHelper()
         .applyActionBarCooldown(player, cooldown);
-      VersionUtils.setDurability(event.getBow(), (short) 0);
+      if (event.getBow() != null) {
+        VersionUtils.setDurability(event.getBow(), (short) 0);
+      }
       return;
     }
     event.setCancelled(true);
@@ -486,10 +483,9 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onItemPickup(PlugilyEntityPickupItemEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(!(event.getEntity() instanceof Player player)) {
       return;
     }
-    Player player = (Player) event.getEntity();
     Arena pluginArena = plugin.getArenaRegistry().getArena(player);
     if(pluginArena == null) {
       return;
@@ -508,14 +504,12 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(event.getDamager() instanceof Arrow)) {
       return;
     }
-    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
+    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player attacker)) {
       return;
     }
-    Player attacker = (Player) ((Arrow) event.getDamager()).getShooter();
-    if(!(event.getEntity() instanceof Player)) {
+    if(!(event.getEntity() instanceof Player victim)) {
       return;
     }
-    Player victim = (Player) event.getEntity();
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
@@ -529,6 +523,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
+    assert arena != null;
     if(arena.isTeammate(attacker, victim)) {
       event.setCancelled(true);
       return;

@@ -41,12 +41,7 @@ import plugily.projects.thebridge.arena.states.InGameState;
 import plugily.projects.thebridge.arena.states.RestartingState;
 import plugily.projects.thebridge.arena.states.StartingState;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Tigerpanzer_02
@@ -69,7 +64,7 @@ public class Arena extends PluginArena {
   int round = 0;
   private Cuboid arenaBorder;
   private Base winner;
-  private MapRestorerManager mapRestorerManager;
+  private final MapRestorerManager mapRestorerManager;
 
   public Arena(String id) {
     super(id);
