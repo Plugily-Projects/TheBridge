@@ -84,30 +84,19 @@ public class Base {
   }
 
   public String getMaterialColor() {
-    switch(color.toLowerCase()) {
-      case "dark_blue":
-      case "dark_aqua":
-        return "cyan";
-      case "aqua":
-        return "light_blue";
-      case "dark_green":
-        return "green";
-      case "green":
-        return "lime";
-      case "dark_red":
-        return "red";
-      case "dark_purple":
-        return "purple";
-      case "dark_gray":
-        return "gray";
-      case "light_purple":
-        return "magenta";
-      case "gold":
-        return "orange";
+    return switch (color.toLowerCase()) {
+      case "dark_blue", "dark_aqua" -> "cyan";
+      case "aqua" -> "light_blue";
+      case "dark_green" -> "green";
+      case "green" -> "lime";
+      case "dark_red" -> "red";
+      case "dark_purple" -> "purple";
+      case "dark_gray" -> "gray";
+      case "light_purple" -> "magenta";
+      case "gold" -> "orange";
       //not used? BROWN, PINK
-      default:
-        return color;
-    }
+      default -> color;
+    };
   }
 
   public String getFormattedColor() {
