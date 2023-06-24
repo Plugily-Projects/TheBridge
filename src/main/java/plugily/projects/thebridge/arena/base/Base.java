@@ -59,9 +59,9 @@ public class Base {
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
-  private HashMap<Location, BlockData> cageBlocks;
+  private final HashMap<Location, BlockData> cageBlocks = new HashMap<>();
 
-  private HashMap<Location, BlockData> cageFloorBlocks;
+  private final HashMap<Location, BlockData> cageFloorBlocks = new HashMap<>();
   private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
@@ -215,6 +215,8 @@ public class Base {
 
   public void setCageCuboid(Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
+    cageBlocks.clear();
+    cageFloorBlocks.clear();
     for (Block block : cageCuboid.blockList()) {
       cageBlocks.put(block.getLocation(), block.getBlockData().clone());
     }
