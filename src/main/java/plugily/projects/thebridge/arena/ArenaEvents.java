@@ -85,8 +85,16 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
+
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
+      // Does not work?
+      event.getBlock().getDrops().clear();
+      // Alternative
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    }
+    else if(arena.getBridgeCuboid() != null && arena.getBridgeCuboid().isIn(event.getBlock().getLocation())) {
+      arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
       // Does not work?
       event.getBlock().getDrops().clear();
       // Alternative
@@ -109,7 +117,11 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    arena.addPlacedBlock(event.getBlock());
+    if(arena.getBridgeCuboid() == null || !arena.getBridgeCuboid().isIn(event.getBlock().getLocation())) {
+      // Only add blocks to the list if the block is not found to be in the broken blocks list
+      // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
+      arena.addPlacedBlock(event.getBlock());
+    }
   }
 
   public boolean canBuild(Arena arena, Player player, Location location) {
