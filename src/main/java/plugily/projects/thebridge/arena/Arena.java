@@ -60,7 +60,7 @@ public class Arena extends PluginArena {
   private Mode mode;
   private final ArrayList<Block> placedBlocks = new ArrayList<>();
 
-  private Cuboid bridgeCuboid;
+  private List<Cuboid> bridgeCuboid;
   private final HashMap<Location, BlockData> brokenBlocks = new HashMap<>();
 
   private final HashMap<Player, Player> hits = new HashMap<>();
@@ -331,12 +331,19 @@ public class Arena extends PluginArena {
     this.placedBlocks.remove(removedBlock);
   }
 
-  public Cuboid getBridgeCuboid() {
+  public List<Cuboid> getBridgeCuboid() {
     return bridgeCuboid;
   }
 
-  public void setBridgeCuboid(Cuboid cuboid) {
+  public void setBridgeCuboid(List<Cuboid> cuboid) {
     this.bridgeCuboid = cuboid;
+  }
+
+  public void addBridgeCuboid(Cuboid cuboid) {
+    if (this.bridgeCuboid == null) {
+      this.bridgeCuboid = new ArrayList<>();
+    }
+    this.bridgeCuboid.add(cuboid);
   }
 
   public HashMap<Location, BlockData> getBrokenBlocks() {

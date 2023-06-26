@@ -42,6 +42,7 @@ import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
@@ -52,6 +53,7 @@ import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 
+import java.sql.Struct;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +87,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    
+
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
       // Does not work?
@@ -93,7 +95,8 @@ public class ArenaEvents extends PluginArenaEvents {
       // Alternative
       event.getBlock().setType(XMaterial.AIR.parseMaterial());
     }
-    else if(arena.getBridgeCuboid() != null && arena.getBridgeCuboid().isIn(event.getBlock().getLocation())) {
+
+    else if (isInBridgeCuboid(arena, event.getBlock().getLocation())){
       arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
       // Does not work?
       event.getBlock().getDrops().clear();
@@ -117,7 +120,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if(arena.getBridgeCuboid() == null || !arena.getBridgeCuboid().isIn(event.getBlock().getLocation())) {
+    if(isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       arena.addPlacedBlock(event.getBlock());
@@ -144,6 +147,18 @@ public class ArenaEvents extends PluginArenaEvents {
       }
     }
     return true;
+  }
+
+  public boolean isInBridgeCuboid(Arena arena, Location location) {
+    if (arena.getBridgeCuboid() != null && !arena.getBridgeCuboid().isEmpty()){
+
+      for (Cuboid cuboid : arena.getBridgeCuboid()) {
+        if (cuboid.isIn(location)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private void rewardLastAttacker(Arena arena, Player victim) {
