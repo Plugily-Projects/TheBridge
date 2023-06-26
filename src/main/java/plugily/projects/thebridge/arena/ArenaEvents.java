@@ -85,7 +85,8 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-
+    event.getPlayer().sendMessage("Bridge Cuboid: " + arena.getBridgeCuboid().toString());
+    event.getPlayer().sendMessage("In bridge Cuboid: " + arena.getBridgeCuboid().isIn(event.getBlock().getLocation()));
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
       // Does not work?
