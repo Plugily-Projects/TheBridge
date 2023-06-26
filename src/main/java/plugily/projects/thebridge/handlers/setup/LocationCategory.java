@@ -45,9 +45,5 @@ public class LocationCategory extends PluginLocationCategory {
     LocationSelectorItem arenaBorder = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Arena", "Location where all bases and lines are in \n (players will be able to build inside)", "arenalocation");
     gui.setItem((getInventoryLine() * 9) + 5, arenaBorder);
     getItemList().add(arenaBorder);
-
-    LocationSelectorItem bridgeLocation = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.RED_TERRACOTTA.parseMaterial()), "Bridge", "Location where the bridge is.\n Players will be able to break pre-built blocks inside this region", "bridgelocation");
-    gui.setItem((getInventoryLine()*9 + 8), bridgeLocation);
-    getItemList().add(bridgeLocation);
   }
 }

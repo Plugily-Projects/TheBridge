@@ -59,7 +59,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
     ((Arena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
     ((Arena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0"))));
-    if (section.contains("id" + ".bridgelocation")) {
+    if (section.contains(id + ".bridgelocation")) {
       ((Arena) arena).setBridgeCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bridgelocation.1")), LocationSerializer.getLocation(section.getString(id + ".bridgelocation.2"))));
     }
     int bases = 0;
