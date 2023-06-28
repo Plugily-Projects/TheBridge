@@ -269,6 +269,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getBase(event.getPlayer()).getCageCuboid() != null) {
       return;
     }
+    if (event.getTo() == null) return;
     if(event.getFrom().getZ() != event.getTo().getZ()
       && event.getFrom().getX() != event.getTo().getX()) {
       event.setCancelled(true);
