@@ -120,7 +120,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if(isInBridgeCuboid(arena, event.getBlock().getLocation())) {
+    if (!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       arena.addPlacedBlock(event.getBlock());
