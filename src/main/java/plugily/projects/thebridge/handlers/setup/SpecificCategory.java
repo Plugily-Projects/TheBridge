@@ -41,12 +41,12 @@ public class SpecificCategory extends PluginSpecificCategory {
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
 
-    gui.setItem((getInventoryLine() * 9) + 1, ClickableItem.of(new ItemBuilder(XMaterial.ORANGE_STAINED_GLASS_PANE.parseMaterial()).name("&e&lEdit Base").lore(ChatColor.GRAY + "Here you can add/edit a base")
-        .lore(ChatColor.GRAY + "Make sure to register the base before continuing!").build(), event -> openBaseMenu(event.getWhoClicked())));
-
-    LocationSelectorItem bridgeLocation = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.RED_TERRACOTTA.parseMaterial()), "Bridge", "Location where the bridge is.\n Players will be able to break pre-built blocks inside this region", "bridgelocation");
-    gui.setItem((getInventoryLine()*9 + 2), bridgeLocation);
+    LocationSelectorItem bridgeLocation = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.RED_TERRACOTTA.parseMaterial()), "Bridge", "Location where the bridge is.\n Players will be able to break pre-built blocks inside this region.\n its optional", "bridgelocation");
+    gui.setItem((getInventoryLine()*9 + 1), bridgeLocation);
     getItemList().add(bridgeLocation);
+    
+    gui.setItem((getInventoryLine() * 9) + 2, ClickableItem.of(new ItemBuilder(XMaterial.ORANGE_STAINED_GLASS_PANE.parseMaterial()).name("&e&lEdit Base").lore(ChatColor.GRAY + "Here you can add/edit a base")
+        .lore(ChatColor.GRAY + "Make sure to register the base before continuing!").build(), event -> openBaseMenu(event.getWhoClicked())));
   }
   public void openBaseMenu(HumanEntity player) {
     NormalFastInv pagedGui = new BasePage(9, getSetupInventory().getPlugin().getPluginMessagePrefix() + "Base Editor Menu", getSetupInventory());
