@@ -53,7 +53,6 @@ import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
 import plugily.projects.thebridge.kits.level.ArcherKit;
 
-import java.sql.Struct;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
