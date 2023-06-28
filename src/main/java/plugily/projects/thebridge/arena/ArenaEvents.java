@@ -377,18 +377,16 @@ public class ArenaEvents extends PluginArenaEvents {
   private void playerDeath(Player player, Arena arena) {
     User user = plugin.getUserManager().getUser(player);
     arena.resetPlayer(player);
-    switch(arena.getArenaState()) {
-      case STARTING:
-      case WAITING_FOR_PLAYERS:
-      case FULL_GAME:
+    switch (arena.getArenaState()) {
+      case STARTING, WAITING_FOR_PLAYERS, FULL_GAME -> {
         Location lobbyLocation = arena.getLobbyLocation();
         VersionUtils.teleport(player, lobbyLocation);
-        break;
-      case IN_GAME:
-        if(!user.isSpectator()) {
+      }
+      case IN_GAME -> {
+        if (!user.isSpectator()) {
           user.adjustStatistic("DEATHS", 1);
           user.adjustStatistic("LOCAL_DEATHS", 1);
-          if(arena.inBase(player)) {
+          if (arena.inBase(player)) {
             Location respawnPoint = arena.getBase(player).getPlayerRespawnPoint();
             VersionUtils.teleport(player, respawnPoint);
             modeDeathHandle(player, arena, user);
@@ -414,13 +412,13 @@ public class ArenaEvents extends PluginArenaEvents {
           Location spectatorLocation = arena.getSpectatorLocation();
           VersionUtils.teleport(player, spectatorLocation);
         }
-        break;
-      case ENDING:
-      case RESTARTING:
+      }
+      case ENDING, RESTARTING -> {
         Location location = arena.getSpectatorLocation();
         VersionUtils.teleport(player, location);
-        break;
-      default:
+      }
+      default -> {
+      }
     }
   }
 
