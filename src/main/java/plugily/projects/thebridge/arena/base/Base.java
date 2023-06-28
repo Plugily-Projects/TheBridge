@@ -248,7 +248,7 @@ public class Base {
   }
 
   private boolean checkCage() {
-    return cageCuboid == null || cageFloorBlocks == null || cageBlocks == null;
+    return cageCuboid == null;
   }
 
   public boolean isDamageCooldown() {
