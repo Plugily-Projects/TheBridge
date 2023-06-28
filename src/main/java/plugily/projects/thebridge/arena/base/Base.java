@@ -244,9 +244,7 @@ public class Base {
     }
 
     HashMap<Location, BlockData> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
-    blocks.forEach((k, v) -> {
-      k.getBlock().setBlockData(v);
-    });
+    blocks.forEach((k, v) -> k.getBlock().setBlockData(v));
   }
 
   private boolean checkCage() {

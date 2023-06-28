@@ -361,9 +361,7 @@ public class Arena extends PluginArena {
   }
 
   public void resetBrokenBlocks() {
-    brokenBlocks.forEach((k, v) -> {
-      k.getBlock().setBlockData(v);
-    });
+    brokenBlocks.forEach((k, v) -> k.getBlock().setBlockData(v));
     brokenBlocks.clear();
   }
 
