@@ -90,44 +90,42 @@ public class ArenaManager extends PluginArenaManager {
     for (Player player : arena.getPlayers()) {
       if (!quickStop) {
         switch (pluginArena.getMode()) {
-          case HEARTS:
+          case HEARTS -> {
             if (pluginArena.isDeathPlayer(player)) {
               plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
+                .getUserManager()
+                .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
               plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
+                .getRewardsHandler()
+                .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
             } else {
               plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
+                .getUserManager()
+                .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
               plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
+                .getRewardsHandler()
+                .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
               plugin.getUserManager().addExperience(player, 5);
             }
-            break;
-          case POINTS:
+          }
+          case POINTS -> {
             if (pluginArena.getWinner().getPlayers().contains(player)) {
               plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
+                .getUserManager()
+                .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
               plugin.getUserManager().addExperience(player, 5);
               plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
+                .getRewardsHandler()
+                .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
             } else {
               plugin
-                  .getUserManager()
-                  .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
+                .getUserManager()
+                .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
               plugin
-                  .getRewardsHandler()
-                  .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
+                .getRewardsHandler()
+                .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
             }
-            break;
-          default:
-            break;
+          }
         }
       }
     }
