@@ -89,17 +89,11 @@ public class ArenaEvents extends PluginArenaEvents {
 
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
-      // Does not work?
       event.getBlock().getDrops().clear();
-      // Alternative
       event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    }
-
-    else if (isInBridgeCuboid(arena, event.getBlock().getLocation())){
+    } else if(isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
-      // Does not work?
       event.getBlock().getDrops().clear();
-      // Alternative
       event.getBlock().setType(XMaterial.AIR.parseMaterial());
     }
     event.setCancelled(true);
@@ -119,7 +113,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if (!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
+    if(!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       arena.addPlacedBlock(event.getBlock());
@@ -149,10 +143,9 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   public boolean isInBridgeCuboid(Arena arena, Location location) {
-    if (arena.getBridgeCuboid() != null && !arena.getBridgeCuboid().isEmpty()){
-
-      for (Cuboid cuboid : arena.getBridgeCuboid()) {
-        if (cuboid.isIn(location)) {
+    if(arena.getBridgeCuboid() != null && !arena.getBridgeCuboid().isEmpty()) {
+      for(Cuboid cuboid : arena.getBridgeCuboid()) {
+        if(cuboid.isIn(location)) {
           return true;
         }
       }
@@ -268,7 +261,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getBase(event.getPlayer()).getCageCuboid() != null) {
       return;
     }
-    if (event.getTo() == null) return;
+    if(event.getTo() == null) return;
     if(event.getFrom().getZ() != event.getTo().getZ()
       && event.getFrom().getX() != event.getTo().getX()) {
       event.setCancelled(true);
@@ -376,16 +369,16 @@ public class ArenaEvents extends PluginArenaEvents {
   private void playerDeath(Player player, Arena arena) {
     User user = plugin.getUserManager().getUser(player);
     arena.resetPlayer(player);
-    switch (arena.getArenaState()) {
+    switch(arena.getArenaState()) {
       case STARTING, WAITING_FOR_PLAYERS, FULL_GAME -> {
         Location lobbyLocation = arena.getLobbyLocation();
         VersionUtils.teleport(player, lobbyLocation);
       }
       case IN_GAME -> {
-        if (!user.isSpectator()) {
+        if(!user.isSpectator()) {
           user.adjustStatistic("DEATHS", 1);
           user.adjustStatistic("LOCAL_DEATHS", 1);
-          if (arena.inBase(player)) {
+          if(arena.inBase(player)) {
             Location respawnPoint = arena.getBase(player).getPlayerRespawnPoint();
             VersionUtils.teleport(player, respawnPoint);
             modeDeathHandle(player, arena, user);
@@ -422,18 +415,18 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   private void modeDeathHandle(Player player, Arena arena, User user) {
-    if (arena.getMode() == Arena.Mode.HEARTS) {
+    if(arena.getMode() == Arena.Mode.HEARTS) {
       // if mode hearts and they are out it should set spec mode for them
-      if (arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
+      if(arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
         user.setSpectator(true);
         ArenaUtils.hidePlayer(player, arena);
         player.getInventory().clear();
-        if (arena.getArenaState() != ArenaState.ENDING
+        if(arena.getArenaState() != ArenaState.ENDING
           && arena.getArenaState() != ArenaState.RESTARTING) {
           arena.addDeathPlayer(player);
         }
         List<Player> players = arena.getBase(player).getPlayers();
-        if (players.stream().allMatch(arena::isDeathPlayer)) {
+        if(players.stream().allMatch(arena::isDeathPlayer)) {
           arena.addOut();
         }
       }
@@ -490,7 +483,7 @@ public class ArenaEvents extends PluginArenaEvents {
       plugin
         .getBukkitHelper()
         .applyActionBarCooldown(player, cooldown);
-      if (event.getBow() != null) {
+      if(event.getBow() != null) {
         VersionUtils.setDurability(event.getBow(), (short) 0);
       }
       return;

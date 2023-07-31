@@ -62,11 +62,13 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
     if (section.contains(id + ".bridges")) {
       if(section.isConfigurationSection(id + ".bridges")) {
-        for(String bridgeID : section.getConfigurationSection(id + ".bases").getKeys(false)) {
+        for(String bridgeID : section.getConfigurationSection(id + ".bridges").getKeys(false)) {
           ((Arena) arena).addBridgeCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bridges." + bridgeID + ".1")), LocationSerializer.getLocation(section.getString(id + ".bridges." + bridgeID + ".2"))));
         }
       }
     }
+
+
     int bases = 0;
     if(section.contains(id + ".bases")) {
       if(section.isConfigurationSection(id + ".bases")) {
