@@ -105,11 +105,6 @@ public class Main extends PluginMain {
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
-  public void addAdditionalValues() {
-
-
-  }
-
 
   private void addPluginMetrics() {
     getMetrics().addCustomChart(new Metrics.SimplePie("hooked_addons", () -> {

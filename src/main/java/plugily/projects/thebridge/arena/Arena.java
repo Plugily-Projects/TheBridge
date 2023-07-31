@@ -23,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -41,12 +42,7 @@ import plugily.projects.thebridge.arena.states.InGameState;
 import plugily.projects.thebridge.arena.states.RestartingState;
 import plugily.projects.thebridge.arena.states.StartingState;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Tigerpanzer_02
@@ -63,13 +59,17 @@ public class Arena extends PluginArena {
   private List<Base> bases = new ArrayList<>();
   private Mode mode;
   private final ArrayList<Block> placedBlocks = new ArrayList<>();
+
+  private List<Cuboid> bridgeCuboid;
+  private final HashMap<Location, BlockData> brokenBlocks = new HashMap<>();
+
   private final HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
   private int out = 0;
   int round = 0;
   private Cuboid arenaBorder;
   private Base winner;
-  private MapRestorerManager mapRestorerManager;
+  private final MapRestorerManager mapRestorerManager;
 
   public Arena(String id) {
     super(id);
@@ -226,6 +226,7 @@ public class Arena extends PluginArena {
   public void cleanUpArena() {
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
+    resetBrokenBlocks();
     resetHits();
     deaths.clear();
     spectators.clear();
@@ -259,6 +260,7 @@ public class Arena extends PluginArena {
     int resetBlocksOption = getArenaOption("RESET_BLOCKS");
     if(resetBlocksOption != 0 && resetBlocksOption - getRound() == 0) {
       resetPlacedBlocks();
+      resetBrokenBlocks();
       round = 0;
     }
     resetHits();
@@ -325,8 +327,30 @@ public class Arena extends PluginArena {
     this.placedBlocks.add(placedBlock);
   }
 
-  public void removePlacedBlock(Block removedblock) {
-    this.placedBlocks.remove(removedblock);
+  public void removePlacedBlock(Block removedBlock) {
+    this.placedBlocks.remove(removedBlock);
+  }
+
+  public List<Cuboid> getBridgeCuboid() {
+    return bridgeCuboid;
+  }
+
+  public void setBridgeCuboid(List<Cuboid> cuboid) {
+    this.bridgeCuboid = cuboid;
+  }
+
+  public void addBridgeCuboid(Cuboid cuboid) {
+    if (this.bridgeCuboid == null) {
+      this.bridgeCuboid = new ArrayList<>();
+    }
+    this.bridgeCuboid.add(cuboid);
+  }
+
+  public HashMap<Location, BlockData> getBrokenBlocks() {
+    return brokenBlocks;
+  }
+  public void addBrokenBlock(Location location, BlockData blockData) {
+    this.brokenBlocks.put(location, blockData);
   }
 
   public void resetPlacedBlocks() {
@@ -335,6 +359,12 @@ public class Arena extends PluginArena {
     }
     placedBlocks.clear();
   }
+
+  public void resetBrokenBlocks() {
+    brokenBlocks.forEach((k, v) -> k.getBlock().setBlockData(v));
+    brokenBlocks.clear();
+  }
+
   public void teleportAllToBaseLocation() {
     for(Player player : getPlayers()) {
       VersionUtils.teleport(player, getBase(player).getPlayerSpawnPoint());

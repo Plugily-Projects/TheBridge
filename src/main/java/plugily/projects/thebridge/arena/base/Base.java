@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -33,6 +34,7 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,9 +59,9 @@ public class Base {
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
-  private List<Block> cageBlocks;
+  private final HashMap<Location, BlockData> cageBlocks = new HashMap<>();
 
-  private List<Block> cageFloorBlocks;
+  private final HashMap<Location, BlockData> cageFloorBlocks = new HashMap<>();
   private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
@@ -84,30 +86,19 @@ public class Base {
   }
 
   public String getMaterialColor() {
-    switch(color.toLowerCase()) {
-      case "dark_blue":
-      case "dark_aqua":
-        return "cyan";
-      case "aqua":
-        return "light_blue";
-      case "dark_green":
-        return "green";
-      case "green":
-        return "lime";
-      case "dark_red":
-        return "red";
-      case "dark_purple":
-        return "purple";
-      case "dark_gray":
-        return "gray";
-      case "light_purple":
-        return "magenta";
-      case "gold":
-        return "orange";
+    return switch (color.toLowerCase()) {
+      case "dark_blue", "dark_aqua" -> "cyan";
+      case "aqua" -> "light_blue";
+      case "dark_green" -> "green";
+      case "green" -> "lime";
+      case "dark_red" -> "red";
+      case "dark_purple" -> "purple";
+      case "dark_gray" -> "gray";
+      case "light_purple" -> "magenta";
+      case "gold" -> "orange";
       //not used? BROWN, PINK
-      default:
-        return color;
-    }
+      default -> color;
+    };
   }
 
   public String getFormattedColor() {
@@ -224,8 +215,14 @@ public class Base {
 
   public void setCageCuboid(Cuboid cageCuboid) {
     this.cageCuboid = cageCuboid;
-    this.cageBlocks = cageCuboid.blockList();
-    this.cageFloorBlocks = cageCuboid.floorBlockList();
+    cageBlocks.clear();
+    cageFloorBlocks.clear();
+    for (Block block : cageCuboid.blockList()) {
+      cageBlocks.put(block.getLocation(), block.getBlockData().clone());
+    }
+    for (Block block : cageCuboid.floorBlockList()) {
+      cageFloorBlocks.put(block.getLocation(), block.getBlockData().clone());
+    }
   }
 
   public void removeCage() {
@@ -245,14 +242,13 @@ public class Base {
     if(checkCage()) {
       return;
     }
-    List<Block> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
-    for(Block block : blocks) {
-      block.getWorld().getBlockAt(block.getLocation()).setBlockData(block.getBlockData());
-    }
+
+    HashMap<Location, BlockData> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
+    blocks.forEach((k, v) -> k.getBlock().setBlockData(v));
   }
 
   private boolean checkCage() {
-    return cageCuboid == null || cageFloorBlocks == null || cageBlocks == null;
+    return cageCuboid == null;
   }
 
   public boolean isDamageCooldown() {

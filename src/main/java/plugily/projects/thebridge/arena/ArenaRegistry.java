@@ -18,7 +18,6 @@
 
 package plugily.projects.thebridge.arena;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +59,14 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
     ((Arena) arena).setMidLocation(LocationSerializer.getLocation(section.getString(id + ".midlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
     ((Arena) arena).setArenaBorder(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(section.getString(id + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0"))));
+
+    if (section.contains(id + ".bridges")) {
+      if(section.isConfigurationSection(id + ".bridges")) {
+        for(String bridgeID : section.getConfigurationSection(id + ".bases").getKeys(false)) {
+          ((Arena) arena).addBridgeCuboid(new Cuboid(LocationSerializer.getLocation(section.getString(id + ".bridges." + bridgeID + ".1")), LocationSerializer.getLocation(section.getString(id + ".bridges." + bridgeID + ".2"))));
+        }
+      }
+    }
     int bases = 0;
     if(section.contains(id + ".bases")) {
       if(section.isConfigurationSection(id + ".bases")) {

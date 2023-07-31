@@ -42,6 +42,7 @@ import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
@@ -85,8 +86,17 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
+
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
+      // Does not work?
+      event.getBlock().getDrops().clear();
+      // Alternative
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    }
+
+    else if (isInBridgeCuboid(arena, event.getBlock().getLocation())){
+      arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
       // Does not work?
       event.getBlock().getDrops().clear();
       // Alternative
@@ -109,7 +119,11 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    arena.addPlacedBlock(event.getBlock());
+    if (!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
+      // Only add blocks to the list if the block is not found to be in the broken blocks list
+      // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
+      arena.addPlacedBlock(event.getBlock());
+    }
   }
 
   public boolean canBuild(Arena arena, Player player, Location location) {
@@ -132,6 +146,18 @@ public class ArenaEvents extends PluginArenaEvents {
       }
     }
     return true;
+  }
+
+  public boolean isInBridgeCuboid(Arena arena, Location location) {
+    if (arena.getBridgeCuboid() != null && !arena.getBridgeCuboid().isEmpty()){
+
+      for (Cuboid cuboid : arena.getBridgeCuboid()) {
+        if (cuboid.isIn(location)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private void rewardLastAttacker(Arena arena, Player victim) {
@@ -162,9 +188,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent event) {
-    if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
-      Player victim = (Player) event.getEntity();
-      Player attacker = (Player) event.getDamager();
+    if(event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
       if(!ArenaUtils.areInSameArena(victim, attacker)) {
         return;
       }
@@ -244,6 +268,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getBase(event.getPlayer()).getCageCuboid() != null) {
       return;
     }
+    if (event.getTo() == null) return;
     if(event.getFrom().getZ() != event.getTo().getZ()
       && event.getFrom().getX() != event.getTo().getX()) {
       event.setCancelled(true);
@@ -351,18 +376,16 @@ public class ArenaEvents extends PluginArenaEvents {
   private void playerDeath(Player player, Arena arena) {
     User user = plugin.getUserManager().getUser(player);
     arena.resetPlayer(player);
-    switch(arena.getArenaState()) {
-      case STARTING:
-      case WAITING_FOR_PLAYERS:
-      case FULL_GAME:
+    switch (arena.getArenaState()) {
+      case STARTING, WAITING_FOR_PLAYERS, FULL_GAME -> {
         Location lobbyLocation = arena.getLobbyLocation();
         VersionUtils.teleport(player, lobbyLocation);
-        break;
-      case IN_GAME:
-        if(!user.isSpectator()) {
+      }
+      case IN_GAME -> {
+        if (!user.isSpectator()) {
           user.adjustStatistic("DEATHS", 1);
           user.adjustStatistic("LOCAL_DEATHS", 1);
-          if(arena.inBase(player)) {
+          if (arena.inBase(player)) {
             Location respawnPoint = arena.getBase(player).getPlayerRespawnPoint();
             VersionUtils.teleport(player, respawnPoint);
             modeDeathHandle(player, arena, user);
@@ -388,37 +411,34 @@ public class ArenaEvents extends PluginArenaEvents {
           Location spectatorLocation = arena.getSpectatorLocation();
           VersionUtils.teleport(player, spectatorLocation);
         }
-        break;
-      case ENDING:
-      case RESTARTING:
+      }
+      case ENDING, RESTARTING -> {
         Location location = arena.getSpectatorLocation();
         VersionUtils.teleport(player, location);
-        break;
-      default:
+      }
+      default -> {
+      }
     }
   }
 
   private void modeDeathHandle(Player player, Arena arena, User user) {
-    switch(arena.getMode()) {
-      case HEARTS:
-        // if mode hearts and they are out it should set spec mode for them
-        if(arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
-          user.setSpectator(true);
-          ArenaUtils.hidePlayer(player, arena);
-          player.getInventory().clear();
-          if(arena.getArenaState() != ArenaState.ENDING
-            && arena.getArenaState() != ArenaState.RESTARTING) {
-            arena.addDeathPlayer(player);
-          }
-          List<Player> players = arena.getBase(player).getPlayers();
-          if(players.stream().allMatch(arena::isDeathPlayer)) {
-            arena.addOut();
-          }
+    if (arena.getMode() == Arena.Mode.HEARTS) {
+      // if mode hearts and they are out it should set spec mode for them
+      if (arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
+        user.setSpectator(true);
+        ArenaUtils.hidePlayer(player, arena);
+        player.getInventory().clear();
+        if (arena.getArenaState() != ArenaState.ENDING
+          && arena.getArenaState() != ArenaState.RESTARTING) {
+          arena.addDeathPlayer(player);
         }
-      default:
-        ArenaUtils.hidePlayersOutsideTheGame(player, arena);
-        break;
+        List<Player> players = arena.getBase(player).getPlayers();
+        if (players.stream().allMatch(arena::isDeathPlayer)) {
+          arena.addOut();
+        }
+      }
     }
+    ArenaUtils.hidePlayersOutsideTheGame(player, arena);
   }
 
 
@@ -470,7 +490,9 @@ public class ArenaEvents extends PluginArenaEvents {
       plugin
         .getBukkitHelper()
         .applyActionBarCooldown(player, cooldown);
-      VersionUtils.setDurability(event.getBow(), (short) 0);
+      if (event.getBow() != null) {
+        VersionUtils.setDurability(event.getBow(), (short) 0);
+      }
       return;
     }
     event.setCancelled(true);
@@ -486,10 +508,9 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onItemPickup(PlugilyEntityPickupItemEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(!(event.getEntity() instanceof Player player)) {
       return;
     }
-    Player player = (Player) event.getEntity();
     Arena pluginArena = plugin.getArenaRegistry().getArena(player);
     if(pluginArena == null) {
       return;
@@ -508,14 +529,12 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(event.getDamager() instanceof Arrow)) {
       return;
     }
-    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
+    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player attacker)) {
       return;
     }
-    Player attacker = (Player) ((Arrow) event.getDamager()).getShooter();
-    if(!(event.getEntity() instanceof Player)) {
+    if(!(event.getEntity() instanceof Player victim)) {
       return;
     }
-    Player victim = (Player) event.getEntity();
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
@@ -529,6 +548,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
+    assert arena != null;
     if(arena.isTeammate(attacker, victim)) {
       event.setCancelled(true);
       return;

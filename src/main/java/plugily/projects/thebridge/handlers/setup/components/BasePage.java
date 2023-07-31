@@ -6,16 +6,13 @@ import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.inventories.InventoryHandler;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationItem;
 import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationSelectorItem;
-import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.conversation.SimpleConversationBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -28,9 +25,6 @@ import plugily.projects.minigamesbox.number.NumberUtils;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.handlers.setup.BaseUtilities;
-
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class BasePage extends NormalFastInv implements InventoryHandler {
 

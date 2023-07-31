@@ -253,8 +253,8 @@ public class PlaceholderInitializer {
         if(pluginArena.getWinner() == null) {
           return "";
         }
-        String summary = new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_" + pluginArena.getMode()).asKey().build();
-        return summary;
+
+        return new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_BASE_" + pluginArena.getMode()).asKey().build();
       }
     });
   }

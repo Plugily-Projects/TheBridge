@@ -18,13 +18,9 @@
 
 package plugily.projects.thebridge.arena.states;
 
-import org.bukkit.entity.Entity;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginRestartingState;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.base.Base;
-
-import java.util.Objects;
 
 /**
  * @author Plajer

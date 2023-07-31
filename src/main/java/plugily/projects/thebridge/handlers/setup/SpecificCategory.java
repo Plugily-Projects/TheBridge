@@ -23,6 +23,8 @@ package plugily.projects.thebridge.handlers.setup;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSpecificCategory;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.category.LocationSelectorItem;
+import plugily.projects.minigamesbox.classic.handlers.setup.items.category.MultiLocationSelectorItem;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.inventory.common.item.ClickableItem;
@@ -40,9 +42,12 @@ public class SpecificCategory extends PluginSpecificCategory {
   public void addItems(NormalFastInv gui) {
     super.addItems(gui);
 
-    gui.setItem((getInventoryLine() * 9) + 1, ClickableItem.of(new ItemBuilder(XMaterial.ORANGE_STAINED_GLASS_PANE.parseMaterial()).name("&e&lEdit Base").lore(ChatColor.GRAY + "Here you can add/edit a base")
+    MultiLocationSelectorItem bridges = new MultiLocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.RED_TERRACOTTA.parseMaterial()), "Bridges", "Location of where bridges are. \nPlayers will be able to break pre-built blocks inside this regeion.\nits optional", "bridges", 0);
+    gui.setItem((getInventoryLine()*9 + 1), bridges);
+    getItemList().add(bridges);
+     
+    gui.setItem((getInventoryLine() * 9) + 2, ClickableItem.of(new ItemBuilder(XMaterial.ORANGE_STAINED_GLASS_PANE.parseMaterial()).name("&e&lEdit Base").lore(ChatColor.GRAY + "Here you can add/edit a base")
         .lore(ChatColor.GRAY + "Make sure to register the base before continuing!").build(), event -> openBaseMenu(event.getWhoClicked())));
-
   }
   public void openBaseMenu(HumanEntity player) {
     NormalFastInv pagedGui = new BasePage(9, getSetupInventory().getPlugin().getPluginMessagePrefix() + "Base Editor Menu", getSetupInventory());
