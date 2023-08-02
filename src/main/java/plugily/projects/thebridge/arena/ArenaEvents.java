@@ -20,6 +20,7 @@ package plugily.projects.thebridge.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -57,6 +58,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -122,7 +124,8 @@ public class ArenaEvents extends PluginArenaEvents {
     if (!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
-      if (!arena.getPlacedBlocks().contains(event.getBlock())) arena.addPlacedBlock(event.getBlock());
+      
+      if (!arena.getPlacedBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) arena.addPlacedBlock(event.getBlock());
     }
   }
 
