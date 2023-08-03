@@ -224,6 +224,7 @@ public class Arena extends PluginArena {
     return spectators.contains(player);
   }
   public void cleanUpArena() {
+    bases.stream().flatMap(base -> base.getPlayers().stream()).forEach(player -> this.getPlugin().getUserManager().getUser(player).setStatistic("LOCAL_SCORED_POINTS", 0));
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
     resetBrokenBlocks();
