@@ -18,7 +18,6 @@ public class MessageInitializer {
 
   public MessageInitializer(Main plugin) {
     this.plugin = plugin;
-    registerLocales();
   }
 
   public void registerMessages() {
@@ -104,17 +103,6 @@ public class MessageInitializer {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_SCORED_POINTS", new Message("Leaderboard.Statistics.Score", ""));
 
-  }
-
-  private void registerLocales() {
-    Arrays.asList(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
-        new Locale("English", "English", "en_GB", "Tigerpanzer_02", Arrays.asList("default", "english", "en")),
-        new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
-        new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
-        new Locale("Portuguese (BR)", "Português Brasileiro", "pt_BR", "POEditor contributors", Arrays.asList("brazilian", "brasil", "brasileiro", "pt-br", "pt_br")),
-        new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
-        new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")))
-      .forEach(LocaleRegistry::registerLocale);
   }
 
   private MessageManager getMessageManager() {
