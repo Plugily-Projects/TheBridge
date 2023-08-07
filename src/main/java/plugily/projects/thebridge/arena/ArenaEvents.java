@@ -90,13 +90,15 @@ public class ArenaEvents extends PluginArenaEvents {
 
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
-      event.getBlock().getDrops().clear();
-      event.getBlock().setType(XMaterial.AIR.parseMaterial());
     } else if(isInBridgeCuboid(arena, event.getBlock().getLocation())) {
-      arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
-      event.getBlock().getDrops().clear();
-      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+      // Only add blocks to the list if the block is not found to be in the broken blocks list
+      // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
+      if(!arena.getBrokenBlocks().containsKey(event.getBlock().getLocation())) {
+        arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
+      }
     }
+    event.getBlock().getDrops().clear();
+    event.getBlock().setType(XMaterial.AIR.parseMaterial());
     event.setCancelled(true);
   }
 
@@ -114,10 +116,8 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if(!isInBridgeCuboid(arena, event.getBlock().getLocation())) {
-      // Only add blocks to the list if the block is not found to be in the broken blocks list
-      // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
-      if (!arena.getPlacedBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) arena.addPlacedBlock(event.getBlock());
+    if(!arena.getPlacedBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) {
+      arena.addPlacedBlock(event.getBlock());
     }
   }
 
@@ -182,7 +182,9 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onHit(EntityDamageByEntityEvent event) {
-    if(event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
+    if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+      Player victim = (Player) event.getEntity();
+      Player attacker = (Player) event.getDamager();
       if(!ArenaUtils.areInSameArena(victim, attacker)) {
         return;
       }
@@ -371,11 +373,13 @@ public class ArenaEvents extends PluginArenaEvents {
     User user = plugin.getUserManager().getUser(player);
     arena.resetPlayer(player);
     switch(arena.getArenaState()) {
-      case STARTING, WAITING_FOR_PLAYERS, FULL_GAME -> {
+      case STARTING:
+      case WAITING_FOR_PLAYERS:
+      case FULL_GAME:
         Location lobbyLocation = arena.getLobbyLocation();
         VersionUtils.teleport(player, lobbyLocation);
-      }
-      case IN_GAME -> {
+        break;
+      case IN_GAME:
         if(!user.isSpectator()) {
           user.adjustStatistic("DEATHS", 1);
           user.adjustStatistic("LOCAL_DEATHS", 1);
@@ -405,13 +409,12 @@ public class ArenaEvents extends PluginArenaEvents {
           Location spectatorLocation = arena.getSpectatorLocation();
           VersionUtils.teleport(player, spectatorLocation);
         }
-      }
-      case ENDING, RESTARTING -> {
+      case ENDING:
+      case RESTARTING:
         Location location = arena.getSpectatorLocation();
         VersionUtils.teleport(player, location);
-      }
-      default -> {
-      }
+      default:
+        break;
     }
   }
 
@@ -502,9 +505,10 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onItemPickup(PlugilyEntityPickupItemEvent event) {
-    if(!(event.getEntity() instanceof Player player)) {
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
+    Player player = (Player) event.getEntity();
     Arena pluginArena = plugin.getArenaRegistry().getArena(player);
     if(pluginArena == null) {
       return;
@@ -523,12 +527,14 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(event.getDamager() instanceof Arrow)) {
       return;
     }
-    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player attacker)) {
+    if(!(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
       return;
     }
-    if(!(event.getEntity() instanceof Player victim)) {
+    Player attacker = (Player) ((Arrow) event.getDamager()).getShooter();
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
+    Player victim = (Player) event.getEntity();
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }

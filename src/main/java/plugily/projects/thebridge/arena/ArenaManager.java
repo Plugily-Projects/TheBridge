@@ -30,7 +30,7 @@ import java.util.Comparator;
 
 /**
  * @author Plajer
- *     <p>Created at 13.05.2018
+ * <p>Created at 13.05.2018
  */
 public class ArenaManager extends PluginArenaManager {
 
@@ -44,16 +44,16 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
     Base partyBase = null;
-    if (arena.getPlayers().contains(partyLeader)) {
-      if (pluginArena.inBase(partyLeader)) {
+    if(arena.getPlayers().contains(partyLeader)) {
+      if(pluginArena.inBase(partyLeader)) {
         partyBase = pluginArena.getBase(partyLeader);
       }
     }
-    if (partyBase != null) {
+    if(partyBase != null) {
       partyBase.addPlayer(player);
     }
   }
@@ -61,22 +61,22 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
     super.leaveAttempt(player, arena);
-    if (pluginArena.isDeathPlayer(player)) {
+    if(pluginArena.isDeathPlayer(player)) {
       pluginArena.removeDeathPlayer(player);
     }
-    if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS
-        && arena.getArenaState() != ArenaState.STARTING
-        && (arena.getPlayers().size() <= 1
-            || (arena.getPlayers().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
-                && pluginArena.getBases().stream()
-                        .max(Comparator.comparing(Base::getPlayersSize))
-                        .get()
-                        .getAlivePlayersSize()
-                    == arena.getPlayers().size()))) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS
+      && arena.getArenaState() != ArenaState.STARTING
+      && (arena.getPlayers().size() <= 1
+      || (arena.getPlayers().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
+      && pluginArena.getBases().stream()
+      .max(Comparator.comparing(Base::getPlayersSize))
+      .get()
+      .getAlivePlayersSize()
+      == arena.getPlayers().size()))) {
       stopGame(true, arena);
     }
   }
@@ -84,14 +84,16 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
-    for (Player player : arena.getPlayers()) {
-      if (!quickStop) {
-        switch (pluginArena.getMode()) {
-          case HEARTS -> {
-            if (pluginArena.isDeathPlayer(player)) {
+    for(Player player : arena.getPlayers()) {
+      if(!quickStop) {
+        switch(pluginArena.getMode()) {
+          default:
+            break;
+          case HEARTS:
+            if(pluginArena.isDeathPlayer(player)) {
               plugin
                 .getUserManager()
                 .addStat(player, plugin.getStatsStorage().getStatisticType("LOSES"));
@@ -107,9 +109,9 @@ public class ArenaManager extends PluginArenaManager {
                 .performReward(player, arena, plugin.getRewardsHandler().getRewardType("WIN"));
               plugin.getUserManager().addExperience(player, 5);
             }
-          }
-          case POINTS -> {
-            if (pluginArena.getWinner().getPlayers().contains(player)) {
+            break;
+          case POINTS:
+            if(pluginArena.getWinner().getPlayers().contains(player)) {
               plugin
                 .getUserManager()
                 .addStat(player, plugin.getStatsStorage().getStatisticType("WINS"));
@@ -125,7 +127,7 @@ public class ArenaManager extends PluginArenaManager {
                 .getRewardsHandler()
                 .performReward(player, arena, plugin.getRewardsHandler().getRewardType("LOSE"));
             }
-          }
+            break;
         }
       }
     }
