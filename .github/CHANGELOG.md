@@ -1,4 +1,16 @@
-### 1.1.5 Release (26.08.2021 - XX)
+### 2.0.0 Release (07.08.2023)
+* Added up to 1.20 compatibility
+* Added full cage support
+* Added bridge block breakage [https://app.feedbacky.net/i/3734]
+* Added base colours as placeholder [https://app.feedbacky.net/i/2867]
+* Changed die screen to just teleportation [https://app.feedbacky.net/i/3721]
+* Changed supported languages [https://translate.plugily.xyz]
+* Changed plugin base is based on MinigamesCore [https://github.com/Plugily-Projects/MiniGamesBox]
+* Changed native java building to java17, java 8 downloadable on our discord [https://discord.plugily.xyz]
+* Fixed player can move in cage
+* Fixed all known bugs
+
+### 1.1.5 Release (26.08.2021 - 2022) [released as dev version]
 * Fixed build check outside of arena border was checking for player and not for block location
 * Fixed maxplayers command not checking if arena was already in-game
 * Fixed bases without players can be used to get scores
