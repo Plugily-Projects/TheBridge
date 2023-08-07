@@ -23,19 +23,17 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.LevelKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 19/08/2014.
@@ -43,16 +41,17 @@ import java.util.List;
 public class MediumTankKit extends LevelKit {
 
   public MediumTankKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Medium-Tank.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Hardcore.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
+    setName(new MessageBuilder("KIT_CONTENT_MEDIUM_TANK_NAME").asKey().build());
+    setKey("MediumTank");
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_MEDIUM_TANK_DESCRIPTION");
+    setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.MediumTank"));
-    KitRegistry.registerKit(this);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("thebridge.kit.mediumtank");
+    return getPlugin().getUserManager().getUser(player).getStatistic("LEVEL") >= this.getLevel() || player.hasPermission("thebridge.kit.mediumtank");
   }
 
   @Override
@@ -64,8 +63,8 @@ public class MediumTankKit extends LevelKit {
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
     VersionUtils.setMaxHealth(player, 32.0);
     player.setHealth(32.0);
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -79,8 +78,8 @@ public class MediumTankKit extends LevelKit {
 
   @Override
   public void reStock(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

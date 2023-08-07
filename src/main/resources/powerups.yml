@@ -1,0 +1,47 @@
+## Plugily Projects powerups.yml
+#Example
+Powerups:
+  Pickup:
+    Chat: "&a%player% picked the &4Powerup %value% up"
+  Ended:
+    Title: "5,20,5;&4Powerup %value% from %player%;&chas ended"
+    Chat: "&4Powerup %value% from %player% has ended%"
+  Drop:
+    Chance: 1
+  Content:
+    Heal:
+      active: false
+      name: "Healing"
+      description: "Let player heal"
+      material: REDSTONE
+      # Add as many potion effects as you want
+      # Format: PotionName, Duration, Amplifier
+      potion-effect:
+        - "REGENERATION, 30, 10"
+      # PLAYER for pickup player | ALL for all arena players
+      potion-type: PLAYER
+      # like rewards
+      execute:
+        - ""
+    Speed:
+      active: true
+      name: "&a&lSPEED BOOSTER"
+      description: "&7Double speed for %number% seconds!"
+      material: FEATHER
+      # Add as many potion effects as you want
+      # Format: PotionName, Duration, Amplifier
+      potion-effect:
+        - "SPEED, 15, 1"
+      # PLAYER for pickup player | ALL for all arena players
+      potion-type: PLAYER
+      # like rewards
+      execute:
+        - ""
+
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

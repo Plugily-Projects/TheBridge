@@ -1,375 +1,143 @@
-/*
- * TheBridge - Defend your base and try to wipe out the others
- * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package plugily.projects.thebridge;
 
-import me.tigerhix.lib.scoreboard.ScoreboardLib;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.commonsbox.database.MysqlDatabase;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
-import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
-import plugily.projects.thebridge.api.StatsStorage;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.TestOnly;
+import plugily.projects.minigamesbox.classic.PluginMain;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
+import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaEvents;
+import plugily.projects.thebridge.arena.ArenaManager;
 import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.base.Base;
+import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
+import plugily.projects.thebridge.boot.AdditionalValueInitializer;
+import plugily.projects.thebridge.boot.MessageInitializer;
+import plugily.projects.thebridge.boot.PlaceholderInitializer;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
-import plugily.projects.thebridge.events.ChatEvents;
-import plugily.projects.thebridge.events.Events;
-import plugily.projects.thebridge.events.JoinEvent;
-import plugily.projects.thebridge.events.LobbyEvent;
-import plugily.projects.thebridge.events.QuitEvent;
-import plugily.projects.thebridge.events.spectator.SpectatorEvents;
-import plugily.projects.thebridge.events.spectator.SpectatorItemEvents;
-import plugily.projects.thebridge.handlers.BungeeManager;
-import plugily.projects.thebridge.handlers.ChatManager;
-import plugily.projects.thebridge.handlers.PermissionsManager;
-import plugily.projects.thebridge.handlers.PlaceholderManager;
-import plugily.projects.thebridge.handlers.items.SpecialItemManager;
-import plugily.projects.thebridge.handlers.language.LanguageManager;
-import plugily.projects.thebridge.handlers.party.PartyHandler;
-import plugily.projects.thebridge.handlers.party.PartySupportInitializer;
-import plugily.projects.thebridge.handlers.rewards.RewardsFactory;
-import plugily.projects.thebridge.handlers.setup.SetupInventory;
-import plugily.projects.thebridge.handlers.sign.SignManager;
-import plugily.projects.thebridge.kits.KitMenuHandler;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.Kit;
-import plugily.projects.thebridge.user.User;
-import plugily.projects.thebridge.user.UserManager;
-import plugily.projects.thebridge.user.data.MysqlManager;
-import plugily.projects.thebridge.utils.CuboidSelector;
-import plugily.projects.thebridge.utils.Debugger;
-import plugily.projects.thebridge.utils.ExceptionLogHandler;
-import plugily.projects.thebridge.utils.MessageUtils;
-import plugily.projects.thebridge.utils.UpdateChecker;
-import plugily.projects.thebridge.utils.Utils;
-import plugily.projects.thebridge.utils.services.ServiceRegistry;
+import plugily.projects.thebridge.events.PluginEvents;
+import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
+import plugily.projects.thebridge.kits.free.BridgeKit;
+import plugily.projects.thebridge.kits.free.KnightKit;
+import plugily.projects.thebridge.kits.free.LightTankKit;
+import plugily.projects.thebridge.kits.level.ArcherKit;
+import plugily.projects.thebridge.kits.level.HardcoreKit;
+import plugily.projects.thebridge.kits.level.HealerKit;
+import plugily.projects.thebridge.kits.level.MediumTankKit;
+import plugily.projects.thebridge.kits.level.TerminatorKit;
+import plugily.projects.thebridge.kits.premium.HeavyTankKit;
+import plugily.projects.thebridge.kits.premium.NakedKit;
+import plugily.projects.thebridge.kits.premium.PremiumHardcoreKit;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
- * @author Tigerpanzer_02, 2Wild4You
- * <p>
- * Created at 31.10.2020
+ * Created by Tigerpanzer_02 on 13.03.2022
  */
-public class Main extends JavaPlugin {
+public class Main extends PluginMain {
 
-
-  private ExceptionLogHandler exceptionLogHandler;
-  private boolean forceDisable = false;
-  private BungeeManager bungeeManager;
-  private RewardsFactory rewardsHandler;
-  private MysqlDatabase database;
-  private SignManager signManager;
-  private PartyHandler partyHandler;
-  private ConfigPreferences configPreferences;
-  private KitMenuHandler kitMenuHandler;
-  private BaseMenuHandler baseMenuHandler;
+  private ArenaRegistry arenaRegistry;
+  private ArenaManager arenaManager;
   private ArgumentsRegistry argumentsRegistry;
-  private UserManager userManager;
-  private ChatManager chatManager;
-  private SpecialItemManager specialItemManager;
-  private CuboidSelector cuboidSelector;
+  private BaseMenuHandler baseMenuHandler;
+
+  @TestOnly
+  public Main() {
+    super();
+  }
+
+  @TestOnly
+  protected Main(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+    super(loader, description, dataFolder, file);
+  }
 
   @Override
   public void onEnable() {
-    if(!validateIfPluginShouldStart()) {
-      return;
-    }
-
     long start = System.currentTimeMillis();
-    setupFiles();
-    saveDefaultConfig();
-    ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler(this);
-    LanguageManager.init(this);
-
-    Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
-
-    Debugger.debug("[System] Initialization start");
-    if(getConfig().getBoolean("Developer-Mode")) {
-      Debugger.deepDebug(true);
-      Debugger.debug(Level.FINE, "Deep debug enabled");
-      for(String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
-        Debugger.monitorPerformance(listenable);
-      }
-    }
-
-    configPreferences = new ConfigPreferences(this);
-    initializeClasses();
-    checkUpdate();
-    Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
-
-    Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
+    MessageInitializer messageInitializer = new MessageInitializer(this);
+    super.onEnable();
+    getDebugger().debug("[System] [Plugin] Initialization start");
+    new PlaceholderInitializer(this);
+    messageInitializer.registerMessages();
+    new AdditionalValueInitializer(this);
+    initializePluginClasses();
+    addKits();
+    getDebugger().debug("Full {0} plugin enabled", getName());
+    getDebugger().debug("[System] [Plugin] Initialization finished took {0}ms", System.currentTimeMillis() - start);
   }
 
-  private boolean validateIfPluginShouldStart() {
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_8_R1)) {
-      MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server version is not supported by The Bridge!");
-      Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch(Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Debugger.sendConsoleMsg("&cYour server software is not supported by The Bridge!");
-      Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    return true;
-  }
-
-  @Override
-  public void onDisable() {
-    if(forceDisable) {
-      return;
-    }
-    Debugger.debug("System disable initialized");
-    long start = System.currentTimeMillis();
-
-    Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    saveAllUserStatistics();
-    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMysqlDatabase().shutdownConnPool();
-    }
-    for(ArmorStand armorStand : HologramManager.getArmorStands()) {
-      armorStand.remove();
-      armorStand.setCustomNameVisible(false);
-    }
-    HologramManager.getArmorStands().clear();
-    for(Arena arena : ArenaRegistry.getArenas()) {
-      arena.getScoreboardManager().stopAllScoreboards();
-      for(Player player : arena.getPlayers()) {
-        arena.doBarAction(Arena.BarAction.REMOVE, player);
-        arena.teleportToEndLocation(player);
-        player.setFlySpeed(0.1f);
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(null);
-        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
-        player.setWalkSpeed(0.2f);
-        player.setGameMode(GameMode.SURVIVAL);
-        if(configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-          InventorySerializer.loadInventory(this, player);
-        }
-      }
-      arena.cleanUpArena();
-      arena.getBases().forEach(Base::reset);
-      arena.resetPlacedBlocks();
-      arena.resetHits();
-    }
-    Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);
-  }
-
-  private void initializeClasses() {
-    chatManager = new ChatManager(this);
-    ScoreboardLib.setPluginInstance(this);
-    if(getConfig().getBoolean("BungeeActivated")) {
-      bungeeManager = new BungeeManager(this);
-    }
-    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"), config.getLong("maxLifeTime", 1800000));
-    }
-    argumentsRegistry = new ArgumentsRegistry(this);
-    userManager = new UserManager(this);
-    Utils.init(this);
-    PermissionsManager.init();
+  public void initializePluginClasses() {
+    addFileName("powerups");
+    Arena.init(this);
+    ArenaUtils.init(this);
     new ArenaEvents(this);
-    new SpectatorEvents(this);
-    new QuitEvent(this);
-    new JoinEvent(this);
-    new ChatEvents(this);
-    registerSoftDependenciesAndServices();
-    User.cooldownHandlerTask();
-    signManager = new SignManager(this);
-    ArenaRegistry.registerArenas();
-    signManager.loadSigns();
-    signManager.updateSigns();
-    new Events(this);
-    new LobbyEvent(this);
-    new SpectatorItemEvents(this);
-    rewardsHandler = new RewardsFactory(this);
-    specialItemManager = new SpecialItemManager(this);
-    Kit.init(this);
-    KitRegistry.init(this);
-    SetupInventory.init(this);
+    arenaManager = new ArenaManager(this);
+    arenaRegistry = new ArenaRegistry(this);
+    arenaRegistry.registerArenas();
+    getSignManager().loadSigns();
+    getSignManager().updateSigns();
+    argumentsRegistry = new ArgumentsRegistry(this);
     baseMenuHandler = new BaseMenuHandler(this);
-    kitMenuHandler = new KitMenuHandler(this);
-    partyHandler = new PartySupportInitializer().initialize(this);
-    cuboidSelector = new CuboidSelector(this);
 
-    new EventsInitializer().initialize(this);
-    MiscUtils.sendStartUpMessage(this, "TheBridge", getDescription(),true, true);
+    new PluginEvents(this);
+    addPluginMetrics();
   }
 
-  private void registerSoftDependenciesAndServices() {
-    Debugger.debug("Hooking into soft dependencies");
+
+  public void addKits() {
     long start = System.currentTimeMillis();
-
-    startPluginMetrics();
-    if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Debugger.debug("Hooking into PlaceholderAPI");
-      new PlaceholderManager().register();
+    getDebugger().debug("Adding kits...");
+    addFileName("kits");
+    Class<?>[] classKitNames = new Class[]{BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
+      MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class};
+    for(Class<?> kitClass : classKitNames) {
+      try {
+        kitClass.getDeclaredConstructor().newInstance();
+      } catch(Exception e) {
+        getLogger().log(Level.SEVERE, "Fatal error while registering existing game kit! Report this error to the developer!");
+        getLogger().log(Level.SEVERE, "Cause: " + e.getMessage() + " (kitClass " + kitClass.getName() + ")");
+        e.printStackTrace();
+      }
     }
-    Debugger.debug("Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
+    getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
-  private void startPluginMetrics() {
-    Metrics metrics = new Metrics(this, 10838);
 
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
-    metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
-      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-        return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
+  private void addPluginMetrics() {
+    getMetrics().addCustomChart(new Metrics.SimplePie("hooked_addons", () -> {
+      if(getServer().getPluginManager().getPlugin("TheBridge-Enlargement") != null) {
+        return "Enlargement";
       }
-      return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
+      return "None";
     }));
   }
 
-  private void checkUpdate() {
-    if(!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-      return;
-    }
-    UpdateChecker.init(this, 87320).requestUpdateCheck().whenComplete((result, exception) -> {
-      if(!result.requiresUpdate()) {
-        return;
-      }
-      if(result.getNewestVersion().contains("b")) {
-        if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[The Bridge] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[The Bridge] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-            result.getNewestVersion()));
-        }
-        return;
-      }
-      MessageUtils.updateIsHere();
-      Debugger.sendConsoleMsg("&aYour TheBridge plugin is outdated! Download it to keep with latest changes and fixes.");
-      Debugger.sendConsoleMsg("&aDisable this option in config.yml if you wish.");
-      Debugger.sendConsoleMsg("&eCurrent version: &c" + getDescription().getVersion() + "&e Latest version: &a" + result.getNewestVersion());
-    });
+  @Override
+  public ArenaRegistry getArenaRegistry() {
+    return arenaRegistry;
   }
 
-  private void setupFiles() {
-    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "kits")) {
-      File file = new File(getDataFolder() + File.separator + fileName + ".yml");
-      if(!file.exists()) {
-        saveResource(fileName + ".yml", false);
-      }
-    }
-  }
-
-  public RewardsFactory getRewardsHandler() {
-    return rewardsHandler;
-  }
-
-  public BungeeManager getBungeeManager() {
-    return bungeeManager;
-  }
-
-  public PartyHandler getPartyHandler() {
-    return partyHandler;
-  }
-
-  public ChatManager getChatManager() {
-    return chatManager;
-  }
-
-  public ConfigPreferences getConfigPreferences() {
-    return configPreferences;
-  }
-
-  public MysqlDatabase getMysqlDatabase() {
-    return database;
-  }
-
-  public SignManager getSignManager() {
-    return signManager;
-  }
-
-  public SpecialItemManager getSpecialItemManager() {
-    return specialItemManager;
-  }
-
+  @Override
   public ArgumentsRegistry getArgumentsRegistry() {
     return argumentsRegistry;
   }
 
-  public UserManager getUserManager() {
-    return userManager;
+  @Override
+  public ArenaManager getArenaManager() {
+    return arenaManager;
   }
 
-  public KitMenuHandler getKitMenuHandler() {
-    return kitMenuHandler;
-  }
 
   public BaseMenuHandler getBaseMenuHandler() {
     return baseMenuHandler;
   }
 
-  public CuboidSelector getCuboidSelector() {
-    return cuboidSelector;
+  @Override
+  public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
+    return new SetupCategoryManager(setupInventory);
   }
 
-  private void saveAllUserStatistics() {
-    for(Player player : getServer().getOnlinePlayers()) {
-      User user = userManager.getUser(player);
-      if(userManager.getDatabase() instanceof MysqlManager) {
-        StringBuilder update = new StringBuilder(" SET ");
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          if(!stat.isPersistent()) continue;
-          if(update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append('=').append(user.getStat(stat));
-          }
-          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
-        }
-        String finalUpdate = update.toString();
-        //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-          + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-        continue;
-      }
-      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        userManager.getDatabase().saveStatistic(user, stat);
-      }
-    }
-  }
 }

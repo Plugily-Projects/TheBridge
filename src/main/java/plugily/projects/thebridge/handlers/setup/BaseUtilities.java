@@ -20,39 +20,18 @@
 package plugily.projects.thebridge.handlers.setup;
 
 import org.bukkit.entity.Player;
-import plugily.projects.thebridge.arena.Arena;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class BaseUtilities {
 
-  private static final HashMap<Player, HashMap<String, Integer>> baseId = new HashMap<>();
+  private static final HashMap<Player, Integer> baseId = new HashMap<>();
 
-  public static HashMap<Player, HashMap<String, Integer>> getBaseId() {
+  public static HashMap<Player,Integer> getBaseId() {
     return baseId;
   }
 
-  private static final List<Player> editing = new ArrayList<>();
-
-  public static boolean check(Arena arena, Player player) {
-    if(!baseId.containsKey(player)) {
-      return false;
-    }
-    return baseId.get(player).containsKey(arena.getId());
-  }
-
-  public static boolean isEditing(Player player) {
-    return editing.contains(player);
-  }
-
-  public static void addEditing(Player player) {
-    editing.remove(player);
-    editing.add(player);
-  }
-
-  public static void removeEditing(Player player) {
-    editing.remove(player);
+  public static boolean check(Player player) {
+    return baseId.containsKey(player);
   }
 }

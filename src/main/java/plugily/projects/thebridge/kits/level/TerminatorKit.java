@@ -25,19 +25,18 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.ArmorHelper;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
-import plugily.projects.commonsbox.minecraft.misc.ColorUtil;
-import plugily.projects.thebridge.api.StatsStorage;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
+import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.LevelKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 18/07/2015.
@@ -45,16 +44,17 @@ import java.util.List;
 public class TerminatorKit extends LevelKit {
 
   public TerminatorKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Terminator.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Terminator.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
+    setName(new MessageBuilder("KIT_CONTENT_TERMINATOR_NAME").asKey().build());
+    setKey("Terminator");
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_TERMINATOR_DESCRIPTION");
+    setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.Terminator"));
-    KitRegistry.registerKit(this);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return getPlugin().getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LEVEL) >= this.getLevel() || player.hasPermission("thebridge.kit.terminator");
+    return getPlugin().getUserManager().getUser(player).getStatistic("LEVEL") >= this.getLevel() || player.hasPermission("thebridge.kit.terminator");
   }
 
   @Override
@@ -64,10 +64,10 @@ public class TerminatorKit extends LevelKit {
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.BONE), new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK}, new int[]{3, 4}));
     player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    player.getInventory().addItem(Utils.getPotion(PotionType.STRENGTH, 2, true));
-    player.getInventory().addItem(Utils.getPotion(PotionType.REGEN, 1, true));
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    player.getInventory().addItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true));
+    player.getInventory().addItem(VersionUtils.getPotion(PotionType.REGEN, 1, true));
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
@@ -83,10 +83,10 @@ public class TerminatorKit extends LevelKit {
   @Override
   public void reStock(Player player) {
     for(int i = 0; i < 2; i++) {
-      player.getInventory().addItem(Utils.getPotion(PotionType.STRENGTH, 2, true));
+      player.getInventory().addItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true));
     }
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);

@@ -1,0 +1,27 @@
+# You can create custom players permissions here.
+# Player with your custom permission will get int
+
+# Create custom exp boost permissions
+Exp-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase exp by 10 percent
+  exp-boost-10: 10
+  exp-boost-50: 50
+  # Increase exp by 300 percent
+  admin-boost: 300
+
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/
+Basic:
+  Full-Games: "thebridge.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'thebridge.join.ARENAnice'
+  # use 'thebridge.join.*' to enable access to all arenas
+  Join: "thebridge.join.<arena>"
+  Forcestart: "thebridge.admin.forcestart"
+  Premium-Kits: "thebridge.kits.premium"
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

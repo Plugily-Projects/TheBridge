@@ -1,14 +1,14 @@
 package plugily.projects.thebridge.api.events.game;
 
 import org.bukkit.event.HandlerList;
-import plugily.projects.thebridge.api.events.TheBridgeEvent;
+import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
 import plugily.projects.thebridge.arena.Arena;
 
 /**
  * @author MatiRosen
  * Called when the round start again, after the time on the cage, and on the first round.
  */
-public class TBRoundStartEvent extends TheBridgeEvent {
+public class TBRoundStartEvent extends PlugilyEvent {
 
   private static final HandlerList handlers = new HandlerList();
 

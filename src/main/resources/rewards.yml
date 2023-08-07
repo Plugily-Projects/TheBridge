@@ -1,14 +1,15 @@
 #
-#             thebridge rewards configuration
+#           Plugily Projects rewards configuration
 #
-#                    Placeholders list:
-#             %PLAYER% - Current player name
-#             %MAPNAME% - Name of map
-#             %ARENA-ID% - Arena Identifier
+#                          Placeholders list:
+#                   %PLAYER% - Current player name
+#                    %WAVE% - Current wave number
+#                       %MAPNAME% - Name of map
+#                    %ARENA-ID% - Arena Identifier
 #             %PLAYERAMOUNT% - Number of players in game
 #
 #        Commands are executed by default BY CONSOLE, use "p:" to preform command by player
-#  You can use chance to execute command adding "chance(NUMBER):" (ex chance(10):) at the beginning of command
+#  Since 3.6.3 you can use chance to execute command adding "chance(NUMBER):" (ex chance(10):) at the beginning of command
 #
 #  Commands examples:
 #    - p:say Hello everyone in %MAPNAME%!     # Player will say "Hello everyone in <map name here>"
@@ -18,7 +19,10 @@
 #       ^ YOU CAN EVEN SWAP CHANCE WITH PLAYER!
 #    - chance(50):eco give %PLAYER% 10                # Console has 10% chance to give player 10$
 #
-#   You can unlock full potential of rewards using our script engine!
+#  Performed rewards:
+#  game-end
+#
+#   You can unlock full potential of rewards using our script engine! (since 4.0.0)
 #    Just add example reward:
 #    - script:player.sendMessage("oh, hi %PLAYER%");      # It will send "oh, hi <player name>" to player! 100% plain java!
 #    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
@@ -27,24 +31,39 @@
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
+#    arena - Plugin arena (API methods https://jd.plugily.xyz/apidocs/minecraft/PLUGILYPROJECTS/plugily/projects/PLUGILYPROJECTS/arena/Arena.html)
 #            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 #
+#                            Whole documentation of scripts soon!
 
 # Rewards must be enabled via config.yml first!
 rewards:
+  # Commands performed when game is started
+  game-start:
+    - say %arena_name% has started
+    - say Ooh and there are playing %arena_players_size% players
   # Commands performed when game is finished
-  endgame:
-    - say %MAPNAME% has ended!
-    - say Ooh and there were playing %PLAYERAMOUNT% players
-  death:
-    - say I died!
-  won:
-    - say You won!
+  game-end:
+    - say %arena_name% has ended
+    - say Ooh and there were playing %arena_players_size% players
+  player-death:
+    - a
+  win:
+    - a
   lose:
-    - say You lose!
+    - b
   kill:
-    - You killed someone! Here you could give players coins ;)
+    - c
+  death:
+    - d
   point:
-    - You scored ;)
-  resetround:
-    - Round gets reset!
+    - e
+  reset-round:
+    - f
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

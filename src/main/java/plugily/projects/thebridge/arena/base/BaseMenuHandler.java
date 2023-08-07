@@ -19,10 +19,6 @@
 
 package plugily.projects.thebridge.arena.base;
 
-
-import plugily.projects.inventoryframework.gui.GuiItem;
-import plugily.projects.inventoryframework.gui.type.ChestGui;
-import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,17 +26,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.events.player.TBPlayerChooseBaseEvent;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.handlers.items.SpecialItem;
-import plugily.projects.thebridge.handlers.items.SpecialItemManager;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,22 +51,29 @@ public class BaseMenuHandler implements Listener {
 
   public BaseMenuHandler(Main plugin) {
     this.plugin = plugin;
-    this.baseItem = plugin.getSpecialItemManager().getSpecialItem(SpecialItemManager.SpecialItems.BASE_SELECTOR.getName());
-    fullTeam = plugin.getChatManager().colorMessage("Bases.Team.Full");
-    emptyTeam = plugin.getChatManager().colorMessage("Bases.Team.Empty");
-    insideTeam = plugin.getChatManager().colorMessage("Bases.Team.Inside");
-    teamName = plugin.getChatManager().colorMessage("Bases.Team.Name");
+
+    this.baseItem = plugin.getSpecialItemManager().getSpecialItem("BASE_SELECTOR");
+    fullTeam = new MessageBuilder("BASES_TEAM_FULL").asKey().build();
+    emptyTeam = new MessageBuilder("BASES_TEAM_EMPTY").asKey().build();
+    insideTeam = new MessageBuilder("BASES_TEAM_INSIDE").asKey().build();
+    teamName = new MessageBuilder("BASES_TEAM_NAME").asKey().build();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   public void createMenu(Player player, Arena arena) {
-    ChestGui gui = new ChestGui(Utils.serializeInt(KitRegistry.getKits().size()) / 9, plugin.getChatManager().colorMessage("Bases.Team.Menu-Name"));
-    StaticPane pane = new StaticPane(9, gui.getRows());
-    gui.addPane(pane);
-    int x = 0;
-    int y = 0;
+    if(!plugin.getBukkitHelper().hasPermission(player, "thebridge.command.selectbase")) {
+      return;
+    }
+
+    NormalFastInv gui =
+      new NormalFastInv(
+        plugin.getBukkitHelper().serializeInt(plugin.getKitRegistry().getKits().size()) / 9,
+        new MessageBuilder("BASES_TEAM_MENU").asKey().build());
     for(Base base : arena.getBases()) {
-      ItemStack itemStack = XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL").get().parseItem();
+      ItemStack itemStack =
+        XMaterial.matchXMaterial(base.getMaterialColor().toUpperCase() + "_WOOL")
+          .get()
+          .parseItem();
       itemStack.setAmount(base.getPlayers().size() == 0 ? 1 : base.getPlayers().size());
       if(base.getPlayers().size() >= base.getMaximumSize()) {
         itemStack = new ItemBuilder(itemStack).lore(fullTeam).build();
@@ -88,48 +90,50 @@ public class BaseMenuHandler implements Listener {
       if(base.getPlayers().contains(player)) {
         itemStack = new ItemBuilder(itemStack).lore(insideTeam).build();
       }
-      itemStack = new ItemBuilder(itemStack).name(teamName.replace("%base%", base.getFormattedColor())).build();
-      pane.addItem(new GuiItem(itemStack, e -> {
-        e.setCancelled(true);
-        if(!(e.getWhoClicked() instanceof Player) || !(e.isLeftClick() || e.isRightClick())) {
-          return;
-        }
-        TBPlayerChooseBaseEvent event = new TBPlayerChooseBaseEvent(player, base, arena);
-        Bukkit.getPluginManager().callEvent(event);
-        if(event.isCancelled()) {
-          return;
-        }
-        if(!base.addPlayer(player)) {
-          return;
-        }
+      itemStack =
+        new ItemBuilder(itemStack)
+          .name(teamName.replace("%base%", base.getFormattedColor()))
+          .build();
+      gui.addItem(
+        new SimpleClickableItem(
+          itemStack,
+          event -> {
+            event.setCancelled(true);
+            if(!(event.getWhoClicked() instanceof Player)
+              || !(event.isLeftClick() || event.isRightClick())) {
+              return;
+            }
+            TBPlayerChooseBaseEvent chooseBaseEvent = new TBPlayerChooseBaseEvent(player, base, arena);
+            Bukkit.getPluginManager().callEvent(chooseBaseEvent);
+            if(chooseBaseEvent.isCancelled()) {
+              return;
+            }
+            if(!base.addPlayer(player)) {
+              return;
+            }
 
-        player.sendMessage(plugin.getChatManager().colorMessage("Bases.Team.Base-Choose").replace("%base%", base.getFormattedColor()));
-        e.getWhoClicked().closeInventory();
-      }), x, y);
-      x++;
-      if(x == 9) {
-        x = 0;
-        y++;
-      }
+            player.sendMessage(new MessageBuilder("BASES_TEAM_CHOOSE").asKey().build().replace("%base%", base.getFormattedColor()));
+            event.getWhoClicked().closeInventory();
+          }));
     }
-    gui.show(player);
+    gui.refresh();
+    gui.open(player);
   }
 
   @EventHandler
-  public void onBaseMenuItemClick(PlayerInteractEvent e) {
-    if(!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+  public void onBaseMenuItemClick(PlayerInteractEvent event) {
+    if(!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
       return;
     }
-    ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
+    ItemStack stack = VersionUtils.getItemInHand(event.getPlayer());
     if(!stack.equals(baseItem.getItemStack())) {
       return;
     }
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
-    e.setCancelled(true);
-    createMenu(e.getPlayer(), arena);
+    event.setCancelled(true);
+    createMenu(event.getPlayer(), arena);
   }
-
 }

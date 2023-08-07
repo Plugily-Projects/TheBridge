@@ -23,18 +23,16 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
+import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaState;
-import plugily.projects.thebridge.handlers.PermissionsManager;
-import plugily.projects.thebridge.kits.KitRegistry;
-import plugily.projects.thebridge.kits.basekits.PremiumKit;
-import plugily.projects.thebridge.utils.Utils;
 
 import java.util.List;
+
+import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 28/07/2015.
@@ -42,15 +40,16 @@ import java.util.List;
 public class PremiumHardcoreKit extends PremiumKit {
 
   public PremiumHardcoreKit() {
-    setName(getPlugin().getChatManager().colorMessage("Kits.Premium-Hardcore.Name"));
-    List<String> description = Utils.splitString(getPlugin().getChatManager().colorMessage("Kits.Premium-Hardcore.Description"), 40);
-    this.setDescription(description.toArray(new String[0]));
-    KitRegistry.registerKit(this);
+    setName(new MessageBuilder("KIT_CONTENT_PREMIUM_HARDCORE_NAME").asKey().build());
+    setKey("PremiumHardcore");
+    List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_PREMIUM_HARDCORE_DESCRIPTION");
+    setDescription(description);
+    getPlugin().getKitRegistry().registerKit(this);
   }
 
   @Override
   public boolean isUnlockedByPlayer(Player player) {
-    return PermissionsManager.gotKitsPerm(player) || player.hasPermission("thebridge.kit.premiumhardcore");
+    return getPlugin().getPermissionsManager().hasPermissionString("KIT_PREMIUM_UNLOCK", player) || player.hasPermission("thebridge.kit.premiumhardcore");
   }
 
   @Override
@@ -60,8 +59,8 @@ public class PremiumHardcoreKit extends PremiumKit {
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 5}));
     VersionUtils.setMaxHealth(player, 6);
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
@@ -75,8 +74,8 @@ public class PremiumHardcoreKit extends PremiumKit {
 
   @Override
   public void reStock(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
+    if(arena == null) {
       return;
     }
     addBuildBlocks(player, arena);
