@@ -23,19 +23,17 @@ package plugily.projects.thebridge.arena.base;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
-import plugily.projects.minigamesbox.classic.utils.version.xseries.XBlock;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,9 +58,9 @@ public class Base {
   private final Cuboid baseCuboid;
   private final Cuboid portalCuboid;
   private Cuboid cageCuboid;
-  private final HashMap<Location, Material> cageBlocks = new HashMap<>();
+  private final List<BlockState> cageBlocks = new ArrayList<>();
 
-  private final HashMap<Location, Material> cageFloorBlocks = new HashMap<>();
+  private final List<BlockState> cageFloorBlocks = new ArrayList<>();
   private boolean damageCooldown = false;
 
   private ArmorStandHologram armorStandHologram;
@@ -230,10 +228,10 @@ public class Base {
     cageBlocks.clear();
     cageFloorBlocks.clear();
     for (Block block : cageCuboid.blockList()) {
-      cageBlocks.put(block.getLocation(), block.getType());
+      cageBlocks.add(block.getState());
     }
     for (Block block : cageCuboid.floorBlockList()) {
-      cageFloorBlocks.put(block.getLocation(), block.getType());
+      cageFloorBlocks.add(block.getState());
     }
   }
 
@@ -255,8 +253,8 @@ public class Base {
       return;
     }
 
-    HashMap<Location, Material> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
-    blocks.forEach((location, material) -> XBlock.setType(location.getBlock(), XMaterial.matchXMaterial(material)));
+    List<BlockState> blocks = plugin.getConfigPreferences().getOption("CAGE_ONLY_FLOOR") ? cageFloorBlocks : cageBlocks;
+    blocks.forEach(blockState -> blockState.update(true));
   }
 
   private boolean checkCage() {
