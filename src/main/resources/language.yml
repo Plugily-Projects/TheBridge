@@ -157,7 +157,7 @@ Bossbar:
     In-Game:
       - "Playing %plugin_name_uppercase% on PLUGILY.XYZ"
       - "Check the plugin creator out on PLUGILY.XYZ"
-      - "Current base points %base_color_formatted%"
+      - "Current own points %user_statistic_local_scored_points%"
       - "Your base %arena_base_color_formatted%"
     Ending:
       - "Game has ended! You were playing on PLUGILY.XYZ"

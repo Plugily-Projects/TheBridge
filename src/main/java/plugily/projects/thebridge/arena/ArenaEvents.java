@@ -58,6 +58,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -94,7 +95,7 @@ public class ArenaEvents extends PluginArenaEvents {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       if(!arena.getBrokenBlocks().containsKey(event.getBlock().getLocation())) {
-        arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getBlockData());
+        arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
     }
     event.getBlock().getDrops().clear();
@@ -116,7 +117,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if(!arena.getPlacedBlocks().stream().map(Block::getLocation).toList().contains(event.getBlock().getLocation())) {
+    if(!arena.getPlacedBlocks().stream().map(Block::getLocation).collect(Collectors.toList()).contains(event.getBlock().getLocation())) {
       arena.addPlacedBlock(event.getBlock());
     }
   }
@@ -409,6 +410,7 @@ public class ArenaEvents extends PluginArenaEvents {
           Location spectatorLocation = arena.getSpectatorLocation();
           VersionUtils.teleport(player, spectatorLocation);
         }
+        break;
       case ENDING:
       case RESTARTING:
         Location location = arena.getSpectatorLocation();

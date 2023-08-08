@@ -33,6 +33,8 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XBlock;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.api.events.game.TBRoundResetEvent;
 import plugily.projects.thebridge.arena.base.Base;
@@ -61,7 +63,7 @@ public class Arena extends PluginArena {
   private final ArrayList<Block> placedBlocks = new ArrayList<>();
 
   private List<Cuboid> bridgeCuboid;
-  private final HashMap<Location, BlockData> brokenBlocks = new HashMap<>();
+  private final HashMap<Location, Material> brokenBlocks = new HashMap<>();
 
   private final HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
@@ -346,11 +348,11 @@ public class Arena extends PluginArena {
     this.bridgeCuboid.add(cuboid);
   }
 
-  public HashMap<Location, BlockData> getBrokenBlocks() {
+  public HashMap<Location, Material> getBrokenBlocks() {
     return brokenBlocks;
   }
-  public void addBrokenBlock(Location location, BlockData blockData) {
-    this.brokenBlocks.put(location, blockData);
+  public void addBrokenBlock(Location location, Material material) {
+    this.brokenBlocks.put(location, material);
   }
 
   public void resetPlacedBlocks() {
@@ -361,7 +363,7 @@ public class Arena extends PluginArena {
   }
 
   public void resetBrokenBlocks() {
-    brokenBlocks.forEach((k, v) -> k.getBlock().setBlockData(v));
+    brokenBlocks.forEach((location, material) -> XBlock.setType(location.getBlock(), XMaterial.matchXMaterial(material)));
     brokenBlocks.clear();
   }
 
