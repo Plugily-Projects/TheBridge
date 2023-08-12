@@ -111,7 +111,7 @@ public class ArenaEvents extends PluginArenaEvents {
         .arena(arena)
         .sendPlayer();
       event.setCancelled(true);
-      return false;
+      return;
     }
   }
 
