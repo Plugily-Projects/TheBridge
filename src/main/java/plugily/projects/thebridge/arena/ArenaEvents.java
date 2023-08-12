@@ -91,16 +91,28 @@ public class ArenaEvents extends PluginArenaEvents {
 
     if(arena.getPlacedBlocks().contains(event.getBlock())) {
       arena.removePlacedBlock(event.getBlock());
+      event.getBlock().getDrops().clear();
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+      event.setCancelled(true);
     } else if(isInBridgeCuboid(arena, event.getBlock().getLocation())) {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       if(!arena.getBrokenBlocks().containsKey(event.getBlock().getLocation())) {
         arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
+      event.getBlock().getDrops().clear();
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+      event.setCancelled(true);
     }
-    event.getBlock().getDrops().clear();
-    event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    event.setCancelled(true);
+    else {
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
+        .asKey()
+        .player(player)
+        .arena(arena)
+        .sendPlayer();
+      event.setCancelled(true);
+      return false;
+    }
   }
 
   @EventHandler
