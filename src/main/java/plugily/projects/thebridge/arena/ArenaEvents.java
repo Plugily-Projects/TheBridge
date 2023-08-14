@@ -109,7 +109,7 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     event.getBlock().getDrops().clear();
     event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    event.setCancelled(true);
+    event.setCancelled(false);
   }
 
   @EventHandler
