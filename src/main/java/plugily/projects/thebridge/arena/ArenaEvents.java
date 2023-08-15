@@ -98,9 +98,18 @@ public class ArenaEvents extends PluginArenaEvents {
         arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
     }
+    else {
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
+        .asKey()
+        .player(player)
+        .arena(arena)
+        .sendPlayer();
+      event.setCancelled(true);
+      return;
+    }
     event.getBlock().getDrops().clear();
     event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    event.setCancelled(true);
+    event.setCancelled(false);
   }
 
   @EventHandler
