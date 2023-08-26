@@ -32,6 +32,7 @@ import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class BridgeKit extends FreeKit {
     addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 2);
     addKitItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 5), 3);
-    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 4);
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
 
     setKitHelmet(new ItemStack(XMaterial.LEATHER_HELMET.parseMaterial()));
     setKitChestplate(new ItemStack(XMaterial.LEATHER_CHESTPLATE.parseMaterial()));
@@ -79,33 +80,7 @@ public class BridgeKit extends FreeKit {
 
   @Override
   public ItemStack handleItem(Player player, ItemStack itemStack) {
-    // Gets the current arena the player is in
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-
-    if (arena == null) {
-      return itemStack;
-    }
-
-    // Replaces white terracotta with coloured terracotta if the player is in a team
-    if (itemStack.getType().equals(Material.WHITE_TERRACOTTA)) {
-      Arena pluginArena = arena.getPlugin().getArenaRegistry().getArena(arena.getId());
-      if (pluginArena == null) {
-        return itemStack;
-      }
-      itemStack.setType(XMaterial.matchXMaterial(pluginArena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial());
-      return itemStack;
-    }
-
-    // Replaces leather armour with the coloured leather armour if the player is in a team
-    if (itemStack.getType().equals(Material.LEATHER_HELMET) || itemStack.getType().equals(Material.LEATHER_CHESTPLATE) || itemStack.getType().equals(Material.LEATHER_LEGGINGS) || itemStack.getType().equals(Material.LEATHER_BOOTS)) {
-      LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
-      assert itemMeta != null;
-      itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
-      itemStack.setItemMeta(itemMeta);
-      return itemStack;
-    }
-
-    return itemStack;
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
