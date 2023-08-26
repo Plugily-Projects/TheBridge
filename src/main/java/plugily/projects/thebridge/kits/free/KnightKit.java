@@ -19,19 +19,15 @@
 
 package plugily.projects.thebridge.kits.free;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.FreeKit;
-import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
-import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
