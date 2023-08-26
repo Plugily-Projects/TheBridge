@@ -24,6 +24,9 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.FreeKit;
 import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
@@ -54,21 +57,58 @@ public class BridgeKit extends FreeKit {
   }
 
   @Override
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10), 0);
+
+    addKitItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10), 1);
+    addKitItem(XMaterial.ARROW.parseItem(), 9);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 2);
+    addKitItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 5), 3);
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 4);
+
+    setKitHelmet(new ItemStack(XMaterial.LEATHER_HELMET.parseMaterial()));
+    setKitChestplate(new ItemStack(XMaterial.LEATHER_CHESTPLATE.parseMaterial()));
+    setKitLeggings(new ItemStack(XMaterial.LEATHER_LEGGINGS.parseMaterial()));
+    setKitBoots(new ItemStack(XMaterial.LEATHER_BOOTS.parseMaterial()));
+  }
+
+  @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
-    player.getInventory().setItem(9, XMaterial.ARROW.parseItem());
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-        Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.getInventory().addItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 5));
+    super.giveKitItems(player);
     VersionUtils.setMaxHealth(player, 20.0);
     player.setHealth(20.0);
+  }
+
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    // Gets the current arena the player is in
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
+
+    if (arena == null) {
+      return itemStack;
     }
-    ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
+
+    // Replaces white terracotta with coloured terracotta if the player is in a team
+    if (itemStack.getType().equals(Material.WHITE_TERRACOTTA)) {
+      Arena pluginArena = arena.getPlugin().getArenaRegistry().getArena(arena.getId());
+      if (pluginArena == null) {
+        return itemStack;
+      }
+      itemStack.setType(XMaterial.matchXMaterial(pluginArena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial());
+      return itemStack;
+    }
+
+    // Replaces leather armour with the coloured leather armour if the player is in a team
+    if (itemStack.getType().equals(Material.LEATHER_HELMET) || itemStack.getType().equals(Material.LEATHER_CHESTPLATE) || itemStack.getType().equals(Material.LEATHER_LEGGINGS) || itemStack.getType().equals(Material.LEATHER_BOOTS)) {
+      LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+      assert itemMeta != null;
+      itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
+      itemStack.setItemMeta(itemMeta);
+      return itemStack;
+    }
+
+    return itemStack;
   }
 
   @Override
