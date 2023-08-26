@@ -25,10 +25,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import plugily.projects.minigamesbox.classic.PluginMain;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 
 /**
