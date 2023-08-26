@@ -19,22 +19,18 @@
 
 package plugily.projects.thebridge.kits.level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
-import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
-import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 14/08/2014.
@@ -56,34 +52,36 @@ public class ArcherKit extends LevelKit {
   }
 
   @Override
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10), 0);
+    addKitItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10), 1);
+    addKitItem(XMaterial.ARROW.parseItem(), 9);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 2);
+    addKitItem(new ItemStack(Material.COOKED_BEEF, 10), 3);
+
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+
+    setKitHelmet(new ItemStack(XMaterial.LEATHER_HELMET.parseMaterial()));
+    setKitChestplate(new ItemStack(XMaterial.LEATHER_CHESTPLATE.parseMaterial()));
+    setKitLeggings(new ItemStack(XMaterial.LEATHER_LEGGINGS.parseMaterial()));
+    setKitBoots(new ItemStack(XMaterial.LEATHER_BOOTS.parseMaterial()));
+  }
+
+  @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchantedBow(Enchantment.ARROW_INFINITE, 10));
-    player.getInventory().setItem(9, XMaterial.ARROW.parseItem());
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
+    super.giveKitItems(player);
+    VersionUtils.setMaxHealth(player, 20.0);
+    player.setHealth(20.0);
+  }
 
-    player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
-
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
   public Material getMaterial() {
     return Material.BOW;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 }

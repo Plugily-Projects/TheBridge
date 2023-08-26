@@ -19,7 +19,6 @@
 
 package plugily.projects.thebridge.kits.level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,16 +26,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
-import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
-import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
 
 import java.util.List;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 18/07/2015.
@@ -58,38 +52,38 @@ public class TerminatorKit extends LevelKit {
   }
 
   @Override
-  public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.BONE), new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK}, new int[]{3, 4}));
-    player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    player.getInventory().addItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true));
-    player.getInventory().addItem(VersionUtils.getPotion(PotionType.REGEN, 1, true));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.STONE, 10), 0);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 1);
+    addKitItem(WeaponHelper.getEnchanted(new ItemStack(Material.BONE), new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK}, new int[]{3, 4}), 2);
+    addKitItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8), 3);
+    addKitItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true), 4);
+    addKitItem(VersionUtils.getPotion(PotionType.REGEN, 1, true), 5);
 
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+
+    setKitHelmet(new ItemStack(XMaterial.LEATHER_HELMET.parseMaterial()));
+    setKitChestplate(new ItemStack(XMaterial.LEATHER_CHESTPLATE.parseMaterial()));
+    setKitLeggings(new ItemStack(XMaterial.LEATHER_LEGGINGS.parseMaterial()));
+    setKitBoots(new ItemStack(XMaterial.LEATHER_BOOTS.parseMaterial()));
+
+  }
+
+  @Override
+  public void giveKitItems(Player player) {
+    super.giveKitItems(player);
+    VersionUtils.setMaxHealth(player, 20.0);
+    player.setHealth(20.0);
+  }
+
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return null;
   }
 
   @Override
   public Material getMaterial() {
     return Material.ANVIL;
   }
-
-  @Override
-  public void reStock(Player player) {
-    for(int i = 0; i < 2; i++) {
-      player.getInventory().addItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true));
-    }
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
 }

@@ -25,15 +25,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.LevelKit;
-import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 19/08/2014.
@@ -55,33 +52,34 @@ public class MediumTankKit extends LevelKit {
   }
 
   @Override
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10), 0);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 1);
+    addKitItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8), 2);
+
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+
+    setKitHelmet(new ItemStack(XMaterial.IRON_HELMET.parseMaterial()));
+    setKitChestplate(new ItemStack(XMaterial.IRON_CHESTPLATE.parseMaterial()));
+    setKitLeggings(new ItemStack(XMaterial.IRON_LEGGINGS.parseMaterial()));
+    setKitBoots(new ItemStack(XMaterial.IRON_BOOTS.parseMaterial()));
+  }
+
+  @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getUnBreakingSword(WeaponHelper.ResourceType.WOOD, 10));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
+    super.giveKitItems(player);
     VersionUtils.setMaxHealth(player, 32.0);
     player.setHealth(32.0);
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
+  }
 
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
   public Material getMaterial() {
     return Material.IRON_CHESTPLATE;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 }
