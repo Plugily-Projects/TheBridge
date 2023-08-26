@@ -57,6 +57,7 @@ public class BridgeKit extends FreeKit {
     addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 2);
     addKitItem(new ItemStack(XMaterial.GOLDEN_APPLE.parseMaterial(), 5), 3);
+
     addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
 
     setKitHelmet(new ItemStack(XMaterial.LEATHER_HELMET.parseMaterial()));
