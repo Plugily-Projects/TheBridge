@@ -28,7 +28,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionType;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
 import plugily.projects.minigamesbox.classic.user.User;
@@ -36,14 +35,11 @@ import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
-
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 8/02/2015.
@@ -77,34 +73,33 @@ public class NakedKit extends PremiumKit implements Listener {
   }
 
   @Override
-  public void giveKitItems(Player player) {
+  public void setupKitItems() {
     ItemStack itemStack = new ItemStack(getMaterial());
     itemStack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 6);
     itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
-    player.getInventory().addItem(itemStack);
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
+    addKitItem(itemStack, 0);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}), 1);
+
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+  }
+
+  @Override
+  public void giveKitItems(Player player) {
+    super.giveKitItems(player);
+    VersionUtils.setMaxHealth(player, 20.0);
+    player.setHealth(20.0);
+  }
+
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
   public Material getMaterial() {
     return Material.IRON_SWORD;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 1, true));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 
   @EventHandler

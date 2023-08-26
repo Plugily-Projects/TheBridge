@@ -28,11 +28,9 @@ import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tom on 28/07/2015.
@@ -53,33 +51,29 @@ public class PremiumHardcoreKit extends PremiumKit {
   }
 
   @Override
-  public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
-      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{5}));
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 5}));
-    VersionUtils.setMaxHealth(player, 6);
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
+      new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{5}), 0);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 5}), 1);
 
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+  }
+
+  @Override
+  public void giveKitItems(Player player) {
+    super.giveKitItems(player);
+    VersionUtils.setMaxHealth(player, 6);
+    player.setHealth(6);
+  }
+
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
   public Material getMaterial() {
     return Material.DIAMOND_SWORD;
   }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
-
 }

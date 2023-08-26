@@ -25,15 +25,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
-import plugily.projects.minigamesbox.classic.utils.helper.ArmorHelper;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
-import plugily.projects.thebridge.arena.Arena;
+import plugily.projects.thebridge.kits.basekits.KitUtil;
 
 import java.util.List;
-
-import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 
 /**
  * Created by Tigerpanzer_02 on 27.12.2020.
@@ -54,20 +51,30 @@ public class HeavyTankKit extends PremiumKit {
   }
 
   @Override
-  public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.STICK), new Enchantment[]{Enchantment.DURABILITY, Enchantment.DAMAGE_ALL}, new int[]{3, 2}));
-    player.getInventory().addItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8));
-    VersionUtils.setMaxHealth(player, 40.0);
-    player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
-      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
-    player.setHealth(40.0);
-    ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
+  public void setupKitItems() {
+    addKitItem(WeaponHelper.getEnchanted(new ItemStack(Material.STICK), new Enchantment[]{Enchantment.DURABILITY, Enchantment.DAMAGE_ALL}, new int[]{3, 2}), 0);
+    addKitItem(new ItemStack(XMaterial.COOKED_PORKCHOP.parseMaterial(), 8), 1);
+    addKitItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
+      Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}), 2);
 
+    addKitItem(new ItemStack(XMaterial.WHITE_TERRACOTTA.parseMaterial(), 64), 8);
+
+    setKitHelmet(new ItemStack(XMaterial.IRON_HELMET.parseMaterial()));
+    setKitChestplate(new ItemStack(XMaterial.IRON_CHESTPLATE.parseMaterial()));
+    setKitLeggings(new ItemStack(XMaterial.IRON_LEGGINGS.parseMaterial()));
+    setKitBoots(new ItemStack(XMaterial.IRON_BOOTS.parseMaterial()));
+  }
+
+  @Override
+  public void giveKitItems(Player player) {
+    super.giveKitItems(player);
+    VersionUtils.setMaxHealth(player, 40.0);
+    player.setHealth(40.0);
+  }
+
+  @Override
+  public ItemStack handleItem(Player player, ItemStack itemStack) {
+    return KitUtil.handleItem(getPlugin(), player, itemStack);
   }
 
   @Override
@@ -75,12 +82,5 @@ public class HeavyTankKit extends PremiumKit {
     return Material.DIAMOND_CHESTPLATE;
   }
 
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
+
 }
