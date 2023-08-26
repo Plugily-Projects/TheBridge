@@ -1,9 +1,3 @@
-#
-#       Did you know that you can create your own custom kits?
-#                  You can check addon here:
-#         https://www.spigotmc.org/resources/55010/
-#
-
 # Only kits that inherits level kit feature will be available to modify here.
 # Filling here other kits won't change anything as they inherits premium or free kit.
 Required-Level:
@@ -13,21 +7,456 @@ Required-Level:
   Terminator: 20
   Hardcore: 100
 
+kit:
+  Bridge:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: STONE_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: GOLDEN_APPLE
+          amount: 5
+        slot: 3
+      '2':
+        item:
+          material: ARROW
+        slot: 9
+      '3':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '4':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 2
+      '5':
+        item:
+          material: BOW
+          enchants:
+            ARROW_INFINITE: 10
+        slot: 1
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  Knight:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 1
+      '2':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '3':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 2
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  LightTank:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 1
+      '2':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '3':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 2
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  Archer:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: COOKED_BEEF
+          amount: 10
+        slot: 3
+      '1':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '2':
+        item:
+          material: ARROW
+        slot: 9
+      '3':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '4':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 2
+      '5':
+        item:
+          material: BOW
+          enchants:
+            ARROW_INFINITE: 10
+        slot: 1
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  Healer:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 2
+      '2':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '3':
+        item:
+          material: SPLASH_POTION
+          effects: []
+          base-effect: REGEN, false, false
+        slot: 4
+      '4':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 1
+      '5':
+        item:
+          material: SPLASH_POTION
+          effects: []
+          base-effect: INSTANT_HEAL, false, false
+        slot: 3
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  MediumTank:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 2
+      '2':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '3':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 1
+    Armour:
+      Helmet:
+        material: IRON_HELMET
+      Chestplate:
+        material: IRON_CHESTPLATE
+      Leggings:
+        material: IRON_LEGGINGS
+      Boots:
+        material: IRON_BOOTS
+  Terminator:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: STONE_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: BONE
+          enchants:
+            KNOCKBACK: 4
+            DAMAGE_ALL: 3
+        slot: 2
+      '2':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 3
+      '3':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '4':
+        item:
+          material: SPLASH_POTION
+          effects: []
+          base-effect: REGEN, false, false
+        slot: 5
+      '5':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 1
+      '6':
+        item:
+          material: SPLASH_POTION
+          effects: []
+          base-effect: STRENGTH, false, false
+        slot: 4
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  Hardcore:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: WOODEN_SWORD
+          enchants:
+            DURABILITY: 10
+        slot: 0
+      '1':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '2':
+        item:
+          material: COOKIE
+          amount: 10
+        slot: 3
+      '3':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 1
+      '4':
+        item:
+          material: SPLASH_POTION
+          effects: []
+          base-effect: INSTANT_HEAL, false, false
+        slot: 2
+    Armour:
+      Helmet:
+        material: LEATHER_HELMET
+        color: 160, 101, 64
+      Chestplate:
+        material: LEATHER_CHESTPLATE
+        color: 160, 101, 64
+      Leggings:
+        material: LEATHER_LEGGINGS
+        color: 160, 101, 64
+      Boots:
+        material: LEATHER_BOOTS
+        color: 160, 101, 64
+  PremiumHardcore:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: DIAMOND_SWORD
+          enchants:
+            DAMAGE_ALL: 5
+        slot: 0
+      '1':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 10
+        slot: 1
+      '2':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+    Armour: {}
+  Naked:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 4
+            DURABILITY: 10
+        slot: 1
+      '1':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '2':
+        item:
+          material: IRON_SWORD
+          enchants:
+            FIRE_ASPECT: 2
+            DAMAGE_ALL: 6
+            DURABILITY: 10
+        slot: 0
+    Armour: {}
+  HeavyTank:
+    enabled: true
+    Inventory:
+      '0':
+        item:
+          material: COOKED_PORKCHOP
+          amount: 8
+        slot: 1
+      '1':
+        item:
+          material: WHITE_TERRACOTTA
+          amount: 64
+        slot: 8
+      '2':
+        item:
+          material: STICK
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 3
+        slot: 0
+      '3':
+        item:
+          material: DIAMOND_PICKAXE
+          enchants:
+            DIG_SPEED: 2
+            DURABILITY: 10
+        slot: 2
+    Armour:
+      Helmet:
+        material: IRON_HELMET
+      Chestplate:
+        material: IRON_CHESTPLATE
+      Leggings:
+        material: IRON_LEGGINGS
+      Boots:
+        material: IRON_BOOTS
 
-# Here you can disable plugily projects preconfigured kits.
-# Set 'false' to disable.
-Enabled-Game-Kits:
-  Bridge: true
-  Knight: true
-  LightTank: true
-  Archer: true
-  Hardcore: true
-  Healer: true
-  MediumTank: true
-  Terminator: true
-  HeavyTank: true
-  Naked: true
-  PremiumHardcore: true
+
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
