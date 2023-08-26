@@ -19,10 +19,16 @@
 
 package plugily.projects.thebridge.kits.basekits;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.Arena;
 
 /**
@@ -32,19 +38,33 @@ import plugily.projects.thebridge.arena.Arena;
  */
 public class KitUtil {
 
-  public static void addBuildBlocks(Player player, PluginArena arena) {
-    Arena pluginArena = (Arena) arena.getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
-      return;
+  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemStack) {
+    // Gets the current arena the player is in
+    Arena arena = (Arena) plugin.getArenaRegistry().getArena(player);
+
+    if (arena == null) {
+      return itemStack;
     }
-    ItemStack itemStack = XMaterial.matchXMaterial(pluginArena.getBase(player).getMaterialColor().toUpperCase() + arena.getPlugin().getConfig().getString("Colored-Block-Material", "_TERRACOTTA")).get().parseItem();
-    itemStack.setAmount(64);
-    if(player.getInventory().getItem(8) == null) {
-      player.getInventory().setItem(8, itemStack);
-      return;
+
+    // Replaces white terracotta with coloured terracotta if the player is in a team
+    if (itemStack.getType().equals(Material.WHITE_TERRACOTTA)) {
+      Arena pluginArena = arena.getPlugin().getArenaRegistry().getArena(arena.getId());
+      if (pluginArena == null) {
+        return itemStack;
+      }
+      itemStack.setType(XMaterial.matchXMaterial(pluginArena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA").get().parseMaterial());
+      return itemStack;
     }
-    player.getInventory().addItem(itemStack);
+
+    // Replaces leather armour with the coloured leather armour if the player is in a team
+    if (itemStack.getType().equals(Material.LEATHER_HELMET) || itemStack.getType().equals(Material.LEATHER_CHESTPLATE) || itemStack.getType().equals(Material.LEATHER_LEGGINGS) || itemStack.getType().equals(Material.LEATHER_BOOTS)) {
+      LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+      assert itemMeta != null;
+      itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
+      itemStack.setItemMeta(itemMeta);
+      return itemStack;
+    }
+
+    return itemStack;
   }
-
-
 }
