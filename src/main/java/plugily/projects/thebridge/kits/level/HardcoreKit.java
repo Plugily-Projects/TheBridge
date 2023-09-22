@@ -44,8 +44,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class HardcoreKit extends LevelKit {
 
   public HardcoreKit() {
-    setName(new MessageBuilder("KIT_CONTENT_HARDCORE_NAME").asKey().build());
-    setKey("Hardcore");
+    super("Hardcore", new MessageBuilder("KIT_CONTENT_HARDCORE_NAME").asKey().build(), XMaterial.PLAYER_HEAD.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_HARDCORE_DESCRIPTION");
     setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.Hardcore"));
@@ -70,21 +69,6 @@ public class HardcoreKit extends LevelKit {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
-  }
-
-  @Override
-  public Material getMaterial() {
-    return XMaterial.PLAYER_HEAD.parseMaterial();
-  }
-
-  @Override
-  public void reStock(Player player) {
-    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 2, true));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
     addBuildBlocks(player, arena);
   }
 }

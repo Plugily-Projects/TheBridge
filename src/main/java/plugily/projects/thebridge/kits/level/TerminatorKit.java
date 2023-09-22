@@ -44,8 +44,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class TerminatorKit extends LevelKit {
 
   public TerminatorKit() {
-    setName(new MessageBuilder("KIT_CONTENT_TERMINATOR_NAME").asKey().build());
-    setKey("Terminator");
+    super("Terminator", new MessageBuilder("KIT_CONTENT_TERMINATOR_NAME").asKey().build(), XMaterial.ANVIL.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_TERMINATOR_DESCRIPTION");
     setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.Terminator"));
@@ -74,22 +73,4 @@ public class TerminatorKit extends LevelKit {
     addBuildBlocks(player, arena);
 
   }
-
-  @Override
-  public Material getMaterial() {
-    return Material.ANVIL;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    for(int i = 0; i < 2; i++) {
-      player.getInventory().addItem(VersionUtils.getPotion(PotionType.STRENGTH, 2, true));
-    }
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
 }

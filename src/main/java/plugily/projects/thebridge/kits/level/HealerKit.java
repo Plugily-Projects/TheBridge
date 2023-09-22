@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,8 +43,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class HealerKit extends LevelKit {
 
   public HealerKit() {
-    setName(new MessageBuilder("KIT_CONTENT_HEALER_NAME").asKey().build());
-    setKey("Healer");
+    super("Healer", new MessageBuilder("KIT_CONTENT_HEALER_NAME").asKey().build(), XMaterial.POPPY.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_HEALER_DESCRIPTION");
     setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.Healer"));
@@ -72,25 +70,5 @@ public class HealerKit extends LevelKit {
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
     addBuildBlocks(player, arena);
 
-  }
-
-  @Override
-  public Material getMaterial() {
-    return XMaterial.POPPY.parseMaterial();
-  }
-
-  @Override
-  public void reStock(Player player) {
-    for(int i = 0; i < 2; i++) {
-      player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 2, true));
-    }
-    for(int i = 0; i < 2; i++) {
-      player.getInventory().addItem(VersionUtils.getPotion(PotionType.REGEN, 1, true));
-    }
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 }

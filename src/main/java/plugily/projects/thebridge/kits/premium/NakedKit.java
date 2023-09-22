@@ -28,16 +28,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionType;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.kits.basekits.PremiumKit;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.WeaponHelper;
-import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerInteractEvent;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +50,7 @@ public class NakedKit extends PremiumKit implements Listener {
   private final List<Material> armorTypes = new ArrayList<>();
 
   public NakedKit() {
-    setName(new MessageBuilder("KIT_CONTENT_WILD_NAKED_NAME").asKey().build());
-    setKey("Naked");
+    super("Naked", new MessageBuilder("KIT_CONTENT_WILD_NAKED_NAME").asKey().build(), XMaterial.IRON_SWORD.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_WILD_NAKED_DESCRIPTION");
     setDescription(description);
     getPlugin().getServer().getPluginManager().registerEvents(this, getPlugin());
@@ -78,28 +74,13 @@ public class NakedKit extends PremiumKit implements Listener {
 
   @Override
   public void giveKitItems(Player player) {
-    ItemStack itemStack = new ItemStack(getMaterial());
+    ItemStack itemStack = XMaterial.IRON_SWORD.parseItem();
     itemStack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 6);
     itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
     player.getInventory().addItem(itemStack);
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 4}));
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.IRON_SWORD;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    player.getInventory().addItem(VersionUtils.getPotion(PotionType.INSTANT_HEAL, 1, true));
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null) {
       return;

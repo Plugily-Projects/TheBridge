@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.free;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,8 +40,7 @@ import java.util.List;
 public class KnightKit extends FreeKit {
 
   public KnightKit() {
-    setName(new MessageBuilder("KIT_CONTENT_KNIGHT_NAME").asKey().build());
-    setKey("Knight");
+    super("Knight", new MessageBuilder("KIT_CONTENT_KNIGHT_NAME").asKey().build(), XMaterial.WOODEN_SWORD.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_KNIGHT_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -64,20 +62,6 @@ public class KnightKit extends FreeKit {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    KitUtil.addBuildBlocks(player, arena);
-  }
-
-  @Override
-  public Material getMaterial() {
-    return XMaterial.WOODEN_SWORD.parseMaterial();
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
     KitUtil.addBuildBlocks(player, arena);
   }
 }

@@ -19,7 +19,6 @@
 
 package plugily.projects.thebridge.kits.free;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,8 +40,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class LightTankKit extends FreeKit {
 
   public LightTankKit() {
-    setName(new MessageBuilder("KIT_CONTENT_LIGHT_TANK_NAME").asKey().build());
-    setKey("LightTank");
+    super("LightTank", new MessageBuilder("KIT_CONTENT_LIGHT_TANK_NAME").asKey().build(), XMaterial.LEATHER_CHESTPLATE.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_LIGHT_TANK_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -62,20 +60,6 @@ public class LightTankKit extends FreeKit {
         Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     VersionUtils.setMaxHealth(player, 26.0);
     player.setHealth(26.0);
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.LEATHER_CHESTPLATE;
-  }
-
-  @Override
-  public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null) {
       return;

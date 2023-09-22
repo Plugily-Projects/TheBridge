@@ -41,8 +41,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class HeavyTankKit extends PremiumKit {
 
   public HeavyTankKit() {
-    setName(new MessageBuilder("KIT_CONTENT_HEAVY_TANK_NAME").asKey().build());
-    setKey("HeavyTank");
+    super("HeavyTank", new MessageBuilder("KIT_CONTENT_HEAVY_TANK_NAME").asKey().build(), XMaterial.DIAMOND_CHESTPLATE.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_HEAVY_TANK_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -62,21 +61,6 @@ public class HeavyTankKit extends PremiumKit {
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 2}));
     player.setHealth(40.0);
     ArmorHelper.setArmor(player, ArmorHelper.ArmorType.IRON);
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.DIAMOND_CHESTPLATE;
-  }
-
-  @Override
-  public void reStock(Player player) {
     Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
     if(arena == null) {
       return;

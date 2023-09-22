@@ -42,9 +42,8 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class ArcherKit extends LevelKit {
 
   public ArcherKit() {
+    super("Archer", new MessageBuilder("KIT_CONTENT_ARCHER_NAME").asKey().build(), XMaterial.BOW.parseItem());
     setLevel(getKitsConfig().getInt("Required-Level.Archer"));
-    setKey("Archer");
-    setName(new MessageBuilder("KIT_CONTENT_ARCHER_NAME").asKey().build());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_ARCHER_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -71,19 +70,5 @@ public class ArcherKit extends LevelKit {
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
     addBuildBlocks(player, arena);
 
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.BOW;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 }

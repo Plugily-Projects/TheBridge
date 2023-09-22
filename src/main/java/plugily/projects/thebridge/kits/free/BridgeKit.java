@@ -20,7 +20,6 @@
 package plugily.projects.thebridge.kits.free;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,8 +39,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class BridgeKit extends FreeKit {
 
   public BridgeKit() {
-    setName(new MessageBuilder("KIT_CONTENT_BRIDGE_NAME").asKey().build());
-    setKey("Bridge");
+    super("Bridge", new MessageBuilder("KIT_CONTENT_BRIDGE_NAME").asKey().build(), XMaterial.GOLDEN_APPLE.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_BRIDGE_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -68,20 +66,6 @@ public class BridgeKit extends FreeKit {
       return;
     }
     ArmorHelper.setColouredArmor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())), player);
-    addBuildBlocks(player, arena);
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.GOLDEN_APPLE;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
     addBuildBlocks(player, arena);
   }
 }

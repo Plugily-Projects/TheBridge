@@ -40,8 +40,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class PremiumHardcoreKit extends PremiumKit {
 
   public PremiumHardcoreKit() {
-    setName(new MessageBuilder("KIT_CONTENT_PREMIUM_HARDCORE_NAME").asKey().build());
-    setKey("PremiumHardcore");
+    super("PremiumHardcore",new MessageBuilder("KIT_CONTENT_PREMIUM_HARDCORE_NAME").asKey().build(), XMaterial.DIAMOND_SWORD.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_PREMIUM_HARDCORE_DESCRIPTION");
     setDescription(description);
     getPlugin().getKitRegistry().registerKit(this);
@@ -54,7 +53,7 @@ public class PremiumHardcoreKit extends PremiumKit {
 
   @Override
   public void giveKitItems(Player player) {
-    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(getMaterial()),
+    player.getInventory().addItem(WeaponHelper.getEnchanted(new ItemStack(Material.DIAMOND_SWORD),
       new Enchantment[]{Enchantment.DAMAGE_ALL}, new int[]{5}));
     player.getInventory().addItem(WeaponHelper.getEnchanted(XMaterial.DIAMOND_PICKAXE.parseItem(), new Enchantment[]{
       Enchantment.DURABILITY, Enchantment.DIG_SPEED}, new int[]{10, 5}));
@@ -66,20 +65,4 @@ public class PremiumHardcoreKit extends PremiumKit {
     addBuildBlocks(player, arena);
 
   }
-
-  @Override
-  public Material getMaterial() {
-    return Material.DIAMOND_SWORD;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
-  }
-
-
 }

@@ -19,7 +19,6 @@
 
 package plugily.projects.thebridge.kits.level;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,8 +40,7 @@ import static plugily.projects.thebridge.kits.basekits.KitUtil.addBuildBlocks;
 public class MediumTankKit extends LevelKit {
 
   public MediumTankKit() {
-    setName(new MessageBuilder("KIT_CONTENT_MEDIUM_TANK_NAME").asKey().build());
-    setKey("MediumTank");
+    super("MediumTank", new MessageBuilder("KIT_CONTENT_MEDIUM_TANK_NAME").asKey().build(), XMaterial.IRON_CHESTPLATE.parseItem());
     List<String> description = getPlugin().getLanguageManager().getLanguageListFromKey("KIT_CONTENT_MEDIUM_TANK_DESCRIPTION");
     setDescription(description);
     setLevel(getKitsConfig().getInt("Required-Level.MediumTank"));
@@ -69,19 +67,5 @@ public class MediumTankKit extends LevelKit {
     }
     addBuildBlocks(player, arena);
 
-  }
-
-  @Override
-  public Material getMaterial() {
-    return Material.IRON_CHESTPLATE;
-  }
-
-  @Override
-  public void reStock(Player player) {
-    Arena arena = (Arena) getPlugin().getArenaRegistry().getArena(player);
-    if(arena == null) {
-      return;
-    }
-    addBuildBlocks(player, arena);
   }
 }
