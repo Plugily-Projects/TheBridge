@@ -1,15 +1,7 @@
-# Only kits that inherits level kit feature will be available to modify here.
-# Filling here other kits won't change anything as they inherits premium or free kit.
-Required-Level:
-  Archer: 2
-  Healer: 6
-  MediumTank: 12
-  Terminator: 20
-  Hardcore: 100
-
 kit:
   Bridge:
     enabled: true
+    kit_type: free
     Inventory:
       '0':
         item:
@@ -59,6 +51,7 @@ kit:
         color: 160, 101, 64
   Knight:
     enabled: true
+    kit_type: free
     Inventory:
       '0':
         item:
@@ -98,6 +91,7 @@ kit:
         color: 160, 101, 64
   LightTank:
     enabled: true
+    kit_type: free
     Inventory:
       '0':
         item:
@@ -137,6 +131,8 @@ kit:
         color: 160, 101, 64
   Archer:
     enabled: true
+    kit_type: level
+    required-level: 2
     Inventory:
       '0':
         item:
@@ -186,6 +182,8 @@ kit:
         color: 160, 101, 64
   Healer:
     enabled: true
+    kit_type: level
+    required-level: 6
     Inventory:
       '0':
         item:
@@ -237,6 +235,8 @@ kit:
         color: 160, 101, 64
   MediumTank:
     enabled: true
+    kit_type: level
+    required-level: 12
     Inventory:
       '0':
         item:
@@ -272,6 +272,8 @@ kit:
         material: IRON_BOOTS
   Terminator:
     enabled: true
+    kit_type: level
+    required-level: 20
     Inventory:
       '0':
         item:
@@ -330,6 +332,8 @@ kit:
         color: 160, 101, 64
   Hardcore:
     enabled: true
+    kit_type: level
+    required-level: 100
     Inventory:
       '0':
         item:
@@ -375,6 +379,7 @@ kit:
         color: 160, 101, 64
   PremiumHardcore:
     enabled: true
+    kit_type: premium
     Inventory:
       '0':
         item:
@@ -397,6 +402,7 @@ kit:
     Armour: {}
   Naked:
     enabled: true
+    kit_type: premium
     Inventory:
       '0':
         item:
@@ -421,6 +427,7 @@ kit:
     Armour: {}
   HeavyTank:
     enabled: true
+    kit_type: premium
     Inventory:
       '0':
         item:

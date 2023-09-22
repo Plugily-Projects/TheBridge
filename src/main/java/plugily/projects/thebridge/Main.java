@@ -6,12 +6,9 @@ import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
+import plugily.projects.minigamesbox.classic.kits.KitRegistry;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaEvents;
-import plugily.projects.thebridge.arena.ArenaManager;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
+import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.boot.AdditionalValueInitializer;
 import plugily.projects.thebridge.boot.MessageInitializer;
@@ -19,17 +16,6 @@ import plugily.projects.thebridge.boot.PlaceholderInitializer;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
-import plugily.projects.thebridge.kits.free.BridgeKit;
-import plugily.projects.thebridge.kits.free.KnightKit;
-import plugily.projects.thebridge.kits.free.LightTankKit;
-import plugily.projects.thebridge.kits.level.ArcherKit;
-import plugily.projects.thebridge.kits.level.HardcoreKit;
-import plugily.projects.thebridge.kits.level.HealerKit;
-import plugily.projects.thebridge.kits.level.MediumTankKit;
-import plugily.projects.thebridge.kits.level.TerminatorKit;
-import plugily.projects.thebridge.kits.premium.HeavyTankKit;
-import plugily.projects.thebridge.kits.premium.NakedKit;
-import plugily.projects.thebridge.kits.premium.PremiumHardcoreKit;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -91,8 +77,13 @@ public class Main extends PluginMain {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
     addFileName("kits");
-    Class<?>[] classKitNames = new Class[]{BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
-      MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class};
+
+    KitRegistry kitRegistry = new KitRegistry(this);
+    kitRegistry.registerKits();
+
+    Class<?>[] classKitNames = new Class[]{};
+    // BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
+    //      MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class
     for(Class<?> kitClass : classKitNames) {
       try {
         kitClass.getDeclaredConstructor().newInstance();
