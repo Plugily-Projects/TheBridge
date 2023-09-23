@@ -97,9 +97,18 @@ public class ArenaEvents extends PluginArenaEvents {
         arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
     }
+    else {
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
+        .asKey()
+        .player(player)
+        .arena(arena)
+        .sendPlayer();
+      event.setCancelled(true);
+      return;
+    }
     event.getBlock().getDrops().clear();
     event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    event.setCancelled(true);
+    event.setCancelled(false);
   }
 
   @EventHandler
@@ -559,6 +568,7 @@ public class ArenaEvents extends PluginArenaEvents {
     XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
 
     if(victim.getHealth() - event.getDamage() <= 0) {
+      playerDeath(victim, arena);
       return;
     }
     DecimalFormat df = new DecimalFormat("##.##");
