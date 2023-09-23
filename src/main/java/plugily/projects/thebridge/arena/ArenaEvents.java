@@ -52,7 +52,6 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
-import plugily.projects.thebridge.kits.level.ArcherKit;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -481,9 +480,9 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     if(user.getCooldown("bow_shot") == 0) {
       int cooldown = plugin.getConfig().getInt("Bow-Cooldown", 5);
-      if((user.getKit() instanceof ArcherKit)) {
-        cooldown = Math.max(0, Math.min(cooldown, cooldown - 2));
-      }
+      //if((user.getKit() instanceof ArcherKit)) {
+      //  cooldown = Math.max(0, Math.min(cooldown, cooldown - 2));
+      //}
       user.setCooldown("bow_shot", cooldown);
       Player player = (Player) event.getEntity();
       plugin

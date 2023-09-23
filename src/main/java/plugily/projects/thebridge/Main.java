@@ -1,17 +1,15 @@
 package plugily.projects.thebridge;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaEvents;
-import plugily.projects.thebridge.arena.ArenaManager;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
+import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.boot.AdditionalValueInitializer;
 import plugily.projects.thebridge.boot.MessageInitializer;
@@ -19,19 +17,10 @@ import plugily.projects.thebridge.boot.PlaceholderInitializer;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
-import plugily.projects.thebridge.kits.free.BridgeKit;
-import plugily.projects.thebridge.kits.free.KnightKit;
-import plugily.projects.thebridge.kits.free.LightTankKit;
-import plugily.projects.thebridge.kits.level.ArcherKit;
-import plugily.projects.thebridge.kits.level.HardcoreKit;
-import plugily.projects.thebridge.kits.level.HealerKit;
-import plugily.projects.thebridge.kits.level.MediumTankKit;
-import plugily.projects.thebridge.kits.level.TerminatorKit;
-import plugily.projects.thebridge.kits.premium.HeavyTankKit;
-import plugily.projects.thebridge.kits.premium.NakedKit;
-import plugily.projects.thebridge.kits.premium.PremiumHardcoreKit;
+import plugily.projects.thebridge.kits.KitRegistry;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -43,6 +32,7 @@ public class Main extends PluginMain {
   private ArenaManager arenaManager;
   private ArgumentsRegistry argumentsRegistry;
   private BaseMenuHandler baseMenuHandler;
+  private KitRegistry kitRegistry;
 
   @TestOnly
   public Main() {
@@ -91,17 +81,22 @@ public class Main extends PluginMain {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
     addFileName("kits");
-    Class<?>[] classKitNames = new Class[]{BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
-      MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class};
-    for(Class<?> kitClass : classKitNames) {
-      try {
-        kitClass.getDeclaredConstructor().newInstance();
-      } catch(Exception e) {
-        getLogger().log(Level.SEVERE, "Fatal error while registering existing game kit! Report this error to the developer!");
-        getLogger().log(Level.SEVERE, "Cause: " + e.getMessage() + " (kitClass " + kitClass.getName() + ")");
-        e.printStackTrace();
-      }
+
+    FileConfiguration kitsConfig = ConfigUtils.getConfig(this, "kits");
+
+    if (!Objects.equals(kitsConfig.getString("Do-Not-Edit.File-Version"), "2")) {
+      getLogger().log(Level.SEVERE, "Your kits.yml config is outdated. Please update it.");
+      getLogger().log(Level.SEVERE, "Cause: File-Version is not 2");
+      return;
     }
+    if (!Objects.equals(kitsConfig.getString("Do-Not-Edit.Core-Version"), "1")) {
+      getLogger().log(Level.SEVERE, "Your kits.yml config is outdated. Please update it.");
+      getLogger().log(Level.SEVERE, "Cause: Core-Version is not 1");
+      return;
+    }
+
+    kitRegistry = new KitRegistry(this);
+    kitRegistry.registerKits();
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
@@ -140,4 +135,8 @@ public class Main extends PluginMain {
     return new SetupCategoryManager(setupInventory);
   }
 
+  @Override
+  public plugily.projects.minigamesbox.classic.kits.KitRegistry getKitRegistry() {
+    return kitRegistry;
+  }
 }
