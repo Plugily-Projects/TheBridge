@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
@@ -14,7 +15,9 @@ import java.util.Optional;
 
 public class KitUtils {
 
-  public static ItemStack handleItem(Arena arena, Player player, ItemStack itemStack) {
+  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemStack) {
+
+    Arena arena = (Arena) plugin.getArenaRegistry().getArena(player);
 
     if (arena == null) {
       return itemStack;

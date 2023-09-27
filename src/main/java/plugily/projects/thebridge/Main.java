@@ -7,6 +7,7 @@ import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
+import plugily.projects.minigamesbox.classic.kits.KitRegistry;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 import plugily.projects.thebridge.arena.*;
@@ -17,7 +18,7 @@ import plugily.projects.thebridge.boot.PlaceholderInitializer;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
-import plugily.projects.thebridge.kits.KitRegistry;
+import plugily.projects.thebridge.kits.KitUtils;
 
 import java.io.File;
 import java.util.Objects;
@@ -95,6 +96,7 @@ public class Main extends PluginMain {
       return;
     }
 
+    KitRegistry.setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     kitRegistry = new KitRegistry(this);
     kitRegistry.registerKits();
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
