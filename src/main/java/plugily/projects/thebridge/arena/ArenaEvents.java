@@ -489,9 +489,10 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     if(user.getCooldown("bow_shot") == 0) {
       int cooldown = plugin.getConfig().getInt("Bow-Cooldown", 5);
-      //if((user.getKit() instanceof ArcherKit)) {
-      //  cooldown = Math.max(0, Math.min(cooldown, cooldown - 2));
-      //}
+
+      if (user.getKit().getOptionalConfiguration("bow-cooldown") != null) {
+        cooldown = Math.max(0, (int) user.getKit().getOptionalConfiguration("bow-cooldown"));
+      }
       user.setCooldown("bow_shot", cooldown);
       Player player = (Player) event.getEntity();
       plugin

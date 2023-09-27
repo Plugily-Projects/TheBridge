@@ -165,6 +165,7 @@ Archer:
   unlockedOnDefault: false
   kit_type: level
   required-level: 2
+  bow-cooldown: 3
   inventory:
     '0':
       item:
