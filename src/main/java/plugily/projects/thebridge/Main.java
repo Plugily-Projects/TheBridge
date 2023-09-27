@@ -21,6 +21,8 @@ import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
 import plugily.projects.thebridge.kits.KitUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -82,6 +84,9 @@ public class Main extends PluginMain {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
     addFileName("kits");
+    
+    List<String> optionalConfigurations = new ArrayList<>();
+    optionalConfigurations.add("bow-cooldown");
 
     FileConfiguration kitsConfig = ConfigUtils.getConfig(this, "kits");
 
@@ -98,7 +103,7 @@ public class Main extends PluginMain {
 
     KitRegistry.setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     kitRegistry = new KitRegistry(this);
-    kitRegistry.registerKits();
+    kitRegistry.registerKits(optionalConfigurations);
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
