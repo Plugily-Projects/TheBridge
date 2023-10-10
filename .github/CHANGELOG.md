@@ -1,3 +1,7 @@
+### 2.0.2 Release
+* Fixed block breakage on bridge
+* Fixed blindness after choosing base if arena border isn't inside spawn
+
 ### 2.0.0 Release (07.08.2023)
 * Added up to 1.20 compatibility
 * Added full cage support
