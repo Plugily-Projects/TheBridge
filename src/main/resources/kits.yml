@@ -8,7 +8,9 @@
 # ---------------------------------- Free kits ---------------------------------
 # ------------------------------------------------------------------------------
 Bridge:
-  name: §7§2Bridge
+  name: "§7§2Bridge"
+  description:
+    - "&7Basic bridge kit like the one you know!"
   display_item:
     material: GOLDEN_APPLE
   enabled: true
@@ -64,7 +66,11 @@ Bridge:
       color: 160, 101, 64
 
 Knight:
-  name: §7§2Knight
+  name: "§7§2Knight"
+  description:
+    - "&7This is the one and only knight kit!"
+    - "Many people think this is the worst kit!"
+    - "I must admit they are totally wrong!"
   display_item:
     material: WOODEN_SWORD
   enabled: true
@@ -109,7 +115,9 @@ Knight:
       color: 160, 101, 64
 
 LightTank:
-  name: §7§2Light Tank
+  name: "§7§2Light Tank"
+  description:
+    - "&7You are Junior tank!"
   display_item:
     material: LEATHER_CHESTPLATE
     color: 160, 101, 64
@@ -158,7 +166,10 @@ LightTank:
 # --------------------------------- Level kits ---------------------------------
 # ------------------------------------------------------------------------------
 Archer:
-  name: §7§6Archer
+  name: "§7§6Archer"
+  description:
+    - "&7Start with a extra amount of arrows, leather armor and a wooden sword."
+    - "Archers are loved by the villagers, know that!"
   display_item:
     material: BOW
   enabled: true
@@ -215,7 +226,9 @@ Archer:
       color: 160, 101, 64
 
 Healer:
-  name: §7§6Healer
+  name: "§7§6Healer"
+  description:
+    - "&7Being a healer is the same as being loved. You are able to heal your teammates."
   display_item:
     material: POPPY
   enabled: true
@@ -273,7 +286,9 @@ Healer:
       color: 160, 101, 64
 
 MediumTank:
-  name: §7§6Medium Tank
+  name: "§7§6Medium Tank"
+  description:
+    - "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
   display_item:
     material: IRON_CHESTPLATE
   enabled: true
@@ -315,7 +330,9 @@ MediumTank:
       material: IRON_BOOTS
 
 Terminator:
-  name: §7§6Terminator
+  name: "§7§6Terminator"
+  description:
+    - "&7Easily kill other players with your strength powers!"
   display_item:
     material: ANVIL
   enabled: true
@@ -380,7 +397,9 @@ Terminator:
       color: 160, 101, 64
 
 Hardcore:
-  name: §7§6Hardcore
+  name: "§7§6Hardcore"
+  description:
+    - "&7You'll see yourself why this is hardcore"
   display_item:
     material: PLAYER_HEAD
   enabled: true
@@ -435,7 +454,10 @@ Hardcore:
 # -------------------------------- Premium kits --------------------------------
 # ------------------------------------------------------------------------------
 PremiumHardcore:
-  name: §7§bPremium Hardcore Master
+  name: "§7§bPremium Hardcore Master"
+  description:
+    - "&7One hit most players with your OP sword! However be careful."
+    - "this kit is only for the pros! Do not use it if you aren't a pro!"
   display_item:
     material: DIAMOND_SWORD
   enabled: true
@@ -463,7 +485,9 @@ PremiumHardcore:
   armour: { }
 
 Naked:
-  name: §7§bWild Naked
+  name: "§7§bWild Naked"
+  description:
+    - "&7You are the ultimate master! You start off with a better iron sword!"
   display_item:
     material: IRON_SWORD
   enabled: true
@@ -491,9 +515,14 @@ Naked:
           DURABILITY: 10
       slot: 0
   armour: { }
+  actions:
+    - "NO_ARMOUR"
 
 HeavyTank:
-  name: §7§bHeavy Tank
+  name: "§7§bHeavy Tank"
+  description:
+    - "&7Start off with iron armor and a double amount of hearts!"
+    - "Yup, that's right, you'll be the last man standing!"
   display_item:
     material: DIAMOND_CHESTPLATE
   enabled: true

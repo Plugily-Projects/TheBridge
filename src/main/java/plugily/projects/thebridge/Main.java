@@ -1,14 +1,11 @@
 package plugily.projects.thebridge;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
-import plugily.projects.minigamesbox.classic.kits.KitRegistry;
-import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
@@ -23,8 +20,6 @@ import plugily.projects.thebridge.kits.KitUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 
 /**
  * Created by Tigerpanzer_02 on 13.03.2022
@@ -35,7 +30,6 @@ public class Main extends PluginMain {
   private ArenaManager arenaManager;
   private ArgumentsRegistry argumentsRegistry;
   private BaseMenuHandler baseMenuHandler;
-  private KitRegistry kitRegistry;
 
   @TestOnly
   public Main() {
@@ -88,22 +82,8 @@ public class Main extends PluginMain {
     List<String> optionalConfigurations = new ArrayList<>();
     optionalConfigurations.add("bow-cooldown");
 
-    FileConfiguration kitsConfig = ConfigUtils.getConfig(this, "kits");
-
-    if (!Objects.equals(kitsConfig.getString("Do-Not-Edit.File-Version"), "2")) {
-      getLogger().log(Level.SEVERE, "Your kits.yml config is outdated. Please update it.");
-      getLogger().log(Level.SEVERE, "Cause: File-Version is not 2");
-      return;
-    }
-    if (!Objects.equals(kitsConfig.getString("Do-Not-Edit.Core-Version"), "1")) {
-      getLogger().log(Level.SEVERE, "Your kits.yml config is outdated. Please update it.");
-      getLogger().log(Level.SEVERE, "Cause: Core-Version is not 1");
-      return;
-    }
-
-    KitRegistry.setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
-    kitRegistry = new KitRegistry(this);
-    kitRegistry.registerKits(optionalConfigurations);
+    getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
+    getKitRegistry().registerKits(optionalConfigurations);
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
@@ -140,10 +120,5 @@ public class Main extends PluginMain {
   @Override
   public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
     return new SetupCategoryManager(setupInventory);
-  }
-
-  @Override
-  public plugily.projects.minigamesbox.classic.kits.KitRegistry getKitRegistry() {
-    return kitRegistry;
   }
 }
