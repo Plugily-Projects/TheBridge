@@ -499,11 +499,13 @@ public class ArenaEvents extends PluginArenaEvents {
       if (user.getKit().getOptionalConfiguration("bow-cooldown") != null) {
         cooldown = Math.max(0, (int) user.getKit().getOptionalConfiguration("bow-cooldown"));
       }
-      user.setCooldown("bow_shot", cooldown);
-      Player player = (Player) event.getEntity();
-      plugin
-        .getBukkitHelper()
-        .applyActionBarCooldown(player, cooldown);
+      if (cooldown != 0) {
+        user.setCooldown("bow_shot", cooldown);
+        Player player = (Player) event.getEntity();
+        plugin
+          .getBukkitHelper()
+          .applyActionBarCooldown(player, cooldown);
+      }
       if(event.getBow() != null) {
         VersionUtils.setDurability(event.getBow(), (short) 0);
       }
