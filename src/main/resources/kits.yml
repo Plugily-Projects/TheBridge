@@ -515,7 +515,7 @@ Naked:
           DURABILITY: 10
       slot: 0
   armour: { }
-  actions:
+  abilities:
     - "NO_ARMOUR"
 
 HeavyTank:
