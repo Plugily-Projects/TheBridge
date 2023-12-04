@@ -1,4 +1,4 @@
-name: ${description}
+name: TheBridge
 main: plugily.projects.thebridge.Main
 authors: [ PlugilyProjects, Tigerpanzer_02 ]
 version: ${version}

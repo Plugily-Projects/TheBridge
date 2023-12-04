@@ -52,7 +52,6 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
-import plugily.projects.thebridge.kits.level.ArcherKit;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -98,9 +97,18 @@ public class ArenaEvents extends PluginArenaEvents {
         arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
     }
+    else {
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
+        .asKey()
+        .player(player)
+        .arena(arena)
+        .sendPlayer();
+      event.setCancelled(true);
+      return;
+    }
     event.getBlock().getDrops().clear();
     event.getBlock().setType(XMaterial.AIR.parseMaterial());
-    event.setCancelled(true);
+    event.setCancelled(false);
   }
 
   @EventHandler
@@ -223,6 +231,9 @@ public class ArenaEvents extends PluginArenaEvents {
     Player player = event.getPlayer();
     Arena arena = plugin.getArenaRegistry().getArena(player);
     if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
@@ -364,6 +375,9 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
     event.setDroppedExp(0);
     event.getDrops().clear();
     playerDeath(player, arena);
@@ -481,14 +495,17 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     if(user.getCooldown("bow_shot") == 0) {
       int cooldown = plugin.getConfig().getInt("Bow-Cooldown", 5);
-      if((user.getKit() instanceof ArcherKit)) {
-        cooldown = Math.max(0, Math.min(cooldown, cooldown - 2));
+
+      if (user.getKit().getOptionalConfiguration("bow-cooldown") != null) {
+        cooldown = Math.max(0, (int) user.getKit().getOptionalConfiguration("bow-cooldown"));
       }
-      user.setCooldown("bow_shot", cooldown);
-      Player player = (Player) event.getEntity();
-      plugin
-        .getBukkitHelper()
-        .applyActionBarCooldown(player, cooldown);
+      if (cooldown != 0) {
+        user.setCooldown("bow_shot", cooldown);
+        Player player = (Player) event.getEntity();
+        plugin
+          .getBukkitHelper()
+          .applyActionBarCooldown(player, cooldown);
+      }
       if(event.getBow() != null) {
         VersionUtils.setDurability(event.getBow(), (short) 0);
       }
@@ -560,6 +577,7 @@ public class ArenaEvents extends PluginArenaEvents {
     XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
 
     if(victim.getHealth() - event.getDamage() <= 0) {
+      playerDeath(victim, arena);
       return;
     }
     DecimalFormat df = new DecimalFormat("##.##");

@@ -7,11 +7,7 @@ import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaEvents;
-import plugily.projects.thebridge.arena.ArenaManager;
-import plugily.projects.thebridge.arena.ArenaRegistry;
-import plugily.projects.thebridge.arena.ArenaUtils;
+import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
 import plugily.projects.thebridge.boot.AdditionalValueInitializer;
 import plugily.projects.thebridge.boot.MessageInitializer;
@@ -19,20 +15,11 @@ import plugily.projects.thebridge.boot.PlaceholderInitializer;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
 import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
-import plugily.projects.thebridge.kits.free.BridgeKit;
-import plugily.projects.thebridge.kits.free.KnightKit;
-import plugily.projects.thebridge.kits.free.LightTankKit;
-import plugily.projects.thebridge.kits.level.ArcherKit;
-import plugily.projects.thebridge.kits.level.HardcoreKit;
-import plugily.projects.thebridge.kits.level.HealerKit;
-import plugily.projects.thebridge.kits.level.MediumTankKit;
-import plugily.projects.thebridge.kits.level.TerminatorKit;
-import plugily.projects.thebridge.kits.premium.HeavyTankKit;
-import plugily.projects.thebridge.kits.premium.NakedKit;
-import plugily.projects.thebridge.kits.premium.PremiumHardcoreKit;
+import plugily.projects.thebridge.kits.KitUtils;
 
 import java.io.File;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tigerpanzer_02 on 13.03.2022
@@ -91,17 +78,12 @@ public class Main extends PluginMain {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
     addFileName("kits");
-    Class<?>[] classKitNames = new Class[]{BridgeKit.class, KnightKit.class, LightTankKit.class, ArcherKit.class, HealerKit.class,
-      MediumTankKit.class, TerminatorKit.class, HardcoreKit.class, PremiumHardcoreKit.class, NakedKit.class, HeavyTankKit.class};
-    for(Class<?> kitClass : classKitNames) {
-      try {
-        kitClass.getDeclaredConstructor().newInstance();
-      } catch(Exception e) {
-        getLogger().log(Level.SEVERE, "Fatal error while registering existing game kit! Report this error to the developer!");
-        getLogger().log(Level.SEVERE, "Cause: " + e.getMessage() + " (kitClass " + kitClass.getName() + ")");
-        e.printStackTrace();
-      }
-    }
+    
+    List<String> optionalConfigurations = new ArrayList<>();
+    optionalConfigurations.add("bow-cooldown");
+
+    getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
+    getKitRegistry().registerKits(optionalConfigurations);
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
@@ -139,5 +121,4 @@ public class Main extends PluginMain {
   public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
     return new SetupCategoryManager(setupInventory);
   }
-
 }
