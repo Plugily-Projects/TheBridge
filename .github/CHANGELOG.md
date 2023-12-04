@@ -1,7 +1,7 @@
 ### 2.0.3 Release (04.12.2023)
 * Fixed block breakage on bridge
 * Fixed blindness after choosing base if arena border isn't inside spawn
-* Added new kits.yml where you can edit all kits file based (patreon: in-game gui based)
+* (Experimental) Added new kits.yml where you can edit all kits file based (patreon: in-game gui based) [changes will happen; don't invest much time]
 * Added bow cooldown per kit
 * Updated to minigamesbox 1.3.3
 
