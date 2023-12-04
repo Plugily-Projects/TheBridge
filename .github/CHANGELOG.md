@@ -1,8 +1,18 @@
-### 2.0.2 Release
+### 2.0.3 Release (04.12.2023)
 * Fixed block breakage on bridge
 * Fixed blindness after choosing base if arena border isn't inside spawn
 * Added new kits.yml where you can edit all kits file based (patreon: in-game gui based)
 * Added bow cooldown per kit
+* Updated to minigamesbox 1.3.3
+
+### 2.0.2 Release (21.08.2023)
+Fixed rewards enabling
+Fixed bossbar disabling
+Fixed locale registration if service unavailable (e.g. server blocks outgoing traffic, cloudflare blacklisted countries)
+
+### 2.0.1 Release (08.08.2023)
+* Fixed teleport after death
+* Fixed block regeneration for lower 1.13
 
 ### 2.0.0 Release (07.08.2023)
 * Added up to 1.20 compatibility
