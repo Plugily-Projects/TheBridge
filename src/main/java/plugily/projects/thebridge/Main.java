@@ -77,7 +77,17 @@ public class Main extends PluginMain {
   public void addKits() {
     long start = System.currentTimeMillis();
     getDebugger().debug("Adding kits...");
-    addFileName("kits");
+    addFileName("kits/archer");
+    addFileName("kits/bridge");
+    addFileName("kits/hardcore");
+    addFileName("kits/healer");
+    addFileName("kits/heavytank");
+    addFileName("kits/knight");
+    addFileName("kits/lighttank");
+    addFileName("kits/mediumtank");
+    addFileName("kits/naked");
+    addFileName("kits/premiumhardcore");
+    addFileName("kits/terminator");
     
     List<String> optionalConfigurations = new ArrayList<>();
     optionalConfigurations.add("bow-cooldown");

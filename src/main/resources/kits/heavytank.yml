@@ -1,0 +1,43 @@
+name: "§7§bHeavy Tank"
+description:
+  - "&7Start off with iron armor and a double amount of hearts!"
+  - "Yup, that's right, you'll be the last man standing!"
+display_item:
+  material: DIAMOND_CHESTPLATE
+enabled: true
+unlockedOnDefault: false
+kit_type: premium
+inventory:
+  '0':
+    item:
+      material: COOKED_PORKCHOP
+      amount: 8
+    slot: 1
+  '1':
+    item:
+      material: WHITE_TERRACOTTA
+      amount: 64
+    slot: 8
+  '2':
+    item:
+      material: STICK
+      enchants:
+        DAMAGE_ALL: 2
+        DURABILITY: 3
+    slot: 0
+  '3':
+    item:
+      material: DIAMOND_PICKAXE
+      enchants:
+        DIG_SPEED: 2
+        DURABILITY: 10
+    slot: 2
+armour:
+  helmet:
+    material: IRON_HELMET
+  chestplate:
+    material: IRON_CHESTPLATE
+  leggings:
+    material: IRON_LEGGINGS
+  boots:
+    material: IRON_BOOTS

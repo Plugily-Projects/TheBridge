@@ -1,3 +1,7 @@
+### 2.0.4 Release (31.12.2024)
+* Moved kits.yml to own /kits files
+* Updated to minigamesbox 1.3.4
+
 ### 2.0.3 Release (04.12.2023)
 * Fixed block breakage on bridge
 * Fixed blindness after choosing base if arena border isn't inside spawn
