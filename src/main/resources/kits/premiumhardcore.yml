@@ -1,0 +1,29 @@
+name: "§7§bPremium Hardcore Master"
+description:
+  - "&7One hit most players with your OP sword! However be careful."
+  - "this kit is only for the pros! Do not use it if you aren't a pro!"
+display_item:
+  material: DIAMOND_SWORD
+enabled: true
+unlockedOnDefault: false
+kit_type: premium
+inventory:
+  '0':
+    item:
+      material: DIAMOND_SWORD
+      enchants:
+        DAMAGE_ALL: 5
+    slot: 0
+  '1':
+    item:
+      material: DIAMOND_PICKAXE
+      enchants:
+        DIG_SPEED: 5
+        DURABILITY: 10
+    slot: 1
+  '2':
+    item:
+      material: WHITE_TERRACOTTA
+      amount: 64
+    slot: 8
+armour: { }

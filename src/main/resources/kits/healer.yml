@@ -1,0 +1,58 @@
+name: "§7§6Healer"
+description:
+  - "&7Being a healer is the same as being loved. You are able to heal your teammates."
+display_item:
+  material: POPPY
+enabled: true
+unlockedOnDefault: false
+kit_type: level
+required-level: 6
+inventory:
+  '0':
+    item:
+      material: WOODEN_SWORD
+      enchants:
+        DURABILITY: 10
+    slot: 0
+  '1':
+    item:
+      material: COOKED_PORKCHOP
+      amount: 8
+    slot: 2
+  '2':
+    item:
+      material: WHITE_TERRACOTTA
+      amount: 64
+    slot: 8
+  '3':
+    item:
+      material: SPLASH_POTION
+      effects: [ ]
+      base-effect: REGEN, false, false
+    slot: 4
+  '4':
+    item:
+      material: DIAMOND_PICKAXE
+      enchants:
+        DIG_SPEED: 2
+        DURABILITY: 10
+    slot: 1
+  '5':
+    item:
+      material: SPLASH_POTION
+      effects: [ ]
+      base-effect: INSTANT_HEAL, false, false
+    slot: 3
+armour:
+  helmet:
+    material: LEATHER_HELMET
+    color: 160, 101, 64
+  chestplate:
+    material: LEATHER_CHESTPLATE
+    color: 160, 101, 64
+  leggings:
+    material: LEATHER_LEGGINGS
+    color: 160, 101, 64
+  boots:
+    material: LEATHER_BOOTS
+    color: 160, 101, 64

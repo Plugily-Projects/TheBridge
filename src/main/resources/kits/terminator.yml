@@ -1,0 +1,65 @@
+name: "§7§6Terminator"
+description:
+  - "&7Easily kill other players with your strength powers!"
+display_item:
+  material: ANVIL
+enabled: true
+unlockedOnDefault: false
+kit_type: level
+required-level: 20
+inventory:
+  '0':
+    item:
+      material: STONE_SWORD
+      enchants:
+        DURABILITY: 10
+    slot: 0
+  '1':
+    item:
+      material: BONE
+      enchants:
+        KNOCKBACK: 4
+        DAMAGE_ALL: 3
+    slot: 2
+  '2':
+    item:
+      material: COOKED_PORKCHOP
+      amount: 8
+    slot: 3
+  '3':
+    item:
+      material: WHITE_TERRACOTTA
+      amount: 64
+    slot: 8
+  '4':
+    item:
+      material: SPLASH_POTION
+      effects: [ ]
+      base-effect: REGEN, false, false
+    slot: 5
+  '5':
+    item:
+      material: DIAMOND_PICKAXE
+      enchants:
+        DIG_SPEED: 2
+        DURABILITY: 10
+    slot: 1
+  '6':
+    item:
+      material: SPLASH_POTION
+      effects: [ ]
+      base-effect: STRENGTH, false, false
+    slot: 4
+armour:
+  helmet:
+    material: LEATHER_HELMET
+    color: 160, 101, 64
+  chestplate:
+    material: LEATHER_CHESTPLATE
+    color: 160, 101, 64
+  leggings:
+    material: LEATHER_LEGGINGS
+    color: 160, 101, 64
+  boots:
+    material: LEATHER_BOOTS
+    color: 160, 101, 64

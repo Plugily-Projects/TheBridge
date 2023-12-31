@@ -1,0 +1,42 @@
+name: "§7§6Medium Tank"
+description:
+  - "&7Start off with 6 more hearts! Don't be afraid! You have plenty hearts left to lose!"
+display_item:
+  material: IRON_CHESTPLATE
+enabled: true
+unlockedOnDefault: false
+kit_type: level
+required-level: 12
+inventory:
+  '0':
+    item:
+      material: WOODEN_SWORD
+      enchants:
+        DURABILITY: 10
+    slot: 0
+  '1':
+    item:
+      material: COOKED_PORKCHOP
+      amount: 8
+    slot: 2
+  '2':
+    item:
+      material: WHITE_TERRACOTTA
+      amount: 64
+    slot: 8
+  '3':
+    item:
+      material: DIAMOND_PICKAXE
+      enchants:
+        DIG_SPEED: 2
+        DURABILITY: 10
+    slot: 1
+armour:
+  helmet:
+    material: IRON_HELMET
+  chestplate:
+    material: IRON_CHESTPLATE
+  leggings:
+    material: IRON_LEGGINGS
+  boots:
+    material: IRON_BOOTS
