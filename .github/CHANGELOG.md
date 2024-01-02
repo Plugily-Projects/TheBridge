@@ -1,3 +1,8 @@
+### 2.0.5 Release (03.01.2024)
+* Added new command /tba locale <locale> to set your locale
+* Fixed GameProfile API 1.20 change
+* Fixed none kits related plugins issues
+
 ### 2.0.4 Release (31.12.2024)
 * Moved kits.yml to own /kits files
 * Updated to minigamesbox 1.3.4
