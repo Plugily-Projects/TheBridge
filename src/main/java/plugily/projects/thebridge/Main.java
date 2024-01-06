@@ -21,6 +21,8 @@ import plugily.projects.thebridge.kits.KitUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tigerpanzer_02 on 13.03.2022
@@ -95,7 +97,11 @@ public class Main extends PluginMain {
 
     getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     getKitRegistry().registerKits(optionalConfigurations);
-    String defaultKitKey = getConfig().getString("Default-Kit", "bridge");
+    getDebugger().debug(Level.INFO, "Kits loaded: ");
+    for (Kit kit : getKitRegistry().getKits()) {
+      getDebugger().debug(kit.getName());
+    }
+    String defaultKitKey = getConfig().getString("Kit.Default-Kit", "bridge");
     Kit defaultKit = getKitRegistry().getKitByKey(defaultKitKey);
     if (defaultKit == null) {
       getDebugger().debug("Default kit {0} not found, using bridge", defaultKitKey);

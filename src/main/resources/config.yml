@@ -35,8 +35,14 @@ Bungee-Mode: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 Inventory-Manager: true
 
-# What should be the default kit, this should be the same as the file name in the kits folder
-Default-Kit: bridge
+# Kits configuration
+Kit:
+  # Should we load kits?
+  # todo - this option doesn't do anything at the moment
+  Enabled: true
+  # What is the default kit for players?
+  # This should be the same name as the file name of the kits file in the kits folder (no .yml)
+  Default-Kit: bridge
 
 Commands:
   # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
