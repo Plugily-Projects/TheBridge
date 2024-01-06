@@ -94,6 +94,7 @@ public class Main extends PluginMain {
 
     getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     getKitRegistry().registerKits(optionalConfigurations);
+    getKitRegistry().setDefaultKit(getKitRegistry().getKitByKey("bridge"));
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
