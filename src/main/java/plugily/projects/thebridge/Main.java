@@ -6,6 +6,7 @@ import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
+import plugily.projects.minigamesbox.classic.kits.basekits.Kit;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
@@ -94,7 +95,13 @@ public class Main extends PluginMain {
 
     getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     getKitRegistry().registerKits(optionalConfigurations);
-    getKitRegistry().setDefaultKit(getKitRegistry().getKitByKey("bridge"));
+    String defaultKitKey = getConfig().getString("Default-Kit", "bridge");
+    Kit defaultKit = getKitRegistry().getKitByKey(defaultKitKey);
+    if (defaultKit == null) {
+      getDebugger().debug("Default kit {0} not found, using bridge", defaultKitKey);
+      getKitRegistry().setDefaultKit(getKitRegistry().getKitByKey("bridge"));
+    }
+    getKitRegistry().setDefaultKit(defaultKit);
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
