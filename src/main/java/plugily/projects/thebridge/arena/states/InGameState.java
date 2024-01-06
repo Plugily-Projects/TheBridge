@@ -101,6 +101,8 @@ public class InGameState extends PluginInGameState {
               }
             }
             getPlugin().getArenaManager().stopGame(false, pluginArena);
+            getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due {1} having {2} points.", arena.getId(), base.getColor(), base.getPoints());
+            getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getMode() == Arena.Mode.POINTS");
             break;
           }
         }
@@ -119,6 +121,8 @@ public class InGameState extends PluginInGameState {
             }
           }
           getPlugin().getArenaManager().stopGame(false, pluginArena);
+          getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due {1} being winner.", arena.getId(), pluginArena.getWinner().getColor());
+          getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getMode() == Arena.Mode.HEARTS");
         }
       }
     }
