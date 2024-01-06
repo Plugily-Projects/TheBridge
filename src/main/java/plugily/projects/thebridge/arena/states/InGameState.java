@@ -54,6 +54,7 @@ public class InGameState extends PluginInGameState {
       pluginArena.setWinner(highestValue);
 
       getPlugin().getArenaManager().stopGame(false, arena);
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due to timer ended", arena.getId());
     }
     if (arena.getTimer() == 30 || arena.getTimer() == 60 || arena.getTimer() == 120) {
       new TitleBuilder("IN_GAME_MESSAGES_ARENA_TIME_LEFT").asKey().arena(pluginArena).sendArena();
