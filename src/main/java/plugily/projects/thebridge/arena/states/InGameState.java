@@ -78,7 +78,7 @@ public class InGameState extends PluginInGameState {
       }
 
     // no players - stop game
-    if (pluginArena.getPlayersLeft().size() == 0) {
+    if (pluginArena.getPlayersLeft().isEmpty()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
     } else {
       // winner check
