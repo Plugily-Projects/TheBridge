@@ -29,6 +29,8 @@ import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.base.Base;
 
+import java.util.logging.Level;
+
 /**
  * @author Plajer
  *     <p>Created at 03.06.2019
@@ -80,6 +82,8 @@ public class InGameState extends PluginInGameState {
     // no players - stop game
     if (pluginArena.getPlayersLeft().isEmpty()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due to no players left", arena.getId());
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getPlayersLeft().isEmpty() is true");
     } else {
       // winner check
       for (Base base : pluginArena.getBases()) {
