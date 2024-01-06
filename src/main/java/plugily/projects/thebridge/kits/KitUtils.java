@@ -24,7 +24,7 @@ public class KitUtils {
     }
 
     // Replaces white terracotta with coloured terracotta if the player is in a team
-    if (itemStack.getType().equals(Material.RED_TERRACOTTA) || itemStack.getType().equals(Material.WHITE_TERRACOTTA)) {
+    if (itemStack.getType().equals(XMaterial.RED_TERRACOTTA) || itemStack.getType().equals(XMaterial.WHITE_TERRACOTTA)) {
       Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
       material.ifPresent(xMaterial -> itemStack.setType(Objects.requireNonNull(xMaterial.parseMaterial())));
       player.sendMessage("§aYour terracotta has been changed to §6" + arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
@@ -32,7 +32,7 @@ public class KitUtils {
     }
 
     // Replaces leather armour with the coloured leather armour if the player is in a team
-    if (itemStack.getType().equals(Material.LEATHER_HELMET) || itemStack.getType().equals(Material.LEATHER_CHESTPLATE) || itemStack.getType().equals(Material.LEATHER_LEGGINGS) || itemStack.getType().equals(Material.LEATHER_BOOTS)) {
+    if (itemStack.getType().equals(XMaterial.LEATHER_HELMET) || itemStack.getType().equals(XMaterial.LEATHER_CHESTPLATE) || itemStack.getType().equals(XMaterial.LEATHER_LEGGINGS) || itemStack.getType().equals(XMaterial.LEATHER_BOOTS)) {
       LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
       assert itemMeta != null;
       itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
