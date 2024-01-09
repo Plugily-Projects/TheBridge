@@ -15,8 +15,9 @@ import java.util.Optional;
 
 public class KitUtils {
 
-  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemStack) {
+  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemOriginal) {
     Arena arena = (Arena) plugin.getArenaRegistry().getArena(player);
+    ItemStack itemStack = itemOriginal.clone();
 
     if (arena == null) {
       plugin.getDebugger().performance("Kit", "Handle item method called for player {1} item stack {2} but the arena was null.", player, itemStack);
