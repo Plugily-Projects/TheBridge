@@ -30,7 +30,6 @@ public class KitUtils {
       Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
       material.ifPresent(xMaterial -> itemStack.setType(Objects.requireNonNull(xMaterial.parseMaterial())));
       plugin.getDebugger().performance("Kit", "Arena {0} Changing terracotta to {1}.", arena.getId(), arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
-      player.sendMessage("§aYour terracotta has been changed to §6" + arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
       return itemStack;
     }
 
