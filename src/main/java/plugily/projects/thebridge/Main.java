@@ -101,16 +101,10 @@ public class Main extends PluginMain {
     for (Kit kit : getKitRegistry().getKits()) {
       getDebugger().debug(kit.getName());
     }
-    String defaultKitKey = getConfig().getString("Kit.Default-Kit", "bridge");
-    Kit defaultKit = getKitRegistry().getKitByKey(defaultKitKey);
-    if (defaultKit == null) {
-      getDebugger().debug("Default kit {0} not found, using bridge", defaultKitKey);
-      getKitRegistry().setDefaultKit(getKitRegistry().getKitByKey("bridge"));
-    }
-    getKitRegistry().setDefaultKit(defaultKit);
+
+    getKitRegistry().setDefaultKit();
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
-
 
   private void addPluginMetrics() {
     getMetrics().addCustomChart(new Metrics.SimplePie("hooked_addons", () -> {

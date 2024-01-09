@@ -67,7 +67,7 @@ public class PluginEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption("FOOD_LOSE")) {
+    if (plugin.getConfigPreferences().getOption("HUNGER_LOSE")) {
       event.setCancelled(true);
       event.setFoodLevel(20);
     }

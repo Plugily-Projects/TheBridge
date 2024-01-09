@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XItemStack;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
 
@@ -26,7 +27,7 @@ public class KitUtils {
     plugin.getDebugger().performance("Kit", "Arena {0} Handle item method called for player {1} item stack {2}.", arena.getId(), player, itemStack);
 
     // Replaces white terracotta with coloured terracotta if the player is in a team
-    if (itemStack.getType().equals(XMaterial.RED_TERRACOTTA.parseMaterial()) || itemStack.getType().equals(XMaterial.WHITE_TERRACOTTA.parseMaterial())) {
+    if (itemStack.getType().equals(XMaterial.WHITE_TERRACOTTA.parseMaterial())) {
       Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
       material.ifPresent(xMaterial -> itemStack.setType(Objects.requireNonNull(xMaterial.parseMaterial())));
       plugin.getDebugger().performance("Kit", "Arena {0} Changing terracotta to {1}.", arena.getId(), arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
