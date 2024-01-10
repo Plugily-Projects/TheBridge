@@ -36,6 +36,7 @@ Bungee-Mode: false
 Inventory-Manager: true
 
 # Kits configuration
+# A server restart is required for changes to apply
 Kit:
   # Should we load kits?
   Enabled: true

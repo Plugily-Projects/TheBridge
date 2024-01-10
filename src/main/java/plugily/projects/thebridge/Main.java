@@ -78,8 +78,12 @@ public class Main extends PluginMain {
 
 
   public void addKits() {
+    if (!getConfigPreferences().getOption("KITS")) {
+      // Kits are disabled, no kits will be loaded
+      return;
+    }
     long start = System.currentTimeMillis();
-    getDebugger().debug("Adding kits...");
+    getDebugger().performance("Kit", "Adding kits...");
     addFileName("kits/archer");
     addFileName("kits/bridge");
     addFileName("kits/hardcore");
@@ -102,7 +106,7 @@ public class Main extends PluginMain {
       getDebugger().debug(kit.getName());
     }
 
-    getKitRegistry().setDefaultKit();
+    getKitRegistry().setDefaultKit("bridge");
     getDebugger().debug("Kit adding finished took {0}ms", System.currentTimeMillis() - start);
   }
 
