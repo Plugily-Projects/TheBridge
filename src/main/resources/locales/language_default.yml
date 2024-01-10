@@ -272,7 +272,7 @@ In-Game:
         Start: "%plugin_prefix% Prepare to jump into the opponents portal"
         Reset: "%plugin_prefix% Movement is disabled while round reset"
         Run: "%plugin_prefix% &aGO! &7Lets jump into the portals!!"
-        Title: "5,20,5;You can't move - Start in...;%number%"
+        Title: "5,20,5;Start in...;%number%"
 #
 # Sign messages
 #
