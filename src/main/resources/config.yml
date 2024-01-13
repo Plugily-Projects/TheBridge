@@ -42,7 +42,11 @@ Kit:
   Enabled: true
   # What is the default kit for players?
   # This should be the same name as the file name of the kits file in the kits folder (no .yml)
-  Default-Kit: bridge
+  Default: "bridge"
+  # Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
+  Colored-Block-Replace-Material: "WHITE_TERRACOTTA"
+  # Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
+  Colored-Block-Material: "TERRACOTTA"
 
 Commands:
   # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
@@ -137,10 +141,6 @@ Holidays: true
 Powerups: false
 
 
-# Should the plugin enable kits which can be found in kits.yml
-Kits: true
-
-
 # Should we create leaderboards out of the stats?
 Leaderboard: true
 
@@ -199,10 +199,6 @@ Hunger-Lose: false
 Block-Break-Drop: true
 
 
-# Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
-Colored-Block-Material: "_TERRACOTTA"
-
-
 # Settings about cages on all bases
 Cage:
   # Should only be the cage-floor removed on cage removal? (still the full cage should be selected!)
@@ -223,4 +219,4 @@ Update-Notifier:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 2
+  Core-Version: 3
