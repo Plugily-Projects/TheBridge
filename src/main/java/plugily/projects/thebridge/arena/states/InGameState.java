@@ -29,6 +29,8 @@ import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.ArenaUtils;
 import plugily.projects.thebridge.arena.base.Base;
 
+import java.util.logging.Level;
+
 /**
  * @author Plajer
  *     <p>Created at 03.06.2019
@@ -52,6 +54,7 @@ public class InGameState extends PluginInGameState {
       pluginArena.setWinner(highestValue);
 
       getPlugin().getArenaManager().stopGame(false, arena);
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due to timer ended", arena.getId());
     }
     if (arena.getTimer() == 30 || arena.getTimer() == 60 || arena.getTimer() == 120) {
       new TitleBuilder("IN_GAME_MESSAGES_ARENA_TIME_LEFT").asKey().arena(pluginArena).sendArena();
@@ -78,8 +81,10 @@ public class InGameState extends PluginInGameState {
       }
 
     // no players - stop game
-    if (pluginArena.getPlayersLeft().size() == 0) {
+    if (pluginArena.getPlayersLeft().isEmpty()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due to no players left", arena.getId());
+      getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getPlayersLeft().isEmpty() is true");
     } else {
       // winner check
       for (Base base : pluginArena.getBases()) {
@@ -97,6 +102,8 @@ public class InGameState extends PluginInGameState {
               }
             }
             getPlugin().getArenaManager().stopGame(false, pluginArena);
+            getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due {1} having {2} points.", arena.getId(), base.getColor(), base.getPoints());
+            getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getMode() == Arena.Mode.POINTS");
             break;
           }
         }
@@ -115,6 +122,8 @@ public class InGameState extends PluginInGameState {
             }
           }
           getPlugin().getArenaManager().stopGame(false, pluginArena);
+          getPlugin().getDebugger().debug(Level.INFO, "[{0}] Game stopped due {1} being winner.", arena.getId(), pluginArena.getWinner().getColor());
+          getPlugin().getDebugger().debug(Level.INFO, "[{0}] Class InGameState, pluginArena.getMode() == Arena.Mode.HEARTS");
         }
       }
     }

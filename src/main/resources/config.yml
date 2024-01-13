@@ -23,7 +23,7 @@ Bossbar:
   Interval: 10
 
 
-# Should we hook into bungeecord? (If you wanna use arena per server option)
+# Should we hook into bungeecord? (If you want to use arena per server option)
 # This option will let you access bungee.yml and its options.
 # You STILL need to use external addon for HUB server game signs
 # Check here for more info: https://wiki.plugily.xyz/
@@ -35,6 +35,14 @@ Bungee-Mode: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 Inventory-Manager: true
 
+# Kits configuration
+# A server restart is required for changes to apply
+Kit:
+  # Should we load kits?
+  Enabled: true
+  # What is the default kit for players?
+  # This should be the same name as the file name of the kits file in the kits folder (no .yml)
+  Default-Kit: bridge
 
 Commands:
   # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
@@ -85,7 +93,7 @@ Database: false
 
 # Should we enable in game rewards? See rewards.yml for more...
 # You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
-Rewards: true
+Rewards: false
 
 
 # Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
@@ -109,11 +117,11 @@ Firework: true
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
-# - white (waiting for players) stained glass
-# - yellow (starting) stained glass
-# - orange (in game) stained glass
-# - gray (ending) stained glass
-# - black (restarting) stained glass
+# - white (waiting for players) stained-glass
+# - yellow (starting) stained-glass
+# - orange (in game) stained-glass
+# - gray (ending) stained-glass
+# - black (restarting) stained-glass
 # or define your own at signs.yml!
 Sign-Block-States: true
 
@@ -170,20 +178,25 @@ Time-Manager:
   Starting: 60
   Shorten-Waiting-Full: 15
   Shorten-Waiting-Force: 5
-  In-Game: 270
+  In-Game: 900
   Ending: 10
   Restarting: 5
 
 
 # Change the Bow Cooldown
-Bow-Cooldown: 5
+Bow-Cooldown: 3
 
 # Allow spectators on arena instances
 Spectators: true
 
+# Should players naturally regenerate health during a game
+Natural-Regeneration: false
 
-#Disable Food lose
-Food-Lose: true
+# Should players lose hunger during a game
+Hunger-Lose: false
+
+# Should blocks when broken drop items during a game
+Block-Break-Drop: true
 
 
 # Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
@@ -192,7 +205,7 @@ Colored-Block-Material: "_TERRACOTTA"
 
 # Settings about cages on all bases
 Cage:
-  # Should only be the cagefloor removed on cage removal? (still the full cage should be selected!)
+  # Should only be the cage-floor removed on cage removal? (still the full cage should be selected!)
   Only-Floor: false
 
 

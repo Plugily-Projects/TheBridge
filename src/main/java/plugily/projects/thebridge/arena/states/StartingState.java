@@ -81,7 +81,7 @@ public class StartingState extends PluginStartingState {
     }
     super.handleCall(arena);
     if(arenaStart) {
-      //needs to be executed after handle call as start location does not exists on thebridge
+      //needs to be executed after handle call as start location does not exist on thebridge
       pluginArena.teleportAllToBaseLocation();
       for (Base base : pluginArena.getBases()) {
         base.addCage();
