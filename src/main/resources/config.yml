@@ -35,6 +35,7 @@ Bungee-Mode: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 Inventory-Manager: true
 
+
 # Kits configuration
 # A server restart is required for changes to apply
 Kit:
@@ -47,6 +48,7 @@ Kit:
   Colored-Block-Replace-Material: "WHITE_TERRACOTTA"
   # Which type should be the Blocks players get. Make sure to use colored blocks here as the format is color + this string
   Colored-Block-Material: "TERRACOTTA"
+
 
 Commands:
   # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
@@ -100,13 +102,11 @@ Database: false
 Rewards: false
 
 
-# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
-# Formatting is configurable in language.yml
-# You can use PlaceholderAPI placeholders in chat format!
-Plugin-Chat-Format: true
-
-
 Chat:
+  # Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
+  # Formatting is configurable in language.yml
+  # You can use PlaceholderAPI placeholders in chat format!
+  Format: true
   Separate:
     # Should we enable a separate arena chat for players inside a arena
     # Useful on multi arena servers that don't want the same chat for all players on the server
@@ -218,5 +218,5 @@ Update-Notifier:
 # Really, don't edit ;p
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
-  File-Version: 1
+  File-Version: 2
   Core-Version: 3
