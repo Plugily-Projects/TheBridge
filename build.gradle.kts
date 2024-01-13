@@ -24,7 +24,7 @@ dependencies {
 }
 
 group = "plugily.projects"
-version = "2.0.5-SNAPSHOT18"
+version = "2.0.5-SNAPSHOT19"
 description = "TheBridge"
 
 java {
