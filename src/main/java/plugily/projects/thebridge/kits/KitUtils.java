@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.utils.misc.ColorUtil;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XItemStack;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.arena.Arena;
 
@@ -15,28 +16,31 @@ import java.util.Optional;
 
 public class KitUtils {
 
-  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemStack) {
-
+  public static ItemStack handleItem(PluginMain plugin, Player player, ItemStack itemOriginal) {
     Arena arena = (Arena) plugin.getArenaRegistry().getArena(player);
+    ItemStack itemStack = itemOriginal.clone();
 
-    if (arena == null) {
+    if(arena == null) {
+      plugin.getDebugger().performance("Kit", "Handle item method called for player {1} item stack {2} but the arena was null.", player, itemStack);
       return itemStack;
     }
+    plugin.getDebugger().performance("Kit", "Arena {0} Handle item method called for player {1} item stack {2}.", arena.getId(), player, itemStack);
 
     // Replaces white terracotta with coloured terracotta if the player is in a team
-    if (itemStack.getType().equals(Material.RED_TERRACOTTA) || itemStack.getType().equals(Material.WHITE_TERRACOTTA)) {
-      Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
+    if(itemStack.getType().equals(XMaterial.matchXMaterial(plugin.getConfig().getString("Kit.Colored-Block-Replace-Material", "WHITE_WOOL")).orElse(XMaterial.WHITE_WOOL).parseMaterial())) {
+      Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_" + plugin.getConfig().getString("Kit.Colored-Block-Material", "WOOL"));
       material.ifPresent(xMaterial -> itemStack.setType(Objects.requireNonNull(xMaterial.parseMaterial())));
-      player.sendMessage("§aYour terracotta has been changed to §6" + arena.getBase(player).getMaterialColor().toUpperCase() + "_TERRACOTTA");
+      plugin.getDebugger().performance("Kit", "Arena {0} Changing coloured block to {1}.", arena.getId(), arena.getBase(player).getMaterialColor().toUpperCase() + "_" + plugin.getConfig().getString("Kit.Colored-Block-Material", "WOOL"));
       return itemStack;
     }
 
     // Replaces leather armour with the coloured leather armour if the player is in a team
-    if (itemStack.getType().equals(Material.LEATHER_HELMET) || itemStack.getType().equals(Material.LEATHER_CHESTPLATE) || itemStack.getType().equals(Material.LEATHER_LEGGINGS) || itemStack.getType().equals(Material.LEATHER_BOOTS)) {
+    if(itemStack.getType().equals(XMaterial.LEATHER_HELMET.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_CHESTPLATE.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_LEGGINGS.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_BOOTS.parseMaterial())) {
       LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
       assert itemMeta != null;
       itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
       itemStack.setItemMeta(itemMeta);
+      plugin.getDebugger().performance("Kit", "Arena {0} Changing armour to {1}.", arena.getId(), arena.getBase(player).getColor().toUpperCase());
       return itemStack;
     }
 

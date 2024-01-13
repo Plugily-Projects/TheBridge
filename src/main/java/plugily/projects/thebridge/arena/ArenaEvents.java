@@ -28,10 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -73,6 +70,28 @@ public class ArenaEvents extends PluginArenaEvents {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
+  @EventHandler
+  public void onNaturalRegeneration(EntityRegainHealthEvent event) {
+    if (plugin.getConfigPreferences().getOption("NATURAL_REGENERATION")) {
+      return;
+    }
+    if (!(event.getEntity() instanceof Player player)) {
+      return;
+    }
+    Arena arena = plugin.getArenaRegistry().getArena(player);
+    if(arena == null) {
+      return;
+    }
+    if(arena.getArenaState() != ArenaState.IN_GAME) {
+      return;
+    }
+    if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED ||
+      event.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN ||
+      event.getRegainReason() == EntityRegainHealthEvent.RegainReason.EATING) {
+      event.setCancelled(true);
+    }
+  }
+
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onBlockBreakEvent(BlockBreakEvent event) {
     Player player = event.getPlayer();
@@ -106,8 +125,10 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    event.getBlock().getDrops().clear();
-    event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    if (!plugin.getConfigPreferences().getOption("BLOCK_BREAK_DROP")) {
+      event.getBlock().getDrops().clear();
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    }
     event.setCancelled(false);
   }
 
