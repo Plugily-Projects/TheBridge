@@ -33,7 +33,6 @@ public class AdditionalValueInitializer {
   }
 
   private void registerConfigOptions() {
-    getConfigPreferences().registerOption("HUNGER_LOSE", new ConfigOption("Hunger-Lose", false));
     getConfigPreferences().registerOption("NATURAL_REGENERATION", new ConfigOption("Natural-Regeneration", false));
     getConfigPreferences().registerOption("CAGE_ONLY_FLOOR", new ConfigOption("Cage.Only-Floor", false));
     getConfigPreferences().registerOption("BLOCK_BREAK_DROP", new ConfigOption("Block-Break-Drop", true));

@@ -58,22 +58,6 @@ public class PluginEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if (event.getEntity().getType() != EntityType.PLAYER) {
-      return;
-    }
-    Player player = (Player) event.getEntity();
-    Arena arena = plugin.getArenaRegistry().getArena(player);
-    if (arena == null) {
-      return;
-    }
-    if (plugin.getConfigPreferences().getOption("HUNGER_LOSE")) {
-      event.setCancelled(true);
-      event.setFoodLevel(20);
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
   public void onAppleConsume(PlayerItemConsumeEvent event) {
     Player player = event.getPlayer();
     Arena arena = plugin.getArenaRegistry().getArena(player);
