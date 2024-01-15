@@ -1,10 +1,12 @@
+### 2.0.7 Release (15.01.2024)
+* Updated to minigamesbox 1.3.7
+
 ### 2.0.6 Release (13.01.2024)
 * Changed default ingame time to 900 from 270, bow cooldown to 3 from 5;
 * Added Natural-Regeneration and Block-Breakage-Item-Drop config option
 * Renamed Food-Lose to Hunger-Lose in config
 * Adjusted language; Removed "You can't move" beetween rounds
 * Updated to minigamesbox 1.3.6
-
 
 ### 2.0.5 Release (03.01.2024)
 * Added new command /tba locale <locale> to set your locale
