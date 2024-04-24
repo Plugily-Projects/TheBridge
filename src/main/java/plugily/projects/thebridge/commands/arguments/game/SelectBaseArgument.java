@@ -21,7 +21,7 @@ package plugily.projects.thebridge.commands.arguments.game;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.commands.arguments.ArgumentsRegistry;
@@ -44,8 +44,8 @@ public class SelectBaseArgument {
             }
             Arena arena = (Arena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
             if(arena != null) {
-              if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
-                  || arena.getArenaState() == ArenaState.STARTING)
+              if(arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS
+                  || arena.getArenaState() == IArenaState.STARTING)
                 arena.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
             }
           }

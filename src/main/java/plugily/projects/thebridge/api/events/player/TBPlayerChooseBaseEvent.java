@@ -22,7 +22,7 @@ package plugily.projects.thebridge.api.events.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import plugily.projects.minigamesbox.classic.api.event.PlugilyEvent;
+import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 

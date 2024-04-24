@@ -19,9 +19,9 @@
 package plugily.projects.thebridge.arena.states;
 
 import org.bukkit.entity.Player;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 
@@ -50,7 +50,7 @@ public class StartingState extends PluginStartingState {
     if(arena.getTimer() == 0 || arena.isForceStart()) {
       arenaStart = true;
       for(Player player : arena.getPlayers()) {
-        User user = arena.getPlugin().getUserManager().getUser(player);
+        IUser user = arena.getPlugin().getUserManager().getUser(player);
         user.resetNonePersistentStatistics();
         // get base with min players
         Base minPlayers =

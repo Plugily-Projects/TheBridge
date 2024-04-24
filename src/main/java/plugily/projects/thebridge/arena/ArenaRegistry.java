@@ -22,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -132,7 +133,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public @Nullable Arena getArena(Player player) {
-    PluginArena pluginArena = super.getArena(player);
+    IPluginArena pluginArena = super.getArena(player);
     if(pluginArena instanceof Arena) {
       return (Arena) pluginArena;
     }
@@ -141,7 +142,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   @Override
   public @Nullable Arena getArena(String id) {
-    PluginArena pluginArena = super.getArena(id);
+    IPluginArena pluginArena = super.getArena(id);
     if(pluginArena instanceof Arena) {
       return (Arena) pluginArena;
     }
@@ -150,7 +151,7 @@ public class ArenaRegistry extends PluginArenaRegistry {
 
   public @NotNull List<Arena> getPluginArenas() {
     List<Arena> arenas = new ArrayList<>();
-    for(PluginArena pluginArena : super.getArenas()) {
+    for(IPluginArena pluginArena : super.getArenas()) {
       if(pluginArena instanceof Arena) {
         arenas.add((Arena) pluginArena);
       }

@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
@@ -79,9 +79,9 @@ public class Arena extends PluginArena {
     setScoreboardManager(new ScoreboardManager(this));
     mapRestorerManager = new MapRestorerManager(this);
     setMapRestorerManager(mapRestorerManager);
-    addGameStateHandler(ArenaState.IN_GAME, new InGameState());
-    addGameStateHandler(ArenaState.RESTARTING, new RestartingState());
-    addGameStateHandler(ArenaState.STARTING, new StartingState());
+    addGameStateHandler(IArenaState.IN_GAME, new InGameState());
+    addGameStateHandler(IArenaState.RESTARTING, new RestartingState());
+    addGameStateHandler(IArenaState.STARTING, new StartingState());
   }
 
   public static void init(Main plugin) {

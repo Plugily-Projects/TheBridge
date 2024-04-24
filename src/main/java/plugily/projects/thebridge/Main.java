@@ -1,12 +1,10 @@
 package plugily.projects.thebridge;
 
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.TestOnly;
+import plugily.projects.minigamesbox.api.kit.IKit;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
-import plugily.projects.minigamesbox.classic.kits.basekits.Kit;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
 import plugily.projects.thebridge.arena.*;
 import plugily.projects.thebridge.arena.base.BaseMenuHandler;
@@ -18,11 +16,9 @@ import plugily.projects.thebridge.events.PluginEvents;
 import plugily.projects.thebridge.handlers.setup.SetupCategoryManager;
 import plugily.projects.thebridge.kits.KitUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
  * Created by Tigerpanzer_02 on 13.03.2022
@@ -37,11 +33,6 @@ public class Main extends PluginMain {
   @TestOnly
   public Main() {
     super();
-  }
-
-  @TestOnly
-  protected Main(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-    super(loader, description, dataFolder, file);
   }
 
   @Override
@@ -102,7 +93,7 @@ public class Main extends PluginMain {
     getKitRegistry().setHandleItem((player, item) -> KitUtils.handleItem(this, player, item));
     getKitRegistry().registerKits(optionalConfigurations);
     getDebugger().debug(Level.INFO, "Kits loaded: ");
-    for (Kit kit : getKitRegistry().getKits()) {
+    for (IKit kit : getKitRegistry().getKits()) {
       getDebugger().debug(kit.getName());
     }
 
