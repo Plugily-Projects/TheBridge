@@ -32,14 +32,14 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerMoveEvent;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
 import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
@@ -82,7 +82,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED ||
@@ -99,7 +99,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if(!canBuild(arena, player, event.getBlock().getLocation())) {
@@ -139,7 +139,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if(!canBuild(arena, player, event.getBlock().getLocation())) {
@@ -219,7 +219,7 @@ public class ArenaEvents extends PluginArenaEvents {
         return;
       }
       Arena arena = plugin.getArenaRegistry().getArena(victim);
-      if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
+      if(arena == null || arena.getArenaState() != IArenaState.IN_GAME) {
         return;
       }
       if(plugin.getUserManager().getUser(attacker).isSpectator()) {
@@ -254,7 +254,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     if(arena.isResetRound() && !plugin.getUserManager().getUser(player).isSpectator()) {
@@ -396,7 +396,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() != ArenaState.IN_GAME) {
+    if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
     event.setDroppedExp(0);
@@ -406,7 +406,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
 
   private void playerDeath(Player player, Arena arena) {
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     arena.resetPlayer(player);
     switch(arena.getArenaState()) {
       case STARTING:
@@ -455,15 +455,15 @@ public class ArenaEvents extends PluginArenaEvents {
     }
   }
 
-  private void modeDeathHandle(Player player, Arena arena, User user) {
+  private void modeDeathHandle(Player player, Arena arena, IUser user) {
     if(arena.getMode() == Arena.Mode.HEARTS) {
       // if mode hearts and they are out it should set spec mode for them
       if(arena.getBase(player).getPoints() >= arena.getArenaOption("MODE_VALUE")) {
         user.setSpectator(true);
         ArenaUtils.hidePlayer(player, arena);
         player.getInventory().clear();
-        if(arena.getArenaState() != ArenaState.ENDING
-          && arena.getArenaState() != ArenaState.RESTARTING) {
+        if(arena.getArenaState() != IArenaState.ENDING
+          && arena.getArenaState() != IArenaState.RESTARTING) {
           arena.addDeathPlayer(player);
         }
         List<Player> players = arena.getBase(player).getPlayers();
@@ -478,7 +478,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @Override
   public boolean additionalFallDamageRules(
-    Player victim, PluginArena arena, EntityDamageEvent event) {
+    Player victim, IPluginArena arena, EntityDamageEvent event) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return false;
@@ -491,7 +491,7 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   @Override
-  public void handleIngameVoidDeath(Player victim, PluginArena arena) {
+  public void handleIngameVoidDeath(Player victim, IPluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -505,7 +505,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(!(event.getEntity() instanceof Player)) {
       return;
     }
-    User user = plugin.getUserManager().getUser((Player) event.getEntity());
+    IUser user = plugin.getUserManager().getUser((Player) event.getEntity());
     Arena pluginArena = plugin.getArenaRegistry().getArena(user.getPlayer());
     if(pluginArena == null) {
       return;
@@ -614,7 +614,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(event.getWhoClicked() instanceof Player
       && plugin.getArenaRegistry().isInArena((Player) event.getWhoClicked())) {
       if(plugin.getArenaRegistry().getArena(((Player) event.getWhoClicked())).getArenaState()
-        != ArenaState.IN_GAME) {
+        != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == event.getWhoClicked().getInventory()) {
           if(event.getView().getType() == InventoryType.CRAFTING
             || event.getView().getType() == InventoryType.PLAYER) {

@@ -1,5 +1,6 @@
 package plugily.projects.thebridge.boot;
 
+import plugily.projects.minigamesbox.api.preferences.IConfigPreferences;
 import plugily.projects.minigamesbox.classic.api.StatisticType;
 import plugily.projects.minigamesbox.classic.api.StatsStorage;
 import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
@@ -10,7 +11,6 @@ import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionsMan
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
-import plugily.projects.minigamesbox.classic.preferences.ConfigPreferences;
 import plugily.projects.thebridge.Main;
 
 /**
@@ -91,7 +91,7 @@ public class AdditionalValueInitializer {
     getArenaOptionManager().registerArenaOption("RESET_TIME", new ArenaOption("null", 5));
   }
 
-  private ConfigPreferences getConfigPreferences() {
+  private IConfigPreferences getConfigPreferences() {
     return plugin.getConfigPreferences();
   }
 
