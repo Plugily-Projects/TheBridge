@@ -64,6 +64,10 @@ public class ArenaManager extends PluginArenaManager {
     if(pluginArena == null) {
       return;
     }
+    Base base = pluginArena.getBase(player);
+    if(base != null){
+      base.removePlayer(player);
+    }
     super.leaveAttempt(player, arena);
     if(pluginArena.isDeathPlayer(player)) {
       pluginArena.removeDeathPlayer(player);
