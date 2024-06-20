@@ -19,19 +19,17 @@
 
 package plugily.projects.thebridge.events;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffectType;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.thebridge.Main;
@@ -76,7 +74,7 @@ public class PluginEvents implements Listener {
   public void onBlockBreakEvent(BlockBreakEvent event) {
     if (plugin.getArenaRegistry().isInArena(event.getPlayer())
         && plugin.getArenaRegistry().getArena(event.getPlayer()).getArenaState()
-            != ArenaState.IN_GAME) {
+            != IArenaState.IN_GAME) {
       event.setCancelled(true);
     }
   }
@@ -86,7 +84,7 @@ public class PluginEvents implements Listener {
   public void onBuild(BlockPlaceEvent event) {
     if (plugin.getArenaRegistry().isInArena(event.getPlayer())
         && plugin.getArenaRegistry().getArena(event.getPlayer()).getArenaState()
-            != ArenaState.IN_GAME) {
+            != IArenaState.IN_GAME) {
       event.setCancelled(true);
     }
   }

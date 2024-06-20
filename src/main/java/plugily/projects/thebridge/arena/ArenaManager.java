@@ -20,8 +20,8 @@ package plugily.projects.thebridge.arena;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
@@ -42,7 +42,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void additionalPartyJoin(Player player, PluginArena arena, Player partyLeader) {
+  public void additionalPartyJoin(Player player, IPluginArena arena, Player partyLeader) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -59,17 +59,21 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
+  public void leaveAttempt(@NotNull Player player, @NotNull IPluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
+    }
+    Base base = pluginArena.getBase(player);
+    if(base != null){
+      base.removePlayer(player);
     }
     super.leaveAttempt(player, arena);
     if(pluginArena.isDeathPlayer(player)) {
       pluginArena.removeDeathPlayer(player);
     }
-    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS
-      && arena.getArenaState() != ArenaState.STARTING
+    if(arena.getArenaState() != IArenaState.WAITING_FOR_PLAYERS
+      && arena.getArenaState() != IArenaState.STARTING
       && (arena.getPlayers().size() <= 1
       || (arena.getPlayers().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
       && pluginArena.getBases().stream()
@@ -82,7 +86,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
+  public void stopGame(boolean quickStop, @NotNull IPluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;

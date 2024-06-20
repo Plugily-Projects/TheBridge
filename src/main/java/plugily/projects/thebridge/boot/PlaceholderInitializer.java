@@ -2,7 +2,7 @@ package plugily.projects.thebridge.boot;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.PlaceholderManager;
@@ -28,17 +28,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("option_mode", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getMode(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getMode(arena);
       }
 
       @Nullable
-      private String getMode(PluginArena arena) {
+      private String getMode(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -52,17 +52,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("base_color", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getBaseValue(arena, player);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return "";
       }
 
       @Nullable
-      private String getBaseValue(PluginArena arena, Player player) {
+      private String getBaseValue(IPluginArena arena, Player player) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -76,17 +76,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("base_color_formatted", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getBaseValue(arena, player);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return "";
       }
 
       @Nullable
-      private String getBaseValue(PluginArena arena, Player player) {
+      private String getBaseValue(IPluginArena arena, Player player) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -100,17 +100,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary_winner_base", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -124,17 +124,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary_winner_base_players", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -160,17 +160,17 @@ public class PlaceholderInitializer {
     });
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary_base_scored", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -189,17 +189,17 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary_player", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena, player);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return "";
       }
 
       @Nullable
-      private String getSummary(PluginArena arena, Player player) {
+      private String getSummary(IPluginArena arena, Player player) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -219,7 +219,7 @@ public class PlaceholderInitializer {
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("option_reset_blocks_in", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;
@@ -228,24 +228,24 @@ public class PlaceholderInitializer {
       }
 
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getValue(arena);
       }
     });
 
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
-      public String getValue(Player player, PluginArena arena) {
+      public String getValue(Player player, IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Override
-      public String getValue(PluginArena arena) {
+      public String getValue(IPluginArena arena) {
         return getSummary(arena);
       }
 
       @Nullable
-      private String getSummary(PluginArena arena) {
+      private String getSummary(IPluginArena arena) {
         Arena pluginArena = getArenaRegistry().getArena(arena.getId());
         if(pluginArena == null) {
           return null;

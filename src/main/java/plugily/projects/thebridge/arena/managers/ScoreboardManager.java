@@ -18,11 +18,11 @@
 
 package plugily.projects.thebridge.arena.managers;
 
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 import plugily.projects.thebridge.arena.Arena;
@@ -46,10 +46,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(User user) {
+  public List<Entry> formatScoreboard(IUser user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    if(user.getArena().getArenaState() == ArenaState.FULL_GAME) {
+    if(user.getArena().getArenaState() == IArenaState.FULL_GAME) {
       lines =
         user.getArena()
           .getPlugin()
@@ -85,7 +85,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
     return builder.build();
   }
 
-  public String formatBase(Base base, User user) {
+  public String formatBase(Base base, IUser user) {
     Arena pluginArena = (Arena) arena.getPlugin().getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return "";
