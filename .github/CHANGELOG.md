@@ -1,5 +1,5 @@
 ### 2.0.10 Release (09.07.2024)
-* Updated to minigamesbox 1.3.10
+* Updated to minigamesbox 1.3.11
 * Fixed arena after playing does not reset the arena options from config
 
 ### 2.0.9 Release (25.04.2024)
