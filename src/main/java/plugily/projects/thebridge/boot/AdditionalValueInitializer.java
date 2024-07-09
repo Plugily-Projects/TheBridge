@@ -70,25 +70,21 @@ public class AdditionalValueInitializer {
 
   private void registerArenaOptions() {
     /**
-     * How many bases are on that arena?
-     */
-    getArenaOptionManager().registerArenaOption("BASE_AMOUNT", new ArenaOption("null", 2));
-    /**
      * How many players per base?
      */
-    getArenaOptionManager().registerArenaOption("BASE_PLAYER_SIZE", new ArenaOption("null", 4));
+    getArenaOptionManager().registerArenaOption("BASE_PLAYER_SIZE", new ArenaOption("maximumsize", 4));
     /**
      * How many points does an base need to win?
      */
-    getArenaOptionManager().registerArenaOption("MODE_VALUE", new ArenaOption("null", 5));
+    getArenaOptionManager().registerArenaOption("MODE_VALUE", new ArenaOption("modevalue", 5));
     /**
      * Reset blocks after round x
      */
-    getArenaOptionManager().registerArenaOption("RESET_BLOCKS", new ArenaOption("null", 0));
+    getArenaOptionManager().registerArenaOption("RESET_BLOCKS", new ArenaOption("resetblocks", 0));
     /**
      * Reset blocks after round x
      */
-    getArenaOptionManager().registerArenaOption("RESET_TIME", new ArenaOption("null", 5));
+    getArenaOptionManager().registerArenaOption("RESET_TIME", new ArenaOption("resettime", 5));
   }
 
   private IConfigPreferences getConfigPreferences() {

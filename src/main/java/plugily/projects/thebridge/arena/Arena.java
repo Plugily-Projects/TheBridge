@@ -225,6 +225,7 @@ public class Arena extends PluginArena {
   public boolean isSpectatorPlayer(Player player) {
     return spectators.contains(player);
   }
+
   public void cleanUpArena() {
     getBases().forEach(Base::reset);
     resetPlacedBlocks();
