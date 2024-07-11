@@ -72,10 +72,10 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onNaturalRegeneration(EntityRegainHealthEvent event) {
-    if (plugin.getConfigPreferences().getOption("NATURAL_REGENERATION")) {
+    if(plugin.getConfigPreferences().getOption("NATURAL_REGENERATION")) {
       return;
     }
-    if (!(event.getEntity() instanceof Player player)) {
+    if(!(event.getEntity() instanceof Player player)) {
       return;
     }
     Arena arena = plugin.getArenaRegistry().getArena(player);
@@ -85,7 +85,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
-    if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED ||
+    if(event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED ||
       event.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN ||
       event.getRegainReason() == EntityRegainHealthEvent.RegainReason.EATING) {
       event.setCancelled(true);
@@ -115,8 +115,7 @@ public class ArenaEvents extends PluginArenaEvents {
       if(!arena.getBrokenBlocks().containsKey(event.getBlock().getLocation())) {
         arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
       }
-    }
-    else {
+    } else {
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
         .asKey()
         .player(player)
@@ -125,7 +124,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setCancelled(true);
       return;
     }
-    if (!plugin.getConfigPreferences().getOption("BLOCK_BREAK_DROP")) {
+    if(!plugin.getConfigPreferences().getOption("BLOCK_BREAK_DROP")) {
       event.getBlock().getDrops().clear();
       event.getBlock().setType(XMaterial.AIR.parseMaterial());
     }
@@ -517,10 +516,10 @@ public class ArenaEvents extends PluginArenaEvents {
     if(user.getCooldown("bow_shot") == 0) {
       int cooldown = plugin.getConfig().getInt("Bow-Cooldown", 5);
 
-      if (user.getKit().getOptionalConfiguration("bow-cooldown") != null) {
+      if(user.getKit().getOptionalConfiguration("bow-cooldown") != null) {
         cooldown = Math.max(0, (int) user.getKit().getOptionalConfiguration("bow-cooldown"));
       }
-      if (cooldown != 0) {
+      if(cooldown != 0) {
         user.setCooldown("bow_shot", cooldown);
         Player player = (Player) event.getEntity();
         plugin
@@ -549,16 +548,12 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player player = (Player) event.getEntity();
-    Arena pluginArena = plugin.getArenaRegistry().getArena(player);
-    if(pluginArena == null) {
+    if(!plugin.getArenaRegistry().isInArena(player)) {
       return;
     }
-    event.setCancelled(true);
-
-    // User user = plugin.getUserManager().getUser(player);
-    // if(user.isSpectator() || pluginArena.getArenaState() != ArenaState.IN_GAME) {
-    //  return;
-    // }
+    if(!plugin.getConfigPreferences().getOption("BLOCK_BREAK_DROP")) {
+      event.setCancelled(true);
+    }
   }
 
 
