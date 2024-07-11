@@ -598,6 +598,7 @@ public class ArenaEvents extends PluginArenaEvents {
     XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
 
     if(victim.getHealth() - event.getDamage() <= 0) {
+      event.setDamage(0);
       playerDeath(victim, arena);
       return;
     }
