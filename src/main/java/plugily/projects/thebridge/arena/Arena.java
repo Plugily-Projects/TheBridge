@@ -282,6 +282,7 @@ public class Arena extends PluginArena {
 
   public void resetPlayer(Player player) {
     player.getInventory().clear();
+    player.setItemOnCursor(null);
     player.getInventory().setArmorContents(null);
     for(PotionEffect pe : player.getActivePotionEffects()) {
       player.removePotionEffect(pe.getType());
