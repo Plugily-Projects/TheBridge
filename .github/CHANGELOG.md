@@ -1,3 +1,11 @@
+### 2.1.1 Release (18.02.2025)
+* Fixed potions on different server versions
+* Updated to minigamesbox 1.3.16
+
+### 2.1.0 Release (24.07.2024)
+* Fixed duplications of cursor items on death
+* Updated to minigamesbox 1.3.14
+
 ### 2.0.10 Release (09.07.2024)
 * Updated to minigamesbox 1.3.11
 * Fixed arena after playing does not reset the arena options from config
