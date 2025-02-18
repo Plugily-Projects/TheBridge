@@ -49,7 +49,7 @@ public class StartingState extends PluginStartingState {
     boolean arenaStart = false;
     if(arena.getTimer() == 0 || arena.isForceStart()) {
       arenaStart = true;
-      for(Player player : arena.getPlayers()) {
+      for(Player player : arena.getPlayersLeft()) {
         IUser user = arena.getPlugin().getUserManager().getUser(player);
         user.resetNonePersistentStatistics();
         // get base with min players
@@ -70,7 +70,7 @@ public class StartingState extends PluginStartingState {
           pluginArena.getBases().stream().max(Comparator.comparing(Base::getPlayersSize)).get();
       Base minPlayers =
           pluginArena.getBases().stream().min(Comparator.comparing(Base::getPlayersSize)).get();
-      if(maxPlayers.getPlayersSize() == pluginArena.getPlayers().size()) {
+      if(maxPlayers.getPlayersSize() == pluginArena.getPlayersLeft().size()) {
         for(int i = 0; i < maxPlayers.getPlayersSize() / 2; i++) {
           Player move = maxPlayers.getPlayers().get(i);
           minPlayers.addPlayer(move);

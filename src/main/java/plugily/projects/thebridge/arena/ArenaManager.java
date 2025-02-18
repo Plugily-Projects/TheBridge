@@ -48,7 +48,7 @@ public class ArenaManager extends PluginArenaManager {
       return;
     }
     Base partyBase = null;
-    if(arena.getPlayers().contains(partyLeader)) {
+    if(arena.getPlayersLeft().contains(partyLeader)) {
       if(pluginArena.inBase(partyLeader)) {
         partyBase = pluginArena.getBase(partyLeader);
       }
@@ -74,13 +74,13 @@ public class ArenaManager extends PluginArenaManager {
     }
     if(arena.getArenaState() != IArenaState.WAITING_FOR_PLAYERS
       && arena.getArenaState() != IArenaState.STARTING
-      && (arena.getPlayers().size() <= 1
-      || (arena.getPlayers().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
+      && (arena.getPlayersLeft().size() <= 1
+      || (arena.getPlayersLeft().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
       && pluginArena.getBases().stream()
       .max(Comparator.comparing(Base::getPlayersSize))
       .get()
       .getAlivePlayersSize()
-      == arena.getPlayers().size()))) {
+      == arena.getPlayersLeft().size()))) {
       stopGame(true, arena);
     }
   }
@@ -91,7 +91,7 @@ public class ArenaManager extends PluginArenaManager {
     if(pluginArena == null) {
       return;
     }
-    for(Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayersLeft()) {
       if(!quickStop) {
         switch(pluginArena.getMode()) {
           default:
