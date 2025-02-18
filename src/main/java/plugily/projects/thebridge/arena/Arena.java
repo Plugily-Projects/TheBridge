@@ -370,7 +370,7 @@ public class Arena extends PluginArena {
   }
 
   public void teleportAllToBaseLocation() {
-    for(Player player : getPlayers()) {
+    for(Player player : getPlayersLeft()) {
       VersionUtils.teleport(player, getBase(player).getPlayerSpawnPoint());
     }
   }
