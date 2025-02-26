@@ -75,9 +75,10 @@ public class ArenaEvents extends PluginArenaEvents {
     if(plugin.getConfigPreferences().getOption("NATURAL_REGENERATION")) {
       return;
     }
-    if(!(event.getEntity() instanceof Player player)) {
+    if(!(event.getEntity() instanceof Player)) {
       return;
     }
+    Player player = (Player) event.getEntity();
     Arena arena = plugin.getArenaRegistry().getArena(player);
     if(arena == null) {
       return;
