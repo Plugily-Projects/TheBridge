@@ -98,6 +98,30 @@ public class PlaceholderInitializer {
       }
     });
 
+    getPlaceholderManager().registerPlaceholder(new Placeholder("base_points", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, IPluginArena arena) {
+        return getBaseValue(arena, player);
+      }
+
+      @Override
+      public String getValue(IPluginArena arena) {
+        return "";
+      }
+
+      @Nullable
+      private String getBaseValue(IPluginArena arena, Player player) {
+        Arena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
+        if(pluginArena.getBase(player) == null) {
+          return null;
+        }
+        return pluginArena.getBase(player).getPoints().toString();
+      }
+    });
+
     getPlaceholderManager().registerPlaceholder(new Placeholder("summary_winner_base", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
       @Override
       public String getValue(Player player, IPluginArena arena) {

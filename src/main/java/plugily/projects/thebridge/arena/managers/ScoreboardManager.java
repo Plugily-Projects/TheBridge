@@ -132,6 +132,15 @@ public class ScoreboardManager extends PluginScoreboardManager {
       }
       formattedLine =
         formattedLine.replaceAll("%scoreboard_base_points_formatted%", points.toString());
+    } else if(formattedLine.contains("%scoreboard_base_points%")) {
+      String points;
+      if (pluginArena.getMode() == Arena.Mode.HEARTS) {
+        points = pluginArena.getArenaOption("MODE_VALUE") + " / " + base.getPoints();
+      } else {
+        points = base.getPoints() + " / " +pluginArena.getArenaOption("MODE_VALUE");
+      }
+      formattedLine =
+        formattedLine.replaceAll("%scoreboard_base_points%", points);
     }
     formattedLine = new MessageBuilder(formattedLine).arena(arena).player(user.getPlayer()).build();
     if(!baseYou) cachedBaseFormat.add(formattedLine);
