@@ -18,13 +18,11 @@
 
 package plugily.projects.thebridge.arena.managers;
 
-import plugily.projects.minigamesbox.api.arena.IArenaState;
+import org.bukkit.entity.Player;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 import plugily.projects.thebridge.arena.Arena;
 import plugily.projects.thebridge.arena.base.Base;
 
@@ -46,23 +44,9 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(IUser user) {
-    EntryBuilder builder = new EntryBuilder();
-    List<String> lines;
-    if(user.getArena().getArenaState() == IArenaState.FULL_GAME) {
-      lines =
-        user.getArena()
-          .getPlugin()
-          .getLanguageManager()
-          .getLanguageList("Scoreboard.Content.Starting");
-    } else {
-      lines =
-        user.getArena()
-          .getPlugin()
-          .getLanguageManager()
-          .getLanguageList(
-            "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName());
-    }
+  public List<String> formatScoreboardLines(List<String> lines, Player player) {
+    List<String> changedLines = new ArrayList<>();
+    IUser user = arena.getPlugin().getUserManager().getUser(player);
     for(String line : lines) {
       if(line.contains("%arena_option_reset_blocks%")
         && arena.getArenaOption("RESET_BLOCKS") == 0) {
@@ -71,18 +55,18 @@ public class ScoreboardManager extends PluginScoreboardManager {
       if(line.contains("%scoreboard_bases_list%")) {
         if(cachedBaseFormat.isEmpty()) {
           for(Base base : ((Arena) user.getArena()).getBases()) {
-            builder.next(formatBase(base, user));
+            changedLines.add(formatBase(base, user));
           }
         } else {
           for(String cached : cachedBaseFormat) {
-            builder.next(cached);
+            changedLines.add(cached);
           }
         }
       } else {
-        builder.next(new MessageBuilder(line).player(user.getPlayer()).arena(arena).build());
+        changedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
       }
     }
-    return builder.build();
+    return changedLines;
   }
 
   public String formatBase(Base base, IUser user) {
