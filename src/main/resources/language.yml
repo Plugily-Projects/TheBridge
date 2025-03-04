@@ -75,10 +75,11 @@ Commands:
 # Please do not use more chars than the scoreboard can handle!
 # Scoreboard supports up to 122 chars for 1.14+ and 48 chars for 1.13- (COLOR CODES INCLUDED.)
 # Placeholders:
-# https://wiki.plugily.xyz/REPLACEWITHPROJECTNAME/placeholders/language
+# https://wiki.plugily.xyz/minigame/placeholders/
 Scoreboard:
   Title: "&a&l%plugin_name%"
   Bases:
+    # Alternative format with numbers instead of symbols would be %scoreboard_base_color_formatted% (%scoreboard_base_players_size%) &e%scoreboard_base_yourself% %scoreboard_base_points%
     Format: "%scoreboard_base_color_formatted% (%scoreboard_base_players_size%) &e%scoreboard_base_yourself% %scoreboard_base_points_formatted%"
     Not-Inside: "--"
     Inside: "(You)"

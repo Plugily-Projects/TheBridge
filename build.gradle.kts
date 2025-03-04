@@ -20,13 +20,13 @@ repositories {
 }
 
 dependencies {
-    implementation("plugily.projects:MiniGamesBox-Classic:1.3.16-SNAPSHOT2") { isTransitive = false }
+    implementation("plugily.projects:MiniGamesBox-Classic:1.3.17") { isTransitive = false }
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.0.1")
 }
 
 group = "plugily.projects"
-version = "2.1.1"
+version = "2.1.1-SNAPSHOT4"
 description = "TheBridge"
 
 java {
