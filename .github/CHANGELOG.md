@@ -1,6 +1,7 @@
-### 2.1.2 Release (xx.03.2025)
+### 2.1.2 Release (04.03.2025)
 * Added new placeholder for scoreboard scoreboard_base_points to show only numbers at scoreboard
 * Added new placeholder base_points to get points of the base a player is in (can be used with MODE_VALUE to get max value)
+* Updated to minigamesbox 1.3.17
 
 ### 2.1.1 Release (18.02.2025)
 * Fixed potions on different server versions
