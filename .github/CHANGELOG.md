@@ -1,3 +1,6 @@
+### 2.1.3 Release (13.03.2025)
+* Updated to minigamesbox 1.4.0
+
 ### 2.1.2 Release (04.03.2025)
 * Added new placeholder for scoreboard scoreboard_base_points to show only numbers at scoreboard
 * Added new placeholder base_points to get points of the base a player is in (can be used with MODE_VALUE to get max value)
