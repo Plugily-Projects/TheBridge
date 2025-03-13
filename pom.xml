@@ -140,10 +140,6 @@
                                     <pattern>plugily.projects.minigamesbox</pattern>
                                     <shadedPattern>plugily.projects.thebridge.minigamesbox</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>plugily.projects.commonsbox</pattern>
-                                    <shadedPattern>plugily.projects.thebridge.commonsbox</shadedPattern>
-                                </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
