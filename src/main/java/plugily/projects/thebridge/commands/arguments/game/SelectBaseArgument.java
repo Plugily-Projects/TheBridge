@@ -45,7 +45,7 @@ public class SelectBaseArgument {
             Arena arena = (Arena) registry.getPlugin().getArenaRegistry().getArena((Player) sender);
             if(arena != null) {
               if(arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS
-                  || arena.getArenaState() == IArenaState.STARTING)
+                  || arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.FULL_GAME)
                 arena.getPlugin().getBaseMenuHandler().createMenu((Player) sender, arena);
             }
           }
