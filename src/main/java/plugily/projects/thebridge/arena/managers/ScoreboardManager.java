@@ -63,7 +63,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
           }
         }
       } else {
-        changedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
+        changedLines.add(line);
       }
     }
     return changedLines;
@@ -118,10 +118,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
         formattedLine.replaceAll("%scoreboard_base_points_formatted%", points.toString());
     } else if(formattedLine.contains("%scoreboard_base_points%")) {
       String points;
-      if (pluginArena.getMode() == Arena.Mode.HEARTS) {
+      if(pluginArena.getMode() == Arena.Mode.HEARTS) {
         points = pluginArena.getArenaOption("MODE_VALUE") + " / " + base.getPoints();
       } else {
-        points = base.getPoints() + " / " +pluginArena.getArenaOption("MODE_VALUE");
+        points = base.getPoints() + " / " + pluginArena.getArenaOption("MODE_VALUE");
       }
       formattedLine =
         formattedLine.replaceAll("%scoreboard_base_points%", points);
