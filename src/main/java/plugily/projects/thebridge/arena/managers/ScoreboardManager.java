@@ -44,10 +44,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<String> formatScoreboardLines(List<String> lines, Player player) {
+  public List<String> getScoreboardLines(Player player) {
     List<String> changedLines = new ArrayList<>();
     IUser user = arena.getPlugin().getUserManager().getUser(player);
-    for(String line : lines) {
+    for(String line : super.getScoreboardLines(player)) {
       if(line.contains("%arena_option_reset_blocks%")
         && arena.getArenaOption("RESET_BLOCKS") == 0) {
         continue;
