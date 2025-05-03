@@ -1,3 +1,9 @@
+### 2.1.4 Release (03.05.2025)
+* Fixed arena forcestop the game after a player leave the Fullgame and not enough players to continue are online
+* Updated language.yml so by default base selection got prefix
+* Removed unused permissions in permissions.yml
+* Updated to minigamesbox 1.4.1
+
 ### 2.1.3 Release (13.03.2025)
 * Updated to minigamesbox 1.4.0
 
