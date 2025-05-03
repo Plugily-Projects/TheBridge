@@ -351,8 +351,8 @@ Bases:
     Inside: "Your team"
     Name: "Base - %base%"
     Menu: "Base Menu"
-    Choose: "You are now on base %base%"
-    Member: "You are already member of it!"
+    Choose: "%plugin_prefix% You are now on base %base%"
+    Member: "%color_chat_issue%%plugin_prefix% You are already member of it!"
   Colors:
     BLACK: "&0BLACK"
     DARK_BLUE: "&1DARK_BLUE"

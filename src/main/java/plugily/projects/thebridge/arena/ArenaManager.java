@@ -73,7 +73,7 @@ public class ArenaManager extends PluginArenaManager {
       pluginArena.removeDeathPlayer(player);
     }
     if(arena.getArenaState() != IArenaState.WAITING_FOR_PLAYERS
-      && arena.getArenaState() != IArenaState.STARTING
+      && arena.getArenaState() != IArenaState.STARTING && arena.getArenaState() != IArenaState.FULL_GAME
       && (arena.getPlayersLeft().size() <= 1
       || (arena.getPlayersLeft().size() <= arena.getArenaOption("BASE_PLAYER_SIZE")
       && pluginArena.getBases().stream()

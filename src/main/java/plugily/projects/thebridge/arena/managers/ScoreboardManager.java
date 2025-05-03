@@ -44,10 +44,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<String> formatScoreboardLines(List<String> lines, Player player) {
+  public List<String> getScoreboardLines(Player player) {
     List<String> changedLines = new ArrayList<>();
     IUser user = arena.getPlugin().getUserManager().getUser(player);
-    for(String line : lines) {
+    for(String line : super.getScoreboardLines(player)) {
       if(line.contains("%arena_option_reset_blocks%")
         && arena.getArenaOption("RESET_BLOCKS") == 0) {
         continue;
@@ -63,7 +63,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
           }
         }
       } else {
-        changedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
+        changedLines.add(line);
       }
     }
     return changedLines;
@@ -118,10 +118,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
         formattedLine.replaceAll("%scoreboard_base_points_formatted%", points.toString());
     } else if(formattedLine.contains("%scoreboard_base_points%")) {
       String points;
-      if (pluginArena.getMode() == Arena.Mode.HEARTS) {
+      if(pluginArena.getMode() == Arena.Mode.HEARTS) {
         points = pluginArena.getArenaOption("MODE_VALUE") + " / " + base.getPoints();
       } else {
-        points = base.getPoints() + " / " +pluginArena.getArenaOption("MODE_VALUE");
+        points = base.getPoints() + " / " + pluginArena.getArenaOption("MODE_VALUE");
       }
       formattedLine =
         formattedLine.replaceAll("%scoreboard_base_points%", points);
