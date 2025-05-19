@@ -290,7 +290,7 @@ public class Arena extends PluginArena {
     player.setExp(0);
     player.setFireTicks(0);
     player.setGameMode(GameMode.SURVIVAL);
-    XPotion.BLINDNESS.buildPotionEffect(30, 10).apply(player);
+    XPotion.BLINDNESS.buildPotionEffect(plugin.getConfig().getInt("Death.Blindness", 30), 10).apply(player);
     VersionUtils.setMaxHealth(player, VersionUtils.getMaxHealth(player));
     player.setHealth(VersionUtils.getMaxHealth(player));
     player.setAllowFlight(false);

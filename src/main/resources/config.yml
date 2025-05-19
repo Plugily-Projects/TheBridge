@@ -210,6 +210,9 @@ Natural-Regeneration: false
 # Should blocks when broken drop items during a game
 Block-Break-Drop: true
 
+# How long should be the blindness effect after death?
+Death:
+  Blindness: 30
 
 # Settings about cages on all bases
 Cage:
@@ -230,5 +233,5 @@ Update-Notifier:
 # Really, don't edit ;p
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
-  File-Version: 2
+  File-Version: 3
   Core-Version: 5
