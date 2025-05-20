@@ -42,7 +42,7 @@ public class LocationCategory extends PluginLocationCategory {
     gui.setItem((getInventoryLine() * 9) + 4, midLocation);
     getItemList().add(midLocation);
 
-    LocationSelectorItem arenaBorder = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Arena", "Location where all bases and lines are in \n (players will be able to build inside)", "arenalocation");
+    LocationSelectorItem arenaBorder = new LocationSelectorItem(getSetupInventory(), new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Arena", "Location where all bases and lines are in \n (players will be able to build inside) \n MAKE SURE TO SET IT OUTSIDE \n OF THE BASES WHICH YOU SET BEFORE!", "arenalocation");
     gui.setItem((getInventoryLine() * 9) + 5, arenaBorder);
     getItemList().add(arenaBorder);
   }
