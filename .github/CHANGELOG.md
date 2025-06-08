@@ -1,3 +1,9 @@
+### 2.1.5 Release (09.06.2025)
+* Fixed startup issues on lower mc versions
+* Added a onserverjoin message about wrong base arena setup if base cuboid is outside arena cuboid
+* Added Death.Blindness in config.yml to change length of blindness effect after death
+* Updated to minigamesbox 1.4.2
+
 ### 2.1.4 Release (03.05.2025)
 * Fixed arena forcestop the game after a player leave the Fullgame and not enough players to continue are online
 * Updated language.yml so by default base selection got prefix
