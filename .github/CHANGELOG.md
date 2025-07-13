@@ -1,3 +1,6 @@
+### 2.1.6 Release (13.07.2025)
+* Updated to MinigamesBox 1.4.3
+
 ### 2.1.5 Release (09.06.2025)
 * Fixed startup issues on lower mc versions
 * Added a onserverjoin message about wrong base arena setup if base cuboid is outside arena cuboid
