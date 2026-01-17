@@ -1,3 +1,6 @@
+### 2.1.7 Release (17.01.2026)
+* Updated to MinigamesBox 1.4.5
+
 ### 2.1.6 Release (13.07.2025)
 * Updated to MinigamesBox 1.4.3
 
