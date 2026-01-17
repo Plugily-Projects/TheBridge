@@ -7,7 +7,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>thebridge</artifactId>
-    <version>2.1.6</version>
+    <version>2.1.6-SNAPSHOT0</version>
     <name>TheBridge</name>
 
     <properties>
