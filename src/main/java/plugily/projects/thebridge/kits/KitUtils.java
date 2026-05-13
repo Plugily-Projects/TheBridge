@@ -27,15 +27,17 @@ public class KitUtils {
     plugin.getDebugger().performance("Kit", "Arena {0} Handle item method called for player {1} item stack {2}.", arena.getId(), player, itemStack);
 
     // Replaces white terracotta with coloured terracotta if the player is in a team
-    if(itemStack.getType().equals(XMaterial.matchXMaterial(plugin.getConfig().getString("Kit.Colored-Block-Replace-Material", "WHITE_WOOL")).orElse(XMaterial.WHITE_WOOL).parseMaterial())) {
+    if(XMaterial.matchXMaterial(plugin.getConfig().getString("Kit.Colored-Block-Replace-Material", "WHITE_WOOL")).orElse(XMaterial.WHITE_WOOL).isSimilar(itemStack)) {
       Optional<XMaterial> material = XMaterial.matchXMaterial(arena.getBase(player).getMaterialColor().toUpperCase() + "_" + plugin.getConfig().getString("Kit.Colored-Block-Material", "WOOL"));
-      material.ifPresent(xMaterial -> itemStack.setType(Objects.requireNonNull(xMaterial.parseMaterial())));
+      material.ifPresent(xMaterial -> {
+        xMaterial.setType(itemStack);
+      });
       plugin.getDebugger().performance("Kit", "Arena {0} Changing coloured block to {1}.", arena.getId(), arena.getBase(player).getMaterialColor().toUpperCase() + "_" + plugin.getConfig().getString("Kit.Colored-Block-Material", "WOOL"));
       return itemStack;
     }
 
     // Replaces leather armour with the coloured leather armour if the player is in a team
-    if(itemStack.getType().equals(XMaterial.LEATHER_HELMET.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_CHESTPLATE.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_LEGGINGS.parseMaterial()) || itemStack.getType().equals(XMaterial.LEATHER_BOOTS.parseMaterial())) {
+    if(XMaterial.LEATHER_HELMET.isSimilar(itemStack) || XMaterial.LEATHER_CHESTPLATE.isSimilar(itemStack) || XMaterial.LEATHER_LEGGINGS.isSimilar(itemStack) || XMaterial.LEATHER_BOOTS.isSimilar(itemStack)) {
       LeatherArmorMeta itemMeta = (LeatherArmorMeta) itemStack.getItemMeta();
       assert itemMeta != null;
       itemMeta.setColor(ColorUtil.fromChatColor(ChatColor.valueOf(arena.getBase(player).getColor().toUpperCase())));
