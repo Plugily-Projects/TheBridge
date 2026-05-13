@@ -47,6 +47,7 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPla
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XBlock;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
@@ -614,8 +615,8 @@ public class ArenaEvents extends PluginArenaEvents {
       if(plugin.getArenaRegistry().getArena(((Player) event.getWhoClicked())).getArenaState()
         != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == event.getWhoClicked().getInventory()) {
-          if(event.getView().getType() == InventoryType.CRAFTING
-            || event.getView().getType() == InventoryType.PLAYER) {
+          if(XInventoryView.of(event.getView()).getType() == InventoryType.CRAFTING
+            || XInventoryView.of(event.getView()).getType() == InventoryType.PLAYER) {
             event.setResult(Event.Result.DENY);
           }
         }
