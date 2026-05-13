@@ -69,7 +69,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
             NormalFastInv pagedGui = new BasePage(9, setupInventory.getPlugin().getPluginMessagePrefix() + "Base Editor Menu", setupInventory);
             pagedGui.open(setupInventory.getPlayer());
             return Prompt.END_OF_CONVERSATION;
-          } catch (IllegalArgumentException ignored) {
+          } catch(IllegalArgumentException ignored) {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. This is not an color!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
@@ -77,7 +77,7 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
       }).buildFor((Player) event.getWhoClicked());
     }));
 
-    LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base",  "bases." + getId(setupInventory.getPlayer()) + ".baselocation");
+    LocationSelectorItem baseCorners = new LocationSelectorItem(setupInventory, new ItemBuilder(XMaterial.BEDROCK.parseMaterial()), "Base", "Set the corners of one base", "bases." + getId(setupInventory.getPlayer()) + ".baselocation");
     setItem(1, baseCorners);
 
     //portal in mid function? LocationSerializer.saveLoc(setupInventory.getPlugin(), setupInventory.getConfig(), "arenas", "instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer()) + ".portalhologram", new Cuboid(selection.getFirstPos(), selection.getSecondPos()).getCenter().add(0, 2, 0));
@@ -103,29 +103,40 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
       .lore(ChatColor.GREEN + "Click to finish & save the setup of this base")
       .build(), event -> {
       String path = "instances." + setupInventory.getArenaKey() + ".bases." + getId(setupInventory.getPlayer());
-      if (setupInventory.getConfig().get(path + ".baselocation.1") == null) {
+      if(setupInventory.getConfig().get(path + ".baselocation.1") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure base location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if (setupInventory.getConfig().get(path + ".portallocation.1") == null) {
+      if(setupInventory.getConfig().get(path + ".portallocation.1") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portal location properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if (setupInventory.getConfig().get(path + ".spawnpoint") == null) {
+      if(setupInventory.getConfig().get(path + ".spawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure spawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if (setupInventory.getConfig().get(path + ".respawnpoint") == null) {
+      if(setupInventory.getConfig().get(path + ".respawnpoint") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure respawnpoint properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if (setupInventory.getConfig().get(path + ".color") == null) {
+      if(setupInventory.getConfig().get(path + ".color") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure color properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if (setupInventory.getConfig().get(path + ".portalhologram") == null) {
+      if(setupInventory.getConfig().get(path + ".portalhologram") == null) {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portalhologram properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
+      }
+      if(setupInventory.getConfig().get(path + ".portalhologram") == null) {
+        new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portalhologram properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
+        return;
+      }
+      if(setupInventory.getConfig().getString(path + ".arenalocation.1") != null && setupInventory.getConfig().getString(path + ".arenalocation.2") != null) {
+        Cuboid arenaBorder = new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0")));
+        if(!(arenaBorder.isIn(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.1"))) && arenaBorder.isIn(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.2"))))) {
+          new MessageBuilder("&c&l✘ &cBase validation failed! Please set your base cuboids (baselocation.1 and baselocation.2) inside your arena cuboid!").prefix().player(setupInventory.getPlayer()).sendPlayer();
+          return;
+        }
       }
       new MessageBuilder("&a&l✔ &aValidation succeeded! Registering new base: " + getId(setupInventory.getPlayer())).prefix().player(setupInventory.getPlayer()).sendPlayer();
       setupInventory.setConfig("bases." + getId(setupInventory.getPlayer()) + ".isdone", true);
@@ -139,13 +150,13 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
         LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portallocation.2")),
         setupInventory.getConfig().getInt(path + ".maximumsize")
       );
-      if (setupInventory.getConfig().get(path + ".cagelocation.1") != null && setupInventory.getConfig().get(path + ".cagelocation.2") != null) {
+      if(setupInventory.getConfig().get(path + ".cagelocation.1") != null && setupInventory.getConfig().get(path + ".cagelocation.2") != null) {
         base.setCageCuboid(new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.1")), LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".cagelocation.2"))));
       }
       Arena arena = (Arena) setupInventory.getPlugin().getArenaRegistry().getArena(setupInventory.getArenaKey());
       arena.addBase(base);
       ArmorStandHologram portal = new ArmorStandHologram(setupInventory.getPlugin().getBukkitHelper().getBlockCenter(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".portalhologram"))));
-      for (String str : setupInventory.getPlugin().getLanguageManager().getLanguageMessage(setupInventory.getPlugin().getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
+      for(String str : setupInventory.getPlugin().getLanguageManager().getLanguageMessage(setupInventory.getPlugin().getMessageManager().getPath("IN_GAME_MESSAGES_ARENA_PORTAL_HOLOGRAM")).split(";")) {
         portal.appendLine(str.replace("%arena_base_color_formatted%", base.getFormattedColor()));
       }
       base.setArmorStandHologram(portal);
@@ -167,14 +178,14 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-          if (!NumberUtils.isInteger(input)) {
+          if(!NumberUtils.isInteger(input)) {
             context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. Its not a number!").prefix().build());
             return Prompt.END_OF_CONVERSATION;
           }
           int number = Integer.parseInt(input);
 
-          if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
-            if (number >= setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size()) {
+          if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
+            if(number >= setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size()) {
               context.getForWhom().sendRawMessage(new MessageBuilder("&cTry again. The number is higher than bases that you have!").prefix().build());
               return Prompt.END_OF_CONVERSATION;
             }
@@ -195,9 +206,9 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
 
 
   public int getId(Player player) {
-    if (!BaseUtilities.check(player)) {
+    if(!BaseUtilities.check(player)) {
       int id = 0;
-      if (setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
+      if(setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases") != null) {
         id = setupInventory.getConfig().getConfigurationSection("instances." + setupInventory.getArenaKey() + ".bases").getKeys(false).size();
       }
       BaseUtilities.getBaseId().put(player, id);

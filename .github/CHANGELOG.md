@@ -1,3 +1,9 @@
+### 2.1.8 Release (13.05.2026)
+* Fixed block replacement (on bridge) and in inventory for legacy versions
+* Fixed InventoryView Error 
+* Added a Base Validation check on Arena Border if already present
+* Updated to MinigamesBox 1.4.6
+
 ### 2.1.7 Release (17.01.2026)
 * Updated to MinigamesBox 1.4.5
 
