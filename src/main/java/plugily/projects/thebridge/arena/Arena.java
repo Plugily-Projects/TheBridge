@@ -25,7 +25,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
@@ -63,7 +62,7 @@ public class Arena extends PluginArena {
   private final ArrayList<Block> placedBlocks = new ArrayList<>();
 
   private List<Cuboid> bridgeCuboid;
-  private final HashMap<Location, Material> brokenBlocks = new HashMap<>();
+  private final HashMap<Location, XMaterial> brokenBlocks = new HashMap<>();
 
   private final HashMap<Player, Player> hits = new HashMap<>();
   private int resetRound = 0;
@@ -350,10 +349,10 @@ public class Arena extends PluginArena {
     this.bridgeCuboid.add(cuboid);
   }
 
-  public HashMap<Location, Material> getBrokenBlocks() {
+  public HashMap<Location, XMaterial> getBrokenBlocks() {
     return brokenBlocks;
   }
-  public void addBrokenBlock(Location location, Material material) {
+  public void addBrokenBlock(Location location, XMaterial material) {
     this.brokenBlocks.put(location, material);
   }
 
@@ -365,7 +364,7 @@ public class Arena extends PluginArena {
   }
 
   public void resetBrokenBlocks() {
-    brokenBlocks.forEach((location, material) -> XBlock.setType(location.getBlock(), XMaterial.matchXMaterial(material)));
+    brokenBlocks.forEach((location, material) -> XBlock.setType(location.getBlock(), material));
     brokenBlocks.clear();
   }
 

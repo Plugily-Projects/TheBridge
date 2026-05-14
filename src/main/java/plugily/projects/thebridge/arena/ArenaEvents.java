@@ -44,8 +44,10 @@ import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XBlock;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 import plugily.projects.thebridge.Main;
 import plugily.projects.thebridge.arena.base.Base;
 import plugily.projects.thebridge.arena.managers.ScoreboardManager;
@@ -114,7 +116,7 @@ public class ArenaEvents extends PluginArenaEvents {
       // Only add blocks to the list if the block is not found to be in the broken blocks list
       // Making it so that resetting placed blocks and resetting broken blocks will not tamper with each other
       if(!arena.getBrokenBlocks().containsKey(event.getBlock().getLocation())) {
-        arena.addBrokenBlock(event.getBlock().getLocation(), event.getBlock().getType());
+        arena.addBrokenBlock(event.getBlock().getLocation(), XBlock.getType(event.getBlock()));
       }
     } else {
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_BUILD_BREAK")
@@ -613,8 +615,8 @@ public class ArenaEvents extends PluginArenaEvents {
       if(plugin.getArenaRegistry().getArena(((Player) event.getWhoClicked())).getArenaState()
         != IArenaState.IN_GAME) {
         if(event.getClickedInventory() == event.getWhoClicked().getInventory()) {
-          if(event.getView().getType() == InventoryType.CRAFTING
-            || event.getView().getType() == InventoryType.PLAYER) {
+          if(XInventoryView.of(event.getView()).getType() == InventoryType.CRAFTING
+            || XInventoryView.of(event.getView()).getType() == InventoryType.PLAYER) {
             event.setResult(Event.Result.DENY);
           }
         }
