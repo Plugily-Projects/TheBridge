@@ -131,10 +131,10 @@ public class BasePage extends NormalFastInv implements InventoryHandler {
         new MessageBuilder("&c&l✘ &cBase validation failed! Please configure portalhologram properly!").prefix().player(setupInventory.getPlayer()).sendPlayer();
         return;
       }
-      if(setupInventory.getConfig().getString(path + ".arenalocation.1") != null && setupInventory.getConfig().getString(path + ".arenalocation.2") != null) {
-        Cuboid arenaBorder = new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0")));
+      if(setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".arenalocation.1") != null && setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".arenalocation.2") != null) {
+        Cuboid arenaBorder = new Cuboid(LocationSerializer.getLocation(setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".arenalocation.1", "world,364.0,63.0,-72.0,0.0,0.0")), LocationSerializer.getLocation(setupInventory.getConfig().getString("instances." + setupInventory.getArenaKey() + ".arenalocation.2", "world,364.0,63.0,-72.0,0.0,0.0")));
         if(!(arenaBorder.isIn(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.1"))) && arenaBorder.isIn(LocationSerializer.getLocation(setupInventory.getConfig().getString(path + ".baselocation.2"))))) {
-          new MessageBuilder("&c&l✘ &cBase validation failed! Please set your base cuboids (baselocation.1 and baselocation.2) inside your arena cuboid!").prefix().player(setupInventory.getPlayer()).sendPlayer();
+          new MessageBuilder("&c&l✘ &cBase validation failed! Please set your base cuboids (baselocation.1 and baselocation.2) inside your arena cuboid (Main Setup Menu of Arena -> Arena)!").prefix().player(setupInventory.getPlayer()).sendPlayer();
           return;
         }
       }
