@@ -1,3 +1,6 @@
+### 2.1.11 Release (10.10.2026)
+* Changed Minigamesbox to 1.4.11
+
 ### 2.1.8 Release (13.05.2026)
 * Fixed block replacement (on bridge) and in inventory for legacy versions
 * Fixed InventoryView Error 
